@@ -45,9 +45,12 @@ model Client {
   user        User            @relation(fields: [userId], references: [id])
   userId      Int             @unique
   imageUrl    String?
+  company     String
+  name        String?
+  surname     String?
   idNumber    String?
   dob         DateTime?       @db.Date
-  sex         Sex
+  sex         Sex?
   countryCode Int?
   phoneNumber Int?
   address     String?
@@ -95,18 +98,17 @@ model Skill {
 model Experience {
   id                Int                 @id @default(autoincrement())
   profile           Profile             @relation(fields: [profileId], references: [id])
-  profileId         Int                 @unique
-  role              String
+  profileId         Int
+  title             String
   employmentType    String
   companyName       String
   location          String
   locationType      String
   isCurrentPosition Boolean
   startDate         DateTime            @db.Date
-  enddDate          DateTime            @db.Date
+  endDate           DateTime            @db.Date
   industry          String
-  description       String
-  orderNumber       Int
+  description       String              @db.VarChar(3000)
   skills            ExperienceSkill[]
   projects          ProjectExperience[]
   createdAt         DateTime            @default(now())
@@ -119,7 +121,6 @@ model ExperienceSkill {
   experienceId Int        @unique
   skill        Skill      @relation(fields: [skillId], references: [id])
   skillId      Int        @unique
-  orderNumber  Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
@@ -127,13 +128,12 @@ model ExperienceSkill {
 model Project {
   id          Int                 @id @default(autoincrement())
   profile     Profile             @relation(fields: [profileId], references: [id])
-  profileId   Int                 @unique
-  projectName String
+  profileId   Int
+  projectName String              @unique
   isOngoing   Boolean
   startDate   DateTime            @db.Date
-  enddDate    DateTime            @db.Date
-  description String
-  orderNumber Int
+  endDate     DateTime            @db.Date
+  description String              @db.VarChar(3000)
   skills      ProjectSkill[]
   images      ProjectImage[]
   tags        ProjectTag[]
@@ -146,9 +146,9 @@ model Project {
 model ProjectClient {
   id        Int      @id @default(autoincrement())
   project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int      @unique
+  projectId Int
   client    Client   @relation(fields: [clientId], references: [id])
-  clientId  Int      @unique
+  clientId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -156,30 +156,28 @@ model ProjectClient {
 model ProjectExperience {
   id           Int        @id @default(autoincrement())
   project      Project    @relation(fields: [projectId], references: [id])
-  projectId    Int        @unique
+  projectId    Int
   experience   Experience @relation(fields: [experienceId], references: [id])
-  experienceId Int        @unique
-  orderNumber  Int
+  experienceId Int
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
 
 model ProjectSkill {
-  id          Int      @id @default(autoincrement())
-  project     Project  @relation(fields: [projectId], references: [id])
-  projectId   Int      @unique
-  skill       Skill    @relation(fields: [skillId], references: [id])
-  skillId     Int      @unique
-  orderNumber Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  skillId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ProjectImage {
   id        Int      @id @default(autoincrement())
   url       String
   caption   String
-  post      Project  @relation(fields: [projectId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
   projectId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -198,13 +196,13 @@ model ProjectTag {
 model Education {
   id          Int      @id @default(autoincrement())
   profile     Profile  @relation(fields: [profileId], references: [id])
-  profileId   Int      @unique
-  school      String
+  profileId   Int
   title       String
-  description String
+  school      String
+  location    String
+  description String   @db.VarChar(3000)
   startDate   DateTime @db.Date
   endDate     DateTime @db.Date
-  orderNumber Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -221,7 +219,7 @@ model Interest {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   profile   Profile  @relation(fields: [profileId], references: [id])
-  profileId Int      @unique
+  profileId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -231,7 +229,7 @@ model Link {
   name      String   @unique
   url       String   @unique
   profile   Profile  @relation(fields: [profileId], references: [id])
-  profileId Int      @unique
+  profileId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

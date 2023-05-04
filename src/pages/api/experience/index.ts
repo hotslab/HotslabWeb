@@ -44,17 +44,16 @@ async function create(
         const newExperience = await prisma.experience.create({
             data: {
                 profileId: body.data.profileId,
-                role: body.data.role,
+                title: body.data.title,
                 employmentType: body.data.employmentType,
                 companyName: body.data.companyName,
                 location: body.data.location,
                 locationType: body.data.locationType,
                 isCurrentPosition: body.data.isCurrentPosition,
                 startDate: body.data.startDate,
-                enddDate: body.data.enddDate,
+                endDate: body.data.endDate,
                 industry: body.data.industry,
                 description: body.data.description,
-                orderNumber: body.data.orderNumber,
             },
         })
         res.status(200).json({ data: newExperience })
@@ -72,17 +71,16 @@ async function update(
             where: { id: body.data.id },
             data: {
                 profileId: body.data.profileId,
-                role: body.data.role,
+                title: body.data.title,
                 employmentType: body.data.employmentType,
                 companyName: body.data.companyName,
                 location: body.data.location,
                 locationType: body.data.locationType,
                 isCurrentPosition: body.data.isCurrentPosition,
                 startDate: body.data.startDate,
-                enddDate: body.data.enddDate,
+                endDate: body.data.endDate,
                 industry: body.data.industry,
                 description: body.data.description,
-                orderNumber: body.data.orderNumber,
             },
         })
         res.status(200).json({ data: updatedExperience })

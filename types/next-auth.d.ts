@@ -14,6 +14,8 @@ declare module "next-auth" {
             showProfile: boolean
             roleId: number
             role: string
+            profileId: number | null
+            clientId: number | null
         } & DefaultSession["user"]
     }
 }

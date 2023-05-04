@@ -44,12 +44,12 @@ async function create(
         const newEducation = await prisma.education.create({
             data: {
                 profileId: body.data.profileId,
+                title: body.data.title,
                 school: body.data.school,
-                degree: body.data.degree,
+                location: body.data.location,
                 description: body.data.description,
                 startDate: body.data.startDate,
-                enddDate: body.data.enddDate,
-                orderNumber: body.data.orderNumber,
+                endDate: body.data.endDate,
             },
         })
         res.status(200).json({ data: newEducation })
@@ -67,12 +67,12 @@ async function update(
             where: { id: body.data.id },
             data: {
                 profileId: body.data.profileId,
+                title: body.data.title,
                 school: body.data.school,
-                degree: body.data.degree,
+                location: body.data.location,
                 description: body.data.description,
                 startDate: body.data.startDate,
-                enddDate: body.data.enddDate,
-                orderNumber: body.data.orderNumber,
+                endDate: body.data.endDate,
             },
         })
         res.status(200).json({ data: updatedEducation })

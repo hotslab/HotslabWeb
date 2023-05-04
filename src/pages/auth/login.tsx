@@ -18,7 +18,7 @@ export default function Login() {
                 if (response) {
                     response.error ?
                         console.error("RESPONSE ERROR", response.error)
-                        : router.push({ pathname: `/profile/${session?.user.id}` })
+                        : router.push({ pathname: `/profiles/${session?.user.id}` })
                 } else console.error('NO RESPONSE FROM SERVER')
             })
             .catch(e => console.error(e))
@@ -30,7 +30,7 @@ export default function Login() {
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image
                         className="mx-auto h-10 w-auto"
-                        src="/HOTSLAB.svg"
+                        src="/assets/hotslab.svg"
                         alt="Your Company"
                         width={100}
                         height={100}

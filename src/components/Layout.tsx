@@ -47,8 +47,8 @@ export default function Layout(props: Props) {
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
         <ul className="menu p-4 w-52 bg-base-100 text-base-content">
           <li onClick={() => Router.push('/')}><a>Home</a></li>
-          <li onClick={() => Router.push('/profile')}><a>Profile</a></li>
-          <li onClick={() => Router.push('/project')}><a>Portfolio</a></li>
+          <li onClick={() => Router.push('/profiles')}><a>Profiles</a></li>
+          <li onClick={() => Router.push('/projects')}><a>Portfolio</a></li>
           <li onClick={() => Router.push('/auth/login')}><a>Login</a></li>
         </ul>
       </div>
