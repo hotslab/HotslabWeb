@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Skill } from '@prisma/client'
@@ -11,17 +10,12 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    // const body = JSON.parse(req.body);
     const session: Session | null = await getServerSession(req, res, {})
-    switch (req.method) {
-        case 'POST':
-            create(req, res, session)
-        case 'PUT':
-            update(req, res, session)
-        case 'DELETE':
-            erase(req, res, session)
-        default:
-            index(req, res, session)
+    if (req.method === 'GET') index(req, res, session)
+    else if (req.method === 'POST') create(req, res, session)
+    else {
+        res.setHeader('Allow', ['GET', 'POST'])
+        res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }
 
@@ -30,7 +24,20 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const skills: Skill[] = await prisma.skill.findMany()
+    const { query, method }: NextApiRequest = req
+    let selectData: { [key: string]: any } = { where: {} }
+    let includeData: { [key: string]: any } = {}
+    if (query.userId) {
+        selectData.where.projects = {
+            every: {
+                project: {
+                    is: { profile: { is: { user: { is: { id: parseInt(query.userId as string, 10) } } } } }
+                }
+            }
+        }
+        includeData = { projects: { select: { projectId: true, project: { select: { projectName: true } } } } }
+    }
+    const skills: Skill[] = await prisma.skill.findMany({ ...selectData, include: includeData })
     res.status(200).json({ data: skills })
 }
 
@@ -45,32 +52,5 @@ async function create(
             data: { name: body.data.name },
         })
         res.status(200).json({ data: newSkill })
-    } else throw new Error("Unauthorized")
-}
-
-async function update(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const updatedSkill = await prisma.skill.update({
-            where: { id: body.data.id },
-            data: { name: body.data.name },
-        })
-        res.status(200).json({ data: updatedSkill })
-    } else throw new Error("Unauthorized")
-}
-
-async function erase(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedSkill = await prisma.skill.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedSkill })
     } else throw new Error("Unauthorized")
 }

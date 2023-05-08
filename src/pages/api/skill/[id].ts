@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
-import { Project } from '@prisma/client'
+import { Skill, SkillExtended } from '@prisma/client'
 
 type Data = { data: any }
 
@@ -27,20 +26,16 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method } = req
+    const { query, method }: NextApiRequest = req
     const id = parseInt(query.id as string, 10)
-    const project = await prisma.project.findUnique({
+    const skill = await prisma.skill.findUnique({
         where: { id: id },
         include: {
-            profile: true,
-            skills: { include: { skill: true } },
-            images: true,
-            tags: { include: { tag: true } },
             experiences: { include: { experience: true } },
-            clients: { include: { client: true } },
+            projects: { include: { project: true } }
         }
     })
-    res.status(200).json({ data: project })
+    res.status(200).json({ data: skill })
 }
 
 async function update(
@@ -50,18 +45,11 @@ async function update(
 ) {
     if (session) {
         const body = JSON.parse(req.body)
-        const updatedProject = await prisma.project.update({
+        const updatedSkill = await prisma.skill.update({
             where: { id: body.data.id },
-            data: {
-                profileId: body.data.profileId,
-                projectName: body.data.projectName,
-                isOngoing: body.data.isOngoing,
-                startDate: body.data.startDate,
-                endDate: body.data.endDate,
-                description: body.data.description,
-            },
+            data: { name: body.data.name },
         })
-        res.status(200).json({ data: updatedProject })
+        res.status(200).json({ data: updatedSkill })
     } else throw new Error("Unauthorized")
 }
 
@@ -72,7 +60,7 @@ async function erase(
 ) {
     if (session) {
         const body = JSON.parse(req.body)
-        const deletedProject = await prisma.project.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedProject })
+        const deletedSkill = await prisma.skill.delete({ where: { id: body.data.id } })
+        res.status(200).json({ data: deletedSkill })
     } else throw new Error("Unauthorized")
 }

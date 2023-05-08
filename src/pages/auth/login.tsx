@@ -2,30 +2,43 @@ import Layout from "@/components/Layout"
 import Image from "next/image"
 import { useState } from 'react'
 import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
-import { signIn, SignInResponse } from "next-auth/react"
+import { useSession, signIn, SignInResponse, getSession } from "next-auth/react"
+import { Session } from "next-auth"
+import { MdOutlineCancel } from "react-icons/md"
 
 export default function Login() {
-
     const router = useRouter()
-    const [email, setEmail] = useState('')
-    const [password, setPasssword] = useState('')
+    const [email, setEmail] = useState("joseph.nyahuye@gmail.com")
+    const [password, setPasssword] = useState("joseph")
+    const [errorMessage, setErrorMessage] = useState("")
     const { data: session, status } = useSession()
 
     async function login() {
         signIn('credentials', { redirect: false, email: email, password: password })
-            .then((response: SignInResponse | undefined) => {
+            .then(async (response: SignInResponse | undefined) => {
                 if (response) {
+                    const session: Session | null = await getSession()
                     response.error ?
-                        console.error("RESPONSE ERROR", response.error)
-                        : router.push({ pathname: `/profiles/${session?.user.id}` })
-                } else console.error('NO RESPONSE FROM SERVER')
+                        setErrorMessage(response.error)
+                        : await router.push({ pathname: `/profiles/${session?.user.id}` })
+                } else setErrorMessage('No Response From Server')
             })
             .catch(e => console.error(e))
     }
 
     return (
         <Layout>
+            {errorMessage &&
+                <div className="alert alert-error shadow-lg">
+                    <div className="w-full flex items-center justify-between font-bold">
+                        <span>{errorMessage}</span>
+                        <MdOutlineCancel
+                            onClick={() => setErrorMessage("")}
+                            className="text-2xl cursor-pointer"
+                        />
+                    </div>
+                </div>
+            }
             <div className="bg-white flex min-h-screen flex flex-col items-center justify-center px-4 lg:px-12">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <Image
@@ -42,7 +55,7 @@ export default function Login() {
 
                 <div className="form-control w-full max-w-xs">
                     <label className="label">
-                        <span className="label-text">Email?</span>
+                        <span className="label-text text-gray-400 font-bold">Email?</span>
                     </label>
                     <input
                         type="text"
@@ -56,7 +69,7 @@ export default function Login() {
                 </div>
                 <div className="form-control w-full max-w-xs">
                     <label className="label">
-                        <span className="label-text">Password?</span>
+                        <span className="label-text text-gray-400 font-bold">Password?</span>
                     </label>
                     <input
                         type="password"

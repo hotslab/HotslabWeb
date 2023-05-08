@@ -10,55 +10,53 @@ export default function Home() {
             <Image
               src="/assets/hotslab.svg"
               alt="Hotslab lLogo"
-              height={150}
-              width={150}
+              height={100}
+              width={100}
+              className="h-[200px] min-[566px]:h-[250px] w-full"
             />
           </div>
           <h1 id="logo-text" className="text-white pt-10 text-xl9 mb-10">HOTSLAB</h1>
-          <div className="grid grid-cols-3 gap-4 mb-10">
-            <div className="card w-52 bg-base-100 shadow-xl">
-              <figure className="px-12 pt-10">
-                {/* <img src="/computer.png" alt="Software Development" height="100px" /> */}
+          <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
+            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
+              <div className="flex justify-between items-center">
                 <Image
                   src="/assets/computer.svg"
                   alt="Software Development"
-                  height={500}
-                  width={500}
+                  height={100}
+                  width={100}
+                  className="w-full"
                 />
-              </figure>
-              <div className="card-body items-center text-center">
+              </div>
+              <div className="flex flex-col justify-between items-center text-center w-full">
                 <h2 className="card-title">Software Development</h2>
-                <p>If a dog chews shoes whose shoes does he choose?</p>
               </div>
             </div>
-            <div className="card w-52 bg-info shadow-xl">
-              <figure className="px-10 pt-10">
-                {/* <img src="/tablet.png" alt="App Development" height="100px" /> */}
+            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
+              <div className="flex justify-between items-center">
+                <Image
+                  src="/assets/tablet.svg"
+                  alt="App Development"
+                  height={100}
+                  width={100}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex flex-col justify-between items-center text-center w-full">
+                <h2 className="card-title">Mobile Applications</h2>
+              </div>
+            </div>
+            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
+              <div className="flex justify-between items-center">
                 <Image
                   src="/assets/artboard.svg"
-                  alt="App Development"
-                  height={500}
-                  width={408}
-                />
-              </figure>
-              <div className="card-body items-center text-center">
-                <h2 className="card-title">Mobile Apps</h2>
-                <p>If a dog chews shoes whose shoes does he choose?</p>
-              </div>
-            </div>
-            <div className="card w-52 bg-base-100 shadow-xl">
-              <figure className="px-10 pt-10">
-                {/* <img src="/design.png" alt="Graphic Design" height="100px" /> */}
-                <Image
-                  src="/assets/design.png"
                   alt="Graphic Design"
-                  width={100}
                   height={100}
+                  width={100}
+                  className="w-full"
                 />
-              </figure>
-              <div className="card-body items-center text-center">
-                <h2 className="card-title">Graphic Design</h2>
-                <p>If a dog chews shoes whose shoes does he choose?</p>
+              </div>
+              <div className="flex flex-col justify-between items-center text-center w-full">
+                <h2 className="card-title">Graphic Designs</h2>
               </div>
             </div>
           </div>
@@ -82,6 +80,10 @@ export default function Home() {
             animation-duration: 30s;
             animation-iteration-count: infinite;
 
+          }
+
+          .hotslab-shadow {
+            box-shadow: 3px 3px 10px black;
           }
 
           /* Chrome, Safari, Opera */

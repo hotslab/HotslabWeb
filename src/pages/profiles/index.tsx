@@ -1,55 +1,67 @@
-import Router from "next/router";
+import { useRouter } from "next/router";
 import Layout from "@/components/Layout"
 import { ProfileExtended } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import Image from 'next/image'
+import { MdAccountCircle } from "react-icons/md"
 
 type Props = { profiles: ProfileExtended[] }
 
 export default function Profiles({ profiles }: Props) {
     const { status } = useSession()
+    const router = useRouter()
+
+    function getProfileImage(image: string | null) {
+        return image ? `http://localhost:3000${image}` : ""
+    }
 
     return (
         <Layout>
-            <div className="bg-white px-8">
-                <div className="container min-h-screen mx-auto px-4 pt-10">
-                    <div className="py-5 flex justify-between items-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-                            {profiles.length > 1 ? 'Profiles' : 'Profile'}
-                        </h2>
-                        <h2 className="text-3xl font-bold tracking-tight text-secondary sm:text-4xl">
-                            {profiles.length}
-                        </h2>
+            <div className="min-h-full bg-white">
+                <div className="container mx-auto py-10 px-4">
+                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Profiles</span>
+                            <span>{profiles.length}</span>
+                        </div>
                     </div>
                     {profiles.length > 0 ?
-                        <ul role="list" className="divide-y divide-gray-100">
+                        <div className="">
                             {profiles.map((profile: ProfileExtended) => (
-                                <li key={profile.id}
-                                    className="flex justify-between gap-x-6 py-5 cursor-pointer"
-                                    onClick={() => Router.push({ pathname: `/profiles/${profile.userId}` })}
+                                <div key={profile.id}
+                                    className="bg-base-100 shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col sm:flex-row justify-center items-center"
                                 >
-                                    <div className="flex gap-x-4" >
-                                        <Image
-                                            src={profile.imageUrl || "/assets/icon.png"}
-                                            alt="Profile Image"
-                                            className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                                            height={150}
-                                            width={150}
-                                        />
-                                        <div className="min-w-0 flex-auto">
-                                            <p className="text-sm font-semibold leading-6 text-gray-900">{profile.user.name}</p>
-                                            <p className="mt-1 truncate text-xs leading-5 text-gray-500">{profile.user.surname}</p>
+                                    <div className="w-full h-1/3 sm:h-full sm:w-1/5 p-6 flex justify-center items-center">
+                                        {
+                                            profile.imageUrl
+                                                ? <Image
+                                                    src={profile.imageUrl}
+                                                    alt={`${profile.user.name} ${profile.user.surname}`}
+                                                    width={100}
+                                                    height={100}
+                                                    className="mask mask-circle"
+                                                />
+                                                : <MdAccountCircle className="text-[100px]" />
+                                        }
+                                    </div>
+                                    <div className="w-full h-2/3 sm:h-full sm:w-4/5 h-full sm:h-[200px] p-6 flex flex-col justify-between items-start gap-5">
+                                        <div className="w-full flex justify-between items-center flex-wrap gap-3">
+                                            <h6 className="card-title text-md">{profile.user.name} {profile.user.surname}</h6>
+                                            <p className="card-title text-sm">{profile.user.role.name}</p>
+                                        </div>
+                                        <div className="card-actions justify-end w-full">
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={() => router.push({ pathname: `/profiles/${profile.userId}` })}
+                                            >
+                                                open
+                                            </button>
                                         </div>
                                     </div>
-                                    <div className="hidden sm:flex sm:flex-col sm:items-end">
-                                        <p className="mt-1 text-xs leading-5 text-gray-500">
-                                            DOB {profile.dob}
-                                        </p>
-                                    </div>
-                                </li>
+                                </div>
                             ))}
-                        </ul>
-                        : <div className="flex justify-center items-center mt-20 p-8 font-bold text-2xl">
+                        </div>
+                        : <div className="flex justify-center items-center my-20 p-8 font-bold text-2xl">
                             <h2 className="text-primary">No profiles found</h2>
                         </div>
                     }

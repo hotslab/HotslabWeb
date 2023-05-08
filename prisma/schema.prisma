@@ -63,36 +63,37 @@ model Client {
 }
 
 model Profile {
-  id          Int          @id @default(autoincrement())
-  user        User         @relation(fields: [userId], references: [id])
-  userId      Int          @unique
-  imageUrl    String?
-  idNumber    String?
-  dob         DateTime?    @db.Date
-  sex         Sex
-  countryCode Int?
-  phoneNumber Int?
-  address     String?
-  city        String?
-  country     String?
-  postcode    String?
-  summary     String?
-  experiences Experience[]
-  educations  Education[]
-  projects    Project[]
-  interests   Interest[]
-  links       Link[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id           Int           @id @default(autoincrement())
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int           @unique
+  imageUrl     String?
+  idNumber     String?
+  dob          DateTime?     @db.Date
+  sex          Sex
+  countryCode  Int?
+  phoneNumber  Int?
+  address      String?
+  city         String?
+  country      String?
+  postcode     String?
+  summary      String?
+  experiences  Experience[]
+  educations   Education[]
+  projects     Project[]
+  interests    Interest[]
+  links        Link[]
+  achievements Achievement[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Skill {
-  id         Int               @id @default(autoincrement())
-  name       String            @unique
-  experience ExperienceSkill[]
-  projects   ProjectSkill[]
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  experiences ExperienceSkill[]
+  projects    ProjectSkill[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 }
 
 model Experience {
@@ -108,7 +109,7 @@ model Experience {
   startDate         DateTime            @db.Date
   endDate           DateTime            @db.Date
   industry          String
-  description       String              @db.VarChar(3000)
+  description       String              @db.VarChar(7000)
   skills            ExperienceSkill[]
   projects          ProjectExperience[]
   createdAt         DateTime            @default(now())
@@ -133,7 +134,7 @@ model Project {
   isOngoing   Boolean
   startDate   DateTime            @db.Date
   endDate     DateTime            @db.Date
-  description String              @db.VarChar(3000)
+  description String              @db.VarChar(7000)
   skills      ProjectSkill[]
   images      ProjectImage[]
   tags        ProjectTag[]
@@ -200,7 +201,7 @@ model Education {
   title       String
   school      String
   location    String
-  description String   @db.VarChar(3000)
+  description String   @db.VarChar(7000)
   startDate   DateTime @db.Date
   endDate     DateTime @db.Date
   createdAt   DateTime @default(now())
@@ -217,7 +218,7 @@ model Tag {
 
 model Interest {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
+  name      String
   profile   Profile  @relation(fields: [profileId], references: [id])
   profileId Int
   createdAt DateTime @default(now())
@@ -226,10 +227,20 @@ model Interest {
 
 model Link {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
-  url       String   @unique
+  name      String
+  url       String
   profile   Profile  @relation(fields: [profileId], references: [id])
   profileId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.VarChar(7000)
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  profileId   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

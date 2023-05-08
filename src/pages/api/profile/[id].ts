@@ -48,7 +48,18 @@ async function index(
             },
             experiences: true,
             educations: true,
-            projects: true,
+            projects: {
+                select: {
+                    projectName: true,
+                    isOngoing: true,
+                    startDate: true,
+                    endDate: true,
+                    description: true,
+                    experiences: { select: { experience: true } },
+                    skills: { select: { skill: true } },
+                    tags: { select: { tag: true } }
+                }
+            },
             interests: true,
             links: true,
         }

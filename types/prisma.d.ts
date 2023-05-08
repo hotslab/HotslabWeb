@@ -1,8 +1,13 @@
 import {
+    Tag,
     Profile,
     Role,
     User,
+    Client,
     Project,
+    Skill,
+    Achievement,
+    Experience,
     ProjectSkill,
     ProjectImage,
     ProjectTag,
@@ -18,7 +23,14 @@ declare module "@prisma/client" {
 
     interface ProfileExtended extends Profile {
         dob: string
-        user: User
+        user: UserExtended
+        achievements: Achievement[]
+        projects: ProjectExtended[]
+    }
+
+    interface SkillExtended extends Skill {
+        experiences: Experience[]
+        projects: ProjectExtended[]
     }
 
     interface ProjectExtended extends Project {
@@ -26,13 +38,33 @@ declare module "@prisma/client" {
         profileId?: number | null
         profile?: Profile
         startDate: Date | string
-        enddDate: Date | string
-        skills?: ProjectSkill[]
+        endDate: Date | string
+        skills?: ProjectSkillExtended[]
         images?: ProjectImage[]
-        tags?: ProjectTag[]
-        experiences?: ProjectExperience[]
-        clients?: ProjectClient[]
+        tags?: ProjectTagExtended[]
+        experiences?: ProjectExperienceExtended[]
+        clients?: ProjectClientExtended[]
         createdAt?: string
         updatedAt?: string
+    }
+
+    interface ProjectTagExtended extends ProjectTag {
+        tag: Tag
+        project: Project
+    }
+
+    interface ProjectClientExtended extends ProjectClient {
+        client: Client
+        project: Project
+    }
+
+    interface ProjectExperienceExtended extends ProjectExperience {
+        experience: Experience
+        project: Project
+    }
+
+    interface ProjectSkillExtended extends ProjectSkill {
+        project: Project,
+        skill: Skill
     }
 }

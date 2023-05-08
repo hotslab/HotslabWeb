@@ -1,7 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import * as argon2 from "argon2"
+import { Skill } from '@prisma/client'
 
 const prisma = new PrismaClient()
+
+async function populateSkills(skillList: string[] | []): Promise<number[] | []> {
+    const skills: Skill[] = await prisma.skill.findMany({ where: { OR: skillList.map((skill: string) => { return { name: skill } }) } })
+    return skills.length > 0 ? skills.map((skill: Skill) => skill.id) : []
+}
 
 async function main() {
     console.log(`Start seeding ...`)
@@ -38,6 +44,40 @@ async function main() {
                     postcode: '0000',
                     summary: `A well seasoned and experienced full stack software developer, with over 5 years 
                             of commercial working experience in the industry.`,
+                    links: {
+                        create: [
+                            { name: "Linkedin Profile", url: "http:// l inkedin.com/in/joseph-nyahuye-4a9b94150 /" },
+                            { name: "StackOverflow Profile", url: "http://stackoverflow.com/users/17287276/joseph-nyahuye?tab=profile" },
+                            { name: "Gitlab Profile", url: "http:// gitlab.com/Hotslab" },
+                            { name: "Github Profile", url: "http:// github.com/hotslab" },
+                            { name: "Portfolio Website", url: "http:// hotslab.com" },
+                        ]
+                    },
+                    interests: {
+                        create: [
+                            { name: "Technology" },
+                            { name: "Art" },
+                            { name: "Music" },
+                            { name: "Video Games" },
+                            { name: "Movies and TV Series" },
+                            { name: "Fitness" }
+                        ]
+                    },
+                    achievements: {
+                        create: [
+                            {
+                                name: "IITPSA - Institute of Information Technology Professionals of South Africa",
+                                description: `Former affiliate member with membership number NO83177 before moving back to Zimbabwe.`
+                            },
+                            {
+                                name: "Zimbabwe Presidential Scholarship of 2010",
+                                description: `
+                                Was awarded the scholarship to study at the University of KwaZulu Natal in South Africa,
+                                due to academy excellence in 2010 for a three year program.
+                                `
+                            }
+                        ]
+                    }
                 }
             }
         }
@@ -85,7 +125,6 @@ async function main() {
         "Yii",
         "Symfony",
         "GraphQL",
-        "React",
         "Quasar",
         "NextJS",
         "Redux",
@@ -115,6 +154,25 @@ async function main() {
         "WooCommerce",
         "TailwindCSS",
         "Bootstrap",
+        "JIRA",
+        "Notion",
+        "Slack",
+        "Google Cloud",
+        "Express",
+        "Koa",
+        "Cypress",
+        "Electron",
+        "Gimp",
+        "Photoshop",
+        "InkScape",
+        "GooglePlay",
+        "IOS",
+        "Xcode",
+        "Android Studio",
+        "Puppeteer",
+        "XML",
+        "Markdown",
+        "CPanel"
     ]
 
     for (const skill of skills)
@@ -246,7 +304,7 @@ async function main() {
     const projects = [
         {
             profileId: user?.profile?.id as any,
-            projectName: "Admin and Client interface integrating social media links(Superb Aps)",
+            projectName: "Admin and Client interface integrating social media",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -282,11 +340,50 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Docker",
+                    "Kubernetes",
+                    "React",
+                    "NextJS",
+                    "Redux",
+                    "npm",
+                    "HTTP",
+                    "REST",
+                    "AWS",
+                    "Linux",
+                    "MySQL",
+                    "Postgre",
+                    "MongoDB",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "TailwindCSS",
+                    "Bootstrap",
+                    "JIRA",
+                    "Notion",
+                    "Slack",
+                    "Google Cloud",
+                    "Express",
+                    "Koa",
+                    "Cypress",
+                    "Markdown"
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "Norman Browser and Electron Desktop Application (Evision / Ebit Technologies)",
+            projectName: "Norman Browser and Electron Desktop Application",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -322,11 +419,55 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Jquery",
+                    "Vue",
+                    "Laravel",
+                    "Yii",
+                    "Symfony",
+                    "GraphQL",
+                    "npm",
+                    "composer",
+                    "Cordova",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "Postgre",
+                    "MSSQL",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "TailwindCSS",
+                    "Bootstrap",
+                    "Express",
+                    "Electron",
+                    "Markdown"
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "NimblePay Web Service (Evision / Ebit Technologies)",
+            projectName: "NimblePay Web Service",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -359,11 +500,63 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Java",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Jquery",
+                    "Vue",
+                    "Laravel",
+                    "Yii",
+                    "Symfony",
+                    "GraphQL",
+                    "Quasar",
+                    "npm",
+                    "composer",
+                    "Cordova",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "Capacitor",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Postgre",
+                    "MSSQL",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "TailwindCSS",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Electron",
+                    "Gimp",
+                    "InkScape",
+                    "Markdown"
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "NimblePay App (Evision / Ebit Technologies)",
+            projectName: "NimblePay App",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -400,11 +593,72 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Java",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Jquery",
+                    "AngularJS",
+                    "Vue",
+                    "Laravel",
+                    "Yii",
+                    "Symfony",
+                    "GraphQL",
+                    "Quasar",
+                    "npm",
+                    "composer",
+                    "Cordova",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "Capacitor",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Postgre",
+                    "MSSQL",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "TailwindCSS",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Cypress",
+                    "Electron",
+                    "Selenium",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "GooglePlay",
+                    "IOS",
+                    "Xcode",
+                    "Android Studio",
+                    "Puppeteer",
+                    "Markdown"
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "Standard Bank Debicheck API Integration (Evision /Ebit Technologies)",
+            projectName: "Standard Bank Debicheck API Integration",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -438,11 +692,56 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Java",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Jquery",
+                    "Vue",
+                    "Laravel",
+                    "Yii",
+                    "Symfony",
+                    "GraphQL",
+                    "npm",
+                    "composer",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "MySQL",
+                    "Postgre",
+                    "MSSQL",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "Google Cloud",
+                    "Express",
+                    "Electron",
+                    "XML",
+                    "Markdown"
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "Brickfield Canvas System (Evision / Ebit Technologies)",
+            projectName: "Brickfield Canvas System",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -475,11 +774,63 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Vue",
+                    "Laravel",
+                    "Symfony",
+                    "npm",
+                    "composer",
+                    "Cordova",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "Capacitor",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "Postgre",
+                    "MSSQL",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "TailwindCSS",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Cypress",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "GooglePlay",
+                    "IOS",
+                    "Xcode",
+                    "Android Studio",
+                    "Puppeteer",
+                    "XML",
+                    "Markdown",
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
             profileId: user?.profile?.id as any,
-            projectName: "Ebranch Service (Evision / Ebit Technologies)",
+            projectName: "Ebranch Service",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -512,43 +863,51 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
-            }
-        },
-        {
-            profileId: user?.profile?.id as any,
-            projectName: "Ebranch Service (Evision / Ebit Technologies)",
-            isOngoing: false,
-            startDate: new Date('2022-09-01').toISOString(),
-            endDate: new Date("2022-09-30").toISOString(),
-            description: `
-            An internal service system for Nimble Group to manage the chat service for debtors needing assistance,
-            and to provide useful statistics for management and other authorised personnel. It was built using
-            SocketIO, Laravel, Redis and MSSQL Database.
-            Reference: The website address is https://nimblepay.nimblegroup.co.za/login.
-            `,
-            experiences: {
-                create: [
-                    {
-                        experienceId: (await prisma.experience.findFirst({
-                            where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
-                            }
-                        }))?.id as any
-                    }
-                ]
             },
-            tags: {
-                create: [
-                    {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
-                    }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Gitlab",
+                    "Node",
+                    "AdonisJS",
+                    "Docker",
+                    "Jquery",
+                    "AngularJS",
+                    "Vue",
+                    "Laravel",
+                    "Yii",
+                    "Symfony",
+                    "GraphQL",
+                    "npm",
+                    "composer",
+                    "Apollo",
+                    "WebRTC",
+                    "SocketIO",
+                    "ElasticSearch",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "JSONAPI",
+                    "Linux",
+                    "Postgre",
+                    "MSSQL",
+                    "MongoDB",
+                    "Redis",
+                    "Nginx",
+                    "Apache",
+                    "Google Cloud",
+                    "Express",
+                    "Electron",
+                    "XML",
+                    "Markdown",
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         },
         {
@@ -591,6 +950,673 @@ async function main() {
                     { url: "/uploads/cargo.jpg", caption: "Cargo" },
                     { url: "/uploads/food.jpg", caption: "Food" },
                 ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Personal Trainer Cape Town",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Personal Trainer Cape Town offers one of the best one-on-one and group personal training in Cape Town. You get the best personal and specialistic services that cater to your individual needs, ensuring that you will reach your goal of a healthier you.
+
+            We constructed the site and added the following features for the landing page:
+
+            An integrated contact form to submit information to the site.
+            Interactive widgets to make the site dynamic and user friendly.
+            The ability to post new future items, downloads and updates.
+            Integration with social networks to allow users to socialize on those platforms and receive updates.
+            The site was built on the WordPress platform, and it is fully customizable.
+
+            Website: http://www.waynne.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Properties Cape Town",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Properties Cape Town is  South African based Estate Agent Service focusing on premier property in and around Cape Town. The agency helps with the listing, viewing and valuation of exclusive and premier property, which it caters for the tastes of it’s discerning and affluent clients.
+
+            We constructed the site and added the following features for the landing page:
+
+            An integrated contact form to submit information to the site.
+            Interactive widgets to make the site dynamic and user friendly.
+            The ability to post new future items, downloads and updates.
+            Integration with social networks to allow users to socialize on those platforms and receive updates.
+            The site was built on the WordPress platform, and it is fully customizable.
+
+            Website: http://www.capetownestateagent.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Capewave Freight Services",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Capewave Freight Services is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company, it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping. It is the sister site to CMG Global Freight Logistics.
+
+            We constructed the site and added the following features:
+
+            An integrated contact form to submit information to the site.
+            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
+            The ability to post new items, downloads and updates.
+            Integration with Facebook to allow users to view the site’s profile, and to socialize also on that platform.
+            The site was built on the WordPress platform, and it is fully customizable.
+
+            URL: http://www.capewavefreight.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Intrinisic Freight Agency",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Intrinsic Freight Agency is a South African based Customs Clearing and Forwarding Company. The company to provides an essential services to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping.
+
+            We constructed the site and added the following features:
+
+            An integrated contact form to submit information to the site.
+            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
+            The ability to post new items, downloads and updates.
+            The site was built on the WordPress platform, and it is fully customizable.
+
+            URL: http://www.intrinsicfreight.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "CMG Global Freight & Logistics",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            CMG GLOBAL FREIGHT & LOGISTICS is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of Freight, Logistics and Shipping.
+
+            We constructed the site and added the following features:
+
+            An integrated contact and career form to submit information to the site.
+            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
+            The ability to post new items, downloads and updates.
+            Integration with Facebook to allow users to view the site’s profile, and to socialize on that platform.
+            The site was built on the WordPress platform, and it is fully customizable.
+
+            URL: http://www.cmg-globalfreight.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Muslim Educational Centre of Oxford",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            MECO (Muslim Educational Centre of Oxford University), is an online socio-political blog addressing issues and topics affecting the Muslim world.
+
+            The site site acts primarily as a online blog and news center, much in the same way as a magazine site, and showcases the features that HOTSLAB can add in creating a online magazine site.
+
+            The site was built on the WordPress platform and the site is fully customizable.
+
+            URL: http://www.meco.org.uk
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Leisure Combined",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Leisure Combined is a premier travel site made for the most discerning travelers who require a quality service. The site acts as a one stop center for all travel needs and helps people to prepare for their trips to South Africa as well as the rest of the World.
+
+            We constructed the site and added the following features:
+
+            1. An intergrated worldwide flight, hotel and car rental search engine
+            2. A catalogue of premier apartments for travelers to choose from when they visit Cape Town.
+            4. Posting of news items, downloads and updates.
+
+            The site was built on the WordPress platform and the site is fully customizable.
+
+            URL: http://www.leisurecombined.co.za
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "JavaScript",
+                    "Typescript",
+                    "PHP",
+                    "HTML",
+                    "SQL",
+                    "CSS",
+                    "Bash",
+                    "Git",
+                    "Github",
+                    "Node",
+                    "Jquery",
+                    "npm",
+                    "SOAP",
+                    "HTTP",
+                    "REST",
+                    "Linux",
+                    "MySQL",
+                    "MariaDB",
+                    "Nginx",
+                    "Apache",
+                    "Wordpress",
+                    "WooCommerce",
+                    "Bootstrap",
+                    "Google Cloud",
+                    "Express",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                    "XML",
+                    "Markdown",
+                    "CPanel"
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Sage Plumbing Roll Up Banner",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Roll up banner for Sage Plumbing used for advertising.
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "Google Cloud",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                ])).map((skillId: number) => { return { skillId: skillId } })
+            }
+        },
+        {
+            profileId: user?.profile?.id as any,
+            projectName: "Properties Cape Town Business Card",
+            isOngoing: false,
+            startDate: new Date('2022-09-01').toISOString(),
+            endDate: new Date("2022-09-30").toISOString(),
+            description: `
+            Business card for Properties Cape Town.
+            `,
+            experiences: {
+                create: [
+                    {
+                        experienceId: (await prisma.experience.findFirst({
+                            where: {
+                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                            }
+                        }))?.id as any
+                    }
+                ]
+            },
+            tags: {
+                create: [
+                    {
+                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id as any
+                    }
+                ]
+            },
+            images: {
+                create: [
+                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
+                    { url: "/uploads/food.jpg", caption: "Food" },
+                ]
+            },
+            skills: {
+                create: (await populateSkills([
+                    "Google Cloud",
+                    "Gimp",
+                    "Photoshop",
+                    "InkScape",
+                ])).map((skillId: number) => { return { skillId: skillId } })
             }
         }
     ]
