@@ -46,11 +46,11 @@ async function main() {
                             of commercial working experience in the industry.`,
                     links: {
                         create: [
-                            { name: "Linkedin Profile", url: "http:// l inkedin.com/in/joseph-nyahuye-4a9b94150 /" },
-                            { name: "StackOverflow Profile", url: "http://stackoverflow.com/users/17287276/joseph-nyahuye?tab=profile" },
-                            { name: "Gitlab Profile", url: "http:// gitlab.com/Hotslab" },
-                            { name: "Github Profile", url: "http:// github.com/hotslab" },
-                            { name: "Portfolio Website", url: "http:// hotslab.com" },
+                            { name: "Linkedin Profile", url: "https://linkedin.com/in/joseph-nyahuye-4a9b94150 /" },
+                            { name: "StackOverflow Profile", url: "https://stackoverflow.com/users/17287276/joseph-nyahuye?tab=profile" },
+                            { name: "Gitlab Profile", url: "https://gitlab.com/Hotslab" },
+                            { name: "Github Profile", url: "https://github.com/hotslab" },
+                            { name: "Portfolio Website", url: "https://hotslab.com" },
                         ]
                     },
                     interests: {
@@ -59,7 +59,8 @@ async function main() {
                             { name: "Art" },
                             { name: "Music" },
                             { name: "Video Games" },
-                            { name: "Movies and TV Series" },
+                            { name: "Movies" },
+                            { name: "TV Series" },
                             { name: "Fitness" }
                         ]
                     },

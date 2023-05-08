@@ -48,6 +48,7 @@ async function index(
             },
             experiences: true,
             educations: true,
+            achievements: true,
             projects: {
                 select: {
                     projectName: true,

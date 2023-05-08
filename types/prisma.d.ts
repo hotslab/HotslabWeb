@@ -6,6 +6,9 @@ import {
     Client,
     Project,
     Skill,
+    Link,
+    Interest,
+    Education,
     Achievement,
     Experience,
     ProjectSkill,
@@ -25,7 +28,11 @@ declare module "@prisma/client" {
         dob: string
         user: UserExtended
         achievements: Achievement[]
+        links: Link[]
         projects: ProjectExtended[]
+        experiences: Experience[]
+        educations: Education[]
+        interests: Interest[]
     }
 
     interface SkillExtended extends Skill {
