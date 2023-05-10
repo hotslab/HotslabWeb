@@ -1,14 +1,31 @@
-import { Achievement, Education, Experience, Interest, Link, ProfileExtended, ProjectClientExtended, ProjectExtended, ProjectSkillExtended, SkillExtended } from "@prisma/client"
+import { Achievement, Country, Education, Experience, Interest, Link, ProfileExtended, ProjectClientExtended, ProjectExtended, ProjectSkillExtended, SkillExtended } from "@prisma/client"
 import Image from "next/image"
-import { MdAccountCircle } from "react-icons/md"
 import { format } from 'date-fns'
-
+import { MdDelete, MdEdit, MdAccountCircle } from "react-icons/md"
+import { useState } from "react"
+import UserEdit from "@/components/User/UserEdit"
+import ProfileEdit from "@/components/Profile/ProfileEdit"
+import Links from "@/components/Link/Links"
+import Skills from "@/components/Skill/Skills"
+import Interests from "@/components/Interest/Interests"
+import Achievements from "@/components/Achievement/Achievements"
+import Educations from "@/components/Education/Educations"
 
 type Props = {
     profile: ProfileExtended
     skills: SkillExtended[]
+    countries: Country[]
 }
-export default function UserProfile({ profile, skills }: Props) {
+
+export default function UserProfile({ profile, skills, countries }: Props) {
+    const [editSection, setEditSection] = useState<string | null>(null)
+    function openEdit(section: string) {
+        setEditSection(section)
+    }
+    function close() {
+        setEditSection(null)
+    }
+
     return (
         <div>
             <div className="px-4 py-6 bg-base-100 w-full min-[420px]:w-1/3 lg:w-1/4 mb-10 flex items-center justify-center">
@@ -25,7 +42,23 @@ export default function UserProfile({ profile, skills }: Props) {
                 }
             </div>
             <div className="mt-6 mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Personal Information</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Personal Information</span>
+                    <div className="flex justify-between items-start flex-wrap gap-10">
+                        <button
+                            className="btn btn-sm btn-error"
+                            onClick={() => openEdit('user')}
+                        >
+                            Edit User
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success"
+                            onClick={() => openEdit('profile')}
+                        >
+                            Edit Profile
+                        </button>
+                    </div>
+                </dt>
                 <div className="">
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-secondary">Role</dt>
@@ -91,7 +124,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mt-6 mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Links</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Links</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('links')}
+                    />
+                </dt>
                 <div className="">
                     {profile.links.map(
                         (link: Link, index: number, array: Link[]) => (
@@ -106,7 +146,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Technical Skills</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Technical Skills</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('skills')}
+                    />
+                </dt>
                 <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                     {skills.map(
                         (skill: SkillExtended, index: number, array: SkillExtended[]) => (
@@ -118,7 +165,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </dd>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Projects</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Projects</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('projects')}
+                    />
+                </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.projects.filter((project: ProjectExtended, index: number, array: ProjectExtended[]) => {
                         if (project.tags && project.tags?.findIndex(e => e.tag.name === "project") > -1)
@@ -187,7 +241,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Work Experience</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Work Experience</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('experiences')}
+                    />
+                </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.experiences.map(
                         (experience: Experience, index: number, array: Experience[]) => (
@@ -242,7 +303,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Education</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Education</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('educations')}
+                    />
+                </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.educations.map(
                         (education: Education, index: number, array: Education[]) => (
@@ -285,7 +353,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Achievements</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Achievements</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('achievements')}
+                    />
+                </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.achievements.map(
                         (achievement: Achievement, index: number, array: Achievement[]) => (
@@ -308,7 +383,14 @@ export default function UserProfile({ profile, skills }: Props) {
                 </div>
             </div>
             <div className="mb-10">
-                <dt className="font-medium text-gray-900 mb-5">Interests</dt>
+                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                    <span>Interests</span>
+                    <MdEdit
+                        title="Edit"
+                        className=""
+                        onClick={() => openEdit('interests')}
+                    />
+                </dt>
                 <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                     {profile.interests.map(
                         (interest: Interest, index: number, array: Interest[]) => (
@@ -319,6 +401,76 @@ export default function UserProfile({ profile, skills }: Props) {
                         ))}
                 </dd>
             </div>
+            {
+                editSection !== null &&
+                <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div className="fixed inset-0 bg-black bg-opacity-95 transition-opacity"></div>
+                    <div className="fixed inset-0 z-10 overflow-y-auto">
+                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                            <div className="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 w-[98%] sm:w-[80%] p-8">
+                                {/* Content */}
+                                {
+                                    editSection === "user" &&
+                                    <UserEdit
+                                        user={profile.user}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "profile" &&
+                                    <ProfileEdit
+                                        profile={profile}
+                                        user={profile.user}
+                                        countries={countries}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "links" &&
+                                    <Links
+                                        links={profile.links}
+                                        profile={profile}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "skills" &&
+                                    <Skills
+                                        skills={skills}
+                                        profile={profile}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "interests" &&
+                                    <Interests
+                                        interests={profile.interests}
+                                        profile={profile}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "achievements" &&
+                                    <Achievements
+                                        achievements={profile.achievements}
+                                        profile={profile}
+                                        close={close}
+                                    />
+                                }
+                                {
+                                    editSection === "educations" &&
+                                    < Educations
+                                        educations={profile.educations}
+                                        profile={profile}
+                                        close={close}
+                                    />
+                                }
+                                {/* End of Content */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     )
 }

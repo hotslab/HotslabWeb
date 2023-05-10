@@ -24,6 +24,20 @@ model Role {
   updatedAt DateTime @updatedAt
 }
 
+model Country {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  code         String?
+  capital      String?
+  region       String?
+  demonym      String?
+  currency     Json?
+  language     Json?
+  flag         String?
+  diallingCode String?
+  isoCode      String?
+}
+
 model User {
   id          Int      @id @default(autoincrement())
   email       String   @unique
@@ -70,7 +84,7 @@ model Profile {
   idNumber     String?
   dob          DateTime?     @db.Date
   sex          Sex
-  countryCode  Int?
+  countryCode  String?
   phoneNumber  Int?
   address      String?
   city         String?

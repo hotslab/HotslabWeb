@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import * as argon2 from "argon2"
 import { Skill } from '@prisma/client'
+import { countries, skills, roles, tags, experiences, educations } from './datasets.mjs'
 
 const prisma = new PrismaClient()
 
@@ -13,11 +14,6 @@ async function main() {
     console.log(`Start seeding ...`)
 
     // ROLES 
-    const roles = [
-        { name: 'Owner', active: true },
-        { name: 'Client', active: true },
-        { name: 'Admin', active: true },
-    ]
     for (const role of roles) await prisma.role.upsert({ where: { name: role.name }, update: {}, create: role })
 
     // USER
@@ -34,9 +30,9 @@ async function main() {
             password: await argon2.hash("joseph"),
             profile: {
                 create: {
-                    dob: new Date(),
+                    dob: new Date('1989-03-07').toISOString(),
                     sex: "male",
-                    countryCode: 263,
+                    countryCode: "+263",
                     phoneNumber: 779101562,
                     address: "Mabelreign",
                     city: "Harare",
@@ -90,214 +86,19 @@ async function main() {
     })
 
     // TAGS
-    const tags = [
-        "project",
-        "portfolio",
-        "design",
-    ]
-
     for (const tag of tags) await prisma.tag.upsert({ where: { name: tag }, update: {}, create: { name: tag } })
 
     // SKILLS
-
-    const skills = [
-        "JavaScript",
-        "Typescript",
-        "PHP",
-        "HTML",
-        "SQL",
-        "CSS",
-        "Java",
-        "Python",
-        "Bash",
-        "Git",
-        "Gitlab",
-        "Github",
-        "Node",
-        "AdonisJS",
-        "Docker",
-        "Kubernetes",
-        "Jquery",
-        "AngularJS",
-        "React",
-        "Angular",
-        "Vue",
-        "Laravel",
-        "Yii",
-        "Symfony",
-        "GraphQL",
-        "Quasar",
-        "NextJS",
-        "Redux",
-        "npm",
-        "composer",
-        "Cordova",
-        "Apollo",
-        "WebRTC",
-        "SocketIO",
-        "ElasticSearch",
-        "Capacitor",
-        "SOAP",
-        "HTTP",
-        "REST",
-        "JSONAPI",
-        "AWS",
-        "Linux",
-        "MySQL",
-        "MariaDB",
-        "Postgre",
-        "MSSQL",
-        "MongoDB",
-        "Redis",
-        "Nginx",
-        "Apache",
-        "Wordpress",
-        "WooCommerce",
-        "TailwindCSS",
-        "Bootstrap",
-        "JIRA",
-        "Notion",
-        "Slack",
-        "Google Cloud",
-        "Express",
-        "Koa",
-        "Cypress",
-        "Electron",
-        "Gimp",
-        "Photoshop",
-        "InkScape",
-        "GooglePlay",
-        "IOS",
-        "Xcode",
-        "Android Studio",
-        "Puppeteer",
-        "XML",
-        "Markdown",
-        "CPanel"
-    ]
-
     for (const skill of skills)
         await prisma.skill.upsert({ where: { name: skill }, update: {}, create: { name: skill } })
 
+    // COUNTRIES
+    for (const country of countries)
+        await prisma.country.upsert({ where: { name: country.name }, update: {}, create: country })
+
 
     // EXPERIENCES
-    const experiences = [
-        {
-            profileId: user?.profile?.id as any,
-            title: "Full Stack Engineer",
-            employmentType: "Full Time",
-            companyName: "Superb Aps",
-            location: "Zimbabwe",
-            locationType: "Remote",
-            isCurrentPosition: false,
-            startDate: new Date("2022-09-01").toISOString(),
-            endDate: new Date("2022-12-31").toISOString(),
-            industry: "Software Development",
-            description: `
-            I worked as a full stack engineer at Superb Aps from October to December 2022. I was unfortunately laid
-            off from my job at the start of December. This is due to one of the company’s venture capital funders
-            pulling out unexpectedly in the latest funding round, citing some financial trouble on their end due to the
-            economic downturn in the market. This unfortunately forced Superb Aps to lay off a large part of its staff
-            to cut costs.
-            The technology stack I worked on was mostly based on JavaScript both the frontend and backend. I
-            worked with React.js, MongoDB, Redis, Koa.js, Docker, Kubernetes, AWS, Mailtrap and other various
-            tools a bit lengthy to mention here, but will be happy to elaborate on should you request for it.
-            For reference please contact Mr Henrik Karlsson (CTO) at henrik.karlsson@superbexperience.com
-            `
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: "Full Stack Software Developer",
-            employmentType: "Full Time",
-            companyName: "Evision/Ebit Technologies",
-            location: "South Africa and Zimbabwe",
-            locationType: "Hybrid",
-            isCurrentPosition: false,
-            startDate: new Date("2016-08-01").toISOString(),
-            endDate: new Date("2022-08-31").toISOString(),
-            industry: "Software Development",
-            description: `
-            I worked as an onsite full stack software developer from August 2016 to 2020 in South Africa, and
-            remotely in Zimbabwe until end of September 2022, building web applications targeting desktop and
-            mobile environments for our major customer and one of South Africa’s biggest debt collectors, Nimble
-            Group (Pty) Ltd (https://nimblegroup.co.za).
-            The technology stack we primarily use is JavaScript on the frontend via the VueJS framework, and PHP
-            on the backend via the Laravel framework. We also use NodeJS in the server to run other services like
-            sockets via SocketIO, and to interact with in-memory databases like Redis for fast data access.
-            For reference please contact Mr Corne Dreyer (Managing Director) at corne@evision.co.za / +2721 003
-            0087.
-            `
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: "Freelance Web Developer",
-            employmentType: "Part Time",
-            companyName: "Hotslab",
-            location: "South Africa",
-            locationType: "Onsite",
-            isCurrentPosition: false,
-            startDate: new Date("2015-10-01").toISOString(),
-            endDate: new Date("2016-09-01").toISOString(),
-            industry: "Software Development",
-            description: `
-            Web design and development from September 2015 to August 2016 on a freelance basis. The work
-            consisted of managing an e-commerce store called Buladeals (https://www.buladeals.com), on a part time
-            basis. I also worked on various projects built under my own portfolio agency, operating under the
-            business name of Hotslab (http://www.hotslab.com). Most of the sites were built using WordPress.
-            `
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: "Cashier",
-            employmentType: "Part Time",
-            companyName: "The Cape Wheel",
-            location: "South Africa",
-            locationType: "Onsite",
-            isCurrentPosition: false,
-            startDate: new Date("2014-12-02").toISOString(),
-            endDate: new Date("2015-09-31").toISOString(),
-            industry: "Hospitality",
-            description: `
-            Cashier for the Cape Wheel in the VA Waterfront Shopping Centre, on a part-time contract starting from 2
-            December 2014 up to September 2015. For reference please call Mr Brynn Roberts (General Manager)
-            on 021 418 2502.
-            `
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: "Store Room Manager",
-            employmentType: "Full Time",
-            companyName: "Fastway Couriers (Pty) Ltd",
-            location: "South Africa",
-            locationType: "Onsite",
-            isCurrentPosition: false,
-            startDate: new Date("2015-02-01").toISOString(),
-            endDate: new Date("2015-06-31").toISOString(),
-            industry: "Freight Services",
-            description: `
-            Store Room Supervisor at Fastway Couriers, starting from February 2015 to end June 2015. For
-            reference please call Mrs Phyllis Timba (Financial Manager) on 0861 222 882 or 076 914 5584.
-            `
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: "Call Centre Sales Agent",
-            employmentType: "Full Time",
-            companyName: "Netsurit IT Support (Pty) Ltd",
-            location: "South Africa",
-            locationType: "Onsite",
-            isCurrentPosition: false,
-            startDate: new Date("2014-07-01").toISOString(),
-            endDate: new Date("2014-09-31").toISOString(),
-            industry: "IT Services",
-            description: `
-            Outbound Telephonic Sales Consultant at Netsurit for a 3 month contract beginning 1 August 2014 and ending
-            31 October 2014. Contact Mr Christian Papst on 021 404 3600.
-            `
-        },
-    ]
-
-    for (const experience of experiences)
+    for (const experience of experiences.map(e => { return { profileId: user?.profile?.id as any, ...e } }))
         if (!await prisma.experience.findFirst({ where: { profileId: user?.profile?.id as any, title: experience.title, companyName: experience.companyName } }))
             await prisma.experience.create({ data: experience })
 
@@ -1627,36 +1428,7 @@ async function main() {
 
 
     // EDUCATION
-    const educations = [
-        {
-            profileId: user?.profile?.id as any,
-            title: 'Bachelor of Social Science',
-            school: 'University of Kwa-Zulu Natal',
-            location: "South Africa",
-            description: `
-            Majored in Economics and Development Studies under the 
-            Zimababwe Presidential Scholarship program for disadvantaged students.
-            `,
-            startDate: new Date('2010-01-01').toISOString(),
-            endDate: new Date('2012-12-31').toISOString()
-        },
-        {
-            profileId: user?.profile?.id as any,
-            title: 'ZIMSEC 2007 A-Levels',
-            school: 'Ellis Robins Boys High School',
-            location: "Zimbabwe",
-            description: `
-            High school education completed with the following grades:
-            i. Economics – A
-            ii. Management of Business – B
-            iii. Accounting – C
-            `,
-            startDate: new Date('2002-01-01').toISOString(),
-            endDate: new Date('2007-12-31').toISOString()
-        }
-    ]
-
-    for (const education of educations)
+    for (const education of educations.map(e => { return { profileId: user?.profile?.id as any, ...e } }))
         if (!await prisma.education.findFirst({ where: { profileId: user?.profile?.id as any, title: education.title, school: education.school } }))
             await prisma.education.create({ data: education })
 

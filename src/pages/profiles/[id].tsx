@@ -1,13 +1,14 @@
 import Layout from "@/components/Layout"
-import UserProfile from '@/components/UserProfile'
+import UserProfile from '@/components/Profile/UserProfile'
+import UserProfileEdit from "@/components/Profile/UserProfileEdit"
 import { useRouter } from 'next/router'
-import { ProfileExtended, SkillExtended } from "@prisma/client"
+import { Country, ProfileExtended, SkillExtended } from "@prisma/client"
 import { useState } from "react"
 import { MdDelete, MdEdit } from "react-icons/md"
 
-type Props = { profile: ProfileExtended, skills: SkillExtended[] }
+type Props = { profile: ProfileExtended, skills: SkillExtended[], countries: Country[] }
 
-export default function Profile({ profile, skills }: Props) {
+export default function Profile({ profile, skills, countries }: Props) {
     const router = useRouter()
     const [editProfile, setEditProfile] = useState(false)
     console.log('profile', profile, skills)
@@ -57,13 +58,7 @@ export default function Profile({ profile, skills }: Props) {
                             </div>
                         </div>
                     </div>
-                    {
-                        editProfile
-                            ? <div className="flex justify-center items-center mt-20 p-8 font-bold text-2xl">
-                                <h2 className="text-primary">Edit profile information</h2>
-                            </div>
-                            : <UserProfile profile={profile} skills={skills} />
-                    }
+                    <UserProfile profile={profile} skills={skills} countries={countries} />
                 </div>
             </div>
         </Layout>
@@ -71,8 +66,10 @@ export default function Profile({ profile, skills }: Props) {
 }
 
 export async function getServerSideProps(context: any) {
-    let profile = null
-    let skills: SkillExtended[] = []
+    let profile: ProfileExtended | null = null
+    let skills: SkillExtended[] | [] = []
+    let countries: Country | [] = []
+
     await fetch(`http://localhost:3000/api/profile/${context.query.id}`, {
         method: "GET",
         headers: {
@@ -87,5 +84,10 @@ export async function getServerSideProps(context: any) {
         },
     }).then(async response => skills = (await response.json()).data)
         .catch(error => console.error(error))
-    return { props: { profile, skills } }
+    await fetch(`http://localhost:3000/api/country`, {
+        method: "GET",
+        headers: { "content-type": "application/json" },
+    }).then(async response => countries = (await response.json()).data)
+        .catch(error => console.error(error))
+    return { props: { profile, skills, countries } }
 }
