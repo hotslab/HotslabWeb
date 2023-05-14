@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Profile } from '@prisma/client'
@@ -26,46 +25,69 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method } = req
-    const id = parseInt(query.id as string, 10)
-    const profile: Profile | null = await prisma.profile.findUnique({
-        where: { userId: parseInt(req.query.id as string, 10) },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    surname: true,
-                    client: true,
-                    roleId: true,
-                    role: true,
-                    active: true,
-                    showProfile: true,
-                    createdAt: true,
-                    updatedAt: true,
-                }
-            },
-            experiences: true,
-            educations: true,
-            achievements: true,
-            projects: {
-                select: {
-                    projectName: true,
-                    isOngoing: true,
-                    startDate: true,
-                    endDate: true,
-                    description: true,
-                    experiences: { select: { experience: true } },
-                    skills: { select: { skill: true } },
-                    tags: { select: { tag: true } }
-                }
-            },
-            interests: true,
-            links: true,
-        }
-    })
-    res.status(200).json({ data: profile })
+    try {
+        const { query, method } = req
+        const id = parseInt(query.id as string, 10)
+        const profile: Profile | null = await prisma.profile.findUnique({
+            where: { userId: parseInt(req.query.id as string, 10) },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                        surname: true,
+                        client: true,
+                        roleId: true,
+                        role: true,
+                        active: true,
+                        showProfile: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    }
+                },
+                experiences: {
+                    select: {
+                        id: true,
+                        profileId: true,
+                        title: true,
+                        employmentType: true,
+                        companyName: true,
+                        location: true,
+                        locationType: true,
+                        isCurrentPosition: true,
+                        startDate: true,
+                        endDate: true,
+                        industry: true,
+                        description: true,
+                        skills: { select: { id: true, skill: true } },
+                        projects: { select: { id: true, project: true } }
+                    }
+                },
+                educations: true,
+                achievements: true,
+                projects: {
+                    select: {
+                        id: true,
+                        projectName: true,
+                        isOngoing: true,
+                        startDate: true,
+                        endDate: true,
+                        description: true,
+                        experiences: { select: { experience: true } },
+                        skills: { select: { skill: true } },
+                        tags: { select: { tag: true } },
+                        images: true
+                    }
+                },
+                interests: true,
+                links: true,
+            }
+        })
+        res.status(200).json({ data: profile })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function update(
@@ -73,26 +95,32 @@ async function update(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const updatedProfile = await prisma.profile.update({
-            where: { id: body.data.id },
-            data: {
-                userId: body.data.userId,
-                idNumber: body.data.idNumber,
-                dob: body.data.dob,
-                sex: body.data.sex,
-                countryCode: body.data.countryCode,
-                phoneNumber: body.data.phoneNumber,
-                address: body.data.address,
-                city: body.data.city,
-                country: body.data.country,
-                postcode: body.data.postcode,
-                summary: body.data.summary,
-            },
-        })
-        res.status(200).json({ data: updatedProfile })
-    } else res.status(400).json({ data: "Unauthorized" })
+    try {
+        if (session) {
+            console.log(req.body)
+            const { query, body } = req
+            const id = parseInt(query.id as string, 10)
+            const updatedProfile = await prisma.profile.update({
+                where: { id: id },
+                data: {
+                    idNumber: body.idNumber,
+                    dob: body.dob,
+                    sex: body.sex,
+                    countryCode: body.countryCode,
+                    phoneNumber: body.phoneNumber,
+                    address: body.address,
+                    city: body.city,
+                    country: body.country,
+                    postcode: body.postcode,
+                    summary: body.summary,
+                },
+            })
+            res.status(200).json({ data: updatedProfile })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function erase(
@@ -100,9 +128,13 @@ async function erase(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedProfile = await prisma.profile.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedProfile })
-    } else res.status(400).json({ data: "Unauthorized" })
+    try {
+        if (session) {
+            const body = JSON.parse(req.body)
+            const deletedProfile = await prisma.profile.delete({ where: { id: body.data.id } })
+            res.status(200).json({ data: deletedProfile })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

@@ -2,21 +2,16 @@ import Layout from "@/components/Layout"
 import UserProfile from '@/components/Profile/UserProfile'
 import UserProfileEdit from "@/components/Profile/UserProfileEdit"
 import { useRouter } from 'next/router'
-import { Country, ProfileExtended, SkillExtended } from "@prisma/client"
+import { Country, ProfileExtended, Role, SkillExtended } from "@prisma/client"
 import { useState } from "react"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 
-type Props = { profile: ProfileExtended, skills: SkillExtended[], countries: Country[] }
+type Props = { profile: ProfileExtended, skills: SkillExtended[], countries: Country[], roles: Role[] }
 
-export default function Profile({ profile, skills, countries }: Props) {
+export default function Profile({ profile, skills, countries, roles }: Props) {
     const router = useRouter()
     const [editProfile, setEditProfile] = useState(false)
-    console.log('profile', profile, skills)
     const dataString: string | null = typeof router.query.data == 'string' ? router.query.data : null
-
-    function deleteProfile() {
-        console.log("delete profile")
-    }
 
     return (
         <Layout>
@@ -32,25 +27,8 @@ export default function Profile({ profile, skills, countries }: Props) {
                                 }
                             </span>
                             <div className="flex justify-between items-center gap-5">
-                                {
-                                    !editProfile &&
-                                    <MdDelete
-                                        title="Delete"
-                                        className=""
-                                        onClick={() => deleteProfile()}
-                                    />
-                                }
-                                {
-                                    !editProfile &&
-                                    <MdEdit
-                                        title="Edit"
-                                        className=""
-                                        onClick={() => setEditProfile(true)}
-                                    />
-                                }
-
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-error text-white"
                                     onClick={editProfile ? () => setEditProfile(false) : () => router.push("/profiles")}
                                 >
                                     Back
@@ -58,7 +36,7 @@ export default function Profile({ profile, skills, countries }: Props) {
                             </div>
                         </div>
                     </div>
-                    <UserProfile profile={profile} skills={skills} countries={countries} />
+                    <UserProfile profile={profile} skills={skills} countries={countries} roles={roles} />
                 </div>
             </div>
         </Layout>
@@ -68,7 +46,8 @@ export default function Profile({ profile, skills, countries }: Props) {
 export async function getServerSideProps(context: any) {
     let profile: ProfileExtended | null = null
     let skills: SkillExtended[] | [] = []
-    let countries: Country | [] = []
+    let countries: Country[] | [] = []
+    let roles: Role[] | [] = []
 
     await fetch(`http://localhost:3000/api/profile/${context.query.id}`, {
         method: "GET",
@@ -89,5 +68,10 @@ export async function getServerSideProps(context: any) {
         headers: { "content-type": "application/json" },
     }).then(async response => countries = (await response.json()).data)
         .catch(error => console.error(error))
-    return { props: { profile, skills, countries } }
+    await fetch(`http://localhost:3000/api/role`, {
+        method: "GET",
+        headers: { "content-type": "application/json" },
+    }).then(async response => roles = (await response.json()).data)
+        .catch(error => console.error(error))
+    return { props: { profile, skills, countries, roles } }
 }

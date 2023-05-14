@@ -1,11 +1,14 @@
 import { Achievement, ProfileExtended } from "@prisma/client";
-import { useState } from "react"
+import { useRouter } from "next/router";
+import { use, useState } from "react"
 
 type props = { achievement: Achievement | null, profile: ProfileExtended, close: Function }
 
 export default function LinkEdit({ achievement, profile, close }: props) {
     const [name, setName] = useState(achievement?.name || "")
     const [description, setDescription] = useState(achievement?.description || "")
+
+    const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
@@ -19,7 +22,8 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 method: achievement ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                close()
+                if (response.ok) { close(), router.replace(router.asPath) }
+                else console.error(response.body)
             })
             .catch(error => console.error(error))
     }
@@ -32,13 +36,13 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 </span>
                 <div className="flex justify-between items-start flex-wrap gap-10">
                     <button
-                        className="btn btn-sm btn-error"
+                        className="btn btn-sm btn-error text-white"
                         onClick={() => close()}
                     >
                         Back
                     </button>
                     <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-success text-white"
                         onClick={() => saveOrUpdate()}
                     >
                         {achievement ? 'Update' : 'Save'}

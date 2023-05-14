@@ -15,7 +15,8 @@ import {
     ProjectImage,
     ProjectTag,
     ProjectExperience,
-    ProjectClient
+    ProjectClient,
+    ExperienceSkill
 } from "@prisma/client"
 
 declare module "@prisma/client" {
@@ -30,7 +31,7 @@ declare module "@prisma/client" {
         achievements: Achievement[]
         links: Link[]
         projects: ProjectExtended[]
-        experiences: Experience[]
+        experiences: ExperienceExtended[]
         educations: Education[]
         interests: Interest[]
     }
@@ -55,6 +56,11 @@ declare module "@prisma/client" {
         updatedAt?: string
     }
 
+    interface ExperienceExtended extends Experience {
+        projects: ProjectExperienceExtended[]
+        skills: ExperienceSkillExtended[]
+    }
+
     interface ProjectTagExtended extends ProjectTag {
         tag: Tag
         project: Project
@@ -72,6 +78,11 @@ declare module "@prisma/client" {
 
     interface ProjectSkillExtended extends ProjectSkill {
         project: Project,
+        skill: Skill
+    }
+
+    interface ExperienceSkillExtended extends ExperienceSkill {
+        experience: Experience
         skill: Skill
     }
 }

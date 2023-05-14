@@ -1,11 +1,14 @@
-import { ProfileExtended, Skill } from "@prisma/client"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { Skill } from "@prisma/client"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 import SkillEdit from "@/components/Skill/SkilEdit"
 import { useState } from "react"
 
-type props = { skills: Skill[], profile: ProfileExtended, close: Function }
+type props = {
+    skills: Skill[] | []
+    close: Function
+}
 
-export default function Skills({ skills, profile, close }: props) {
+export default function Skills({ skills, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
     function openEdit(skill: Skill | null) {
@@ -30,13 +33,13 @@ export default function Skills({ skills, profile, close }: props) {
                             </span>
                             <div className="flex justify-between items-start flex-wrap gap-10">
                                 <button
-                                    className="btn btn-sm btn-error"
+                                    className="btn btn-sm btn-error text-white"
                                     onClick={() => close()}
                                 >
                                     Back
                                 </button>
                                 <button
-                                    className="btn btn-sm btn-success"
+                                    className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
                                     New Skill
@@ -58,14 +61,14 @@ export default function Skills({ skills, profile, close }: props) {
                                         (skill: Skill, index: number, array: Skill[]) => (
                                             <tr key={index} className="hover">
                                                 <th className="flex justify-start items-center gap-5 py-5">
-                                                    <MdEdit
+                                                    <MdEditSquare
                                                         title="Edit"
-                                                        className=""
+                                                        className="text-success cursor-pointer"
                                                         onClick={() => openEdit(skill)}
                                                     />
                                                     <MdDelete
                                                         title="Delete"
-                                                        className=""
+                                                        className="text-error cursor-pointer"
                                                         onClick={() => deleteItem(skill)}
                                                     />
                                                 </th>
@@ -77,7 +80,7 @@ export default function Skills({ skills, profile, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <SkillEdit skill={selectedSkill} profile={profile} close={closeEdit} />}
+                    : <SkillEdit skill={selectedSkill} close={closeEdit} />}
         </div>
     )
 }

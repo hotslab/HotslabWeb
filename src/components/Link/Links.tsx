@@ -1,19 +1,33 @@
 import { Link, ProfileExtended } from "@prisma/client"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 import LinkEdit from "@/components/Link/LinkEdit"
 import { useState } from "react"
+import { useRouter } from "next/router"
 
 type props = { links: Link[], profile: ProfileExtended, close: Function }
 
 export default function Links({ links, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedLink, setSelectedLink] = useState<Link | null>(null)
+
+    const router = useRouter()
+
     function openEdit(link: Link | null) {
         setSelectedLink(link)
         setShowEdit(true)
     }
-    function deleteItem(link: Link) {
-        //
+    async function deleteItem(link: Link) {
+        await fetch(
+            `http://localhost:3000/api/link/${link.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                },
+            }).then(async response => {
+                if (response.ok) router.replace(router.asPath)
+                else console.error(response.body)
+            })
     }
     function closeEdit() {
         setSelectedLink(null)
@@ -30,13 +44,13 @@ export default function Links({ links, profile, close }: props) {
                             </span>
                             <div className="flex justify-between items-start flex-wrap gap-10">
                                 <button
-                                    className="btn btn-sm btn-error"
+                                    className="btn btn-sm btn-error text-white"
                                     onClick={() => close()}
                                 >
                                     Back
                                 </button>
                                 <button
-                                    className="btn btn-sm btn-success"
+                                    className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
                                     New Link
@@ -59,14 +73,14 @@ export default function Links({ links, profile, close }: props) {
                                         (link: Link, index: number, array: Link[]) => (
                                             <tr key={index} className="hover">
                                                 <th className="flex justify-start items-center gap-5 py-5">
-                                                    <MdEdit
+                                                    <MdEditSquare
                                                         title="Edit"
-                                                        className=""
+                                                        className="text-success cursor-pointer"
                                                         onClick={() => openEdit(link)}
                                                     />
                                                     <MdDelete
                                                         title="Delete"
-                                                        className=""
+                                                        className="text-error cursor-pointer"
                                                         onClick={() => deleteItem(link)}
                                                     />
                                                 </th>

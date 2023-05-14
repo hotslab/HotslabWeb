@@ -1,19 +1,19 @@
-import { Skill, ProfileExtended } from "@prisma/client";
+import { Skill } from "@prisma/client";
 import { useState } from "react"
 
-type props = { skill: Skill | null, profile: ProfileExtended, close: Function }
+type props = {
+    skill: Skill | null
+    close: Function
+}
 
-export default function LinkEdit({ skill, profile, close }: props) {
+export default function LinkEdit({ skill, close }: props) {
     const [name, setName] = useState(skill?.name || "")
 
     async function saveOrUpdate() {
         await fetch(
             skill ? `http://localhost:3000/api/skill/${skill.id}` : `http://localhost:3000/api/skill`,
             {
-                body: JSON.stringify({
-                    name: name,
-                    profileId: profile?.id || null
-                }),
+                body: JSON.stringify({ name: name }),
                 method: skill ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
@@ -30,13 +30,13 @@ export default function LinkEdit({ skill, profile, close }: props) {
                 </span>
                 <div className="flex justify-between items-start flex-wrap gap-10">
                     <button
-                        className="btn btn-sm btn-error"
+                        className="btn btn-sm btn-error text-white"
                         onClick={() => close()}
                     >
                         Back
                     </button>
                     <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-success text-white"
                         onClick={() => saveOrUpdate()}
                     >
                         {skill ? 'Update' : 'Save'}

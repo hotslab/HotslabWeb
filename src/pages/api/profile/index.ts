@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Profile } from '@prisma/client'
@@ -25,8 +24,10 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const profiles: Profile[] = await prisma.profile.findMany({
-        include: {
+    try {
+        const { query, method }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {
             user: {
                 select: {
                     id: true,
@@ -48,9 +49,16 @@ async function index(
             interests: true,
             links: true,
         }
-    })
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json({ data: profiles })
+        selectData.where.user = { active: true }
+        const profiles: Profile[] = await prisma.profile.findMany({
+            ...selectData,
+            include: includeData
+        })
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({ data: profiles })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function create(
@@ -58,23 +66,27 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const newProfile = await prisma.profile.create({
-            data: {
-                userId: body.data.userId,
-                idNumber: body.data.idNumber,
-                dob: body.data.dob,
-                sex: body.data.sex,
-                countryCode: body.data.countryCode,
-                phoneNumber: body.data.phoneNumber,
-                address: body.data.address,
-                city: body.data.city,
-                country: body.data.country,
-                postcode: body.data.postcode,
-                summary: body.data.summary,
-            },
-        })
-        res.status(200).json({ data: newProfile })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const body = JSON.parse(req.body)
+            const newProfile = await prisma.profile.create({
+                data: {
+                    userId: body.data.userId,
+                    idNumber: body.data.idNumber,
+                    dob: body.data.dob,
+                    sex: body.data.sex,
+                    countryCode: body.data.countryCode,
+                    phoneNumber: body.data.phoneNumber,
+                    address: body.data.address,
+                    city: body.data.city,
+                    country: body.data.country,
+                    postcode: body.data.postcode,
+                    summary: body.data.summary,
+                },
+            })
+            res.status(200).json({ data: newProfile })
+        } else throw new Error("Unauthorized")
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

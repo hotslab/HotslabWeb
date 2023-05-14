@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Skill, Project } from '@prisma/client'
 import * as argon2 from "argon2"
-import { Skill } from '@prisma/client'
 import { countries, skills, roles, tags, experiences, educations } from './datasets.mjs'
 
 const prisma = new PrismaClient()
@@ -1423,8 +1422,15 @@ async function main() {
         }
     ]
 
-    for (const project of projects)
-        await prisma.project.upsert({ where: { projectName: project.projectName }, update: {}, create: project })
+    for (const project of projects) {
+        const exists: Project[] | [] = await prisma.project.findMany({
+            where: {
+                projectName: project.projectName,
+                description: project.description
+            }
+        })
+        if (exists.length === 0) await prisma.project.create({ data: project })
+    }
 
 
     // EDUCATION

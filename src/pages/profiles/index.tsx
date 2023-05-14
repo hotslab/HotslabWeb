@@ -51,7 +51,7 @@ export default function Profiles({ profiles }: Props) {
                                         </div>
                                         <div className="card-actions justify-end w-full">
                                             <button
-                                                className="btn btn-primary"
+                                                className="btn btn-success text-white"
                                                 onClick={() => router.push({ pathname: `/profiles/${profile.userId}` })}
                                             >
                                                 open

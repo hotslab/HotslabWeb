@@ -1,36 +1,42 @@
 import { useState } from "react"
-import { UserExtended } from "@prisma/client"
+import { Role, UserExtended } from "@prisma/client"
+import { useRouter } from "next/router"
 
-type props = { user: UserExtended | null, close: Function }
+type props = { user: UserExtended | null, roles: Role[], close: Function }
 
-export default function UserEdit({ user, close }: props) {
-    const [email, setEmail] = useState(user ? user.email : "")
+export default function UserEdit({ user, roles, close }: props) {
+    const [email, setEmail] = useState(user?.email || "")
     const [password, setPassword] = useState("")
-    const [name, setName] = useState(user ? user.name : "")
-    const [surname, setSurname] = useState(user ? user.surname : "")
+    const [name, setName] = useState(user?.name || "")
+    const [surname, setSurname] = useState(user?.surname || "")
     const [active, setActive] = useState(user ? Boolean(user.active) : false)
     const [showProfile, setShowProfile] = useState(user ? Boolean(user.showProfile) : false)
+    const [roleId, setRoleId] = useState(user?.roleId)
+
+    const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
             user ? `http://localhost:3000/api/user/${user.id}` : `http://localhost:3000/api/user`,
             {
                 body: JSON.stringify({
+                    // id: user?.id,
                     email: email,
                     password: password,
                     name: name,
                     surname: surname,
                     active: active,
                     showProfile: showProfile,
+                    roleId: roleId
                 }),
                 method: user ? "PUT" : "POST",
                 headers: {
                     "content-type": "application/json",
                 },
             }).then(async response => {
-                close()
+                if (response.ok) { close(), router.replace(router.asPath) }
+                else console.error(response.body)
             })
-            .catch(error => console.error(error))
     }
 
     return (
@@ -41,13 +47,13 @@ export default function UserEdit({ user, close }: props) {
                 </span>
                 <div className="flex justify-between items-start flex-wrap gap-10">
                     <button
-                        className="btn btn-sm btn-error"
+                        className="btn btn-sm btn-error text-white"
                         onClick={() => close()}
                     >
                         Back
                     </button>
                     <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-success text-white"
                         onClick={() => saveOrUpdate()}
                     >
                         {user ? 'Update' : 'Save'}
@@ -134,6 +140,23 @@ export default function UserEdit({ user, close }: props) {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
+                </div>
+                <div className="form-control w-full">
+                    <label className="label">
+                        <span className="label-text text-gray-600">Role</span>
+                    </label>
+                    <select
+                        className="select select-bordered"
+                        value={roleId}
+                        onChange={e => setRoleId(Number(e.target.value))}
+                    >
+                        {roles.map(
+                            (role: Role, index: number, array: Role[]) => (
+                                <option key={index} value={role.id}>
+                                    {role.name}
+                                </option>
+                            ))}
+                    </select>
                 </div>
             </div>
         </div>

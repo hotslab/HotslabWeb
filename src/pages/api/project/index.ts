@@ -41,6 +41,11 @@ async function index(
             tag: { is: { OR: ((query as any).tags.split(",")).map((tag: string) => { return { name: tag } }) } }
         }
     }
+    if (query.notExperienceId) selectData.where.experiences = {
+        every: {
+            experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+        }
+    }
     const projects: Project[] = await prisma.project.findMany({
         ...selectData,
         include: includeData

@@ -84,7 +84,7 @@ export default function Login() {
                 {/* onClick={() => login()} */}
                 <button
                     onClick={() => login()}
-                    className="btn btn-lg sm:btn-wide mt-10"
+                    className="btn btn-lg sm:btn-wide mt-10 text-white"
                 >
                     Login
                 </button>

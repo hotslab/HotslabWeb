@@ -1,3 +1,4 @@
+import { Experiences } from '@/components/Experience/Experiences';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
@@ -24,18 +25,24 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method }: NextApiRequest = req
+    const { query }: NextApiRequest = req
     let selectData: { [key: string]: any } = { where: {} }
     let includeData: { [key: string]: any } = {}
-    if (query.userId) {
-        selectData.where.projects = {
-            every: {
-                project: {
-                    is: { profile: { is: { user: { is: { id: parseInt(query.userId as string, 10) } } } } }
-                }
+    if (query.userId) selectData.where.projects = {
+        every: {
+            project: {
+                is: { profile: { is: { user: { is: { id: Number(query.userId) } } } } }
             }
         }
-        includeData = { projects: { select: { projectId: true, project: { select: { projectName: true } } } } }
+    }
+    if (query.notExperienceId) selectData.where.experiences = {
+        every: {
+            experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+        }
+    }
+    includeData = {
+        experiences: { select: { id: true, experience: true } },
+        projects: { select: { id: true, project: true } }
     }
     const skills: Skill[] = await prisma.skill.findMany({ ...selectData, include: includeData })
     res.status(200).json({ data: skills })

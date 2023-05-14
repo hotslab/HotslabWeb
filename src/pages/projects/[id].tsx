@@ -17,7 +17,7 @@ export default function Project({ project }: Props) {
                         <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                             <span>{project.projectName}</span>
                             <button
-                                className="btn btn-secondary"
+                                className="btn btn-error text-white"
                                 onClick={() => router.push("/projects")}
                             >
                                 Back

@@ -1,4 +1,5 @@
-import { Education, ProfileExtended } from "@prisma/client";
+import { Education, ProfileExtended } from "@prisma/client"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -12,6 +13,8 @@ export default function EducationEdit({ education, profile, close }: props) {
     const [description, setDescription] = useState(education?.description || "")
     const [startDate, setStartDate] = useState(education ? new Date(education.startDate) : "")
     const [endDate, setEndDate] = useState(education ? new Date(education.endDate) : "")
+
+    const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
@@ -29,7 +32,8 @@ export default function EducationEdit({ education, profile, close }: props) {
                 method: education ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                close()
+                if (response.ok) { close(), router.replace(router.asPath) }
+                else console.error(response.body)
             })
             .catch(error => console.error(error))
     }
@@ -42,13 +46,13 @@ export default function EducationEdit({ education, profile, close }: props) {
                 </span>
                 <div className="flex justify-between items-start flex-wrap gap-10">
                     <button
-                        className="btn btn-sm btn-error"
+                        className="btn btn-sm btn-error text-white"
                         onClick={() => close()}
                     >
                         Back
                     </button>
                     <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-success text-white"
                         onClick={() => saveOrUpdate()}
                     >
                         {education ? 'Update' : 'Save'}
@@ -56,20 +60,6 @@ export default function EducationEdit({ education, profile, close }: props) {
                 </div>
             </dt>
             <div className="">
-                <div className="form-control w-full">
-                    <label className="label">
-                        <span className="label-text text-gray-600">School</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="school"
-                        placeholder="school"
-                        autoComplete="school"
-                        className="input input-bordered w-full"
-                        value={school}
-                        onChange={(e) => setSchool(e.target.value)}
-                    />
-                </div>
                 <div className="form-control w-full">
                     <label className="label">
                         <span className="label-text text-gray-600">Title</span>
@@ -82,6 +72,20 @@ export default function EducationEdit({ education, profile, close }: props) {
                         className="input input-bordered w-full"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
+                <div className="form-control w-full">
+                    <label className="label">
+                        <span className="label-text text-gray-600">School</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="school"
+                        placeholder="school"
+                        autoComplete="school"
+                        className="input input-bordered w-full"
+                        value={school}
+                        onChange={(e) => setSchool(e.target.value)}
                     />
                 </div>
                 <div className="form-control w-full">

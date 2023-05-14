@@ -1,19 +1,33 @@
 import { ProfileExtended, Achievement } from "@prisma/client"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 import AchievementEdit from "@/components/Achievement/AchievementEdit"
 import { useState } from "react"
+import { useRouter } from "next/router"
 
 type props = { achievements: Achievement[], profile: ProfileExtended, close: Function }
 
 export default function Achievements({ achievements, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null)
+
+    const router = useRouter()
+
     function openEdit(achievement: Achievement | null) {
         setSelectedAchievement(achievement)
         setShowEdit(true)
     }
-    function deleteItem(achievement: Achievement) {
-        //
+    async function deleteItem(achievement: Achievement) {
+        await fetch(
+            `http://localhost:3000/api/achievement/${achievement.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                },
+            }).then(async response => {
+                if (response.ok) router.replace(router.asPath)
+                else console.error(response.body)
+            })
     }
     function closeEdit() {
         setSelectedAchievement(null)
@@ -30,13 +44,13 @@ export default function Achievements({ achievements, profile, close }: props) {
                             </span>
                             <div className="flex justify-between items-start flex-wrap gap-10">
                                 <button
-                                    className="btn btn-sm btn-error"
+                                    className="btn btn-sm btn-error text-white"
                                     onClick={() => close()}
                                 >
                                     Back
                                 </button>
                                 <button
-                                    className="btn btn-sm btn-success"
+                                    className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
                                     New Achievement
@@ -58,14 +72,14 @@ export default function Achievements({ achievements, profile, close }: props) {
                                         (achievement: Achievement, index: number, array: Achievement[]) => (
                                             <tr key={index} className="hover">
                                                 <th className="flex justify-start items-center gap-5 py-5">
-                                                    <MdEdit
+                                                    <MdEditSquare
                                                         title="Edit"
-                                                        className=""
+                                                        className="text-success cursor-pointer"
                                                         onClick={() => openEdit(achievement)}
                                                     />
                                                     <MdDelete
                                                         title="Delete"
-                                                        className=""
+                                                        className="text-error cursor-pointer"
                                                         onClick={() => deleteItem(achievement)}
                                                     />
                                                 </th>

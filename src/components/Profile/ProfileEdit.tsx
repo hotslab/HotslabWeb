@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import Image from "next/image"
 import { MdAccountCircle } from "react-icons/md"
+import { useRouter } from "next/router"
 
 type props = { profile: ProfileExtended | null, user: UserExtended | null, countries: Country[], close: Function }
 
@@ -18,10 +19,13 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     const [country, setCountry] = useState(profile?.country || "")
     const [postcode, setPostcode] = useState(profile?.postcode || "")
     const [summary, setSummary] = useState(profile?.summary || "")
+    const [selectedImage, setSelectedImage] = useState("")
+
+    const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
-            user ? `http://localhost:3000/api/profile/${profile.id}` : `http://localhost:3000/api/profile`,
+            profile ? `http://localhost:3000/api/profile/${profile.id}` : `http://localhost:3000/api/profile`,
             {
                 body: JSON.stringify({
                     idNumber: idNumber,
@@ -34,17 +38,43 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     country: country,
                     postcode: postcode,
                     summary: summary,
-                    userId: user?.id || null
                 }),
                 method: user ? "PUT" : "POST",
                 headers: {
                     "content-type": "application/json",
                 },
             }).then(async response => {
-                close()
+                if (response.ok) {
+                    console.log(selectedImage, "IMAGE")
+                    const profileData = (await response.json()).data
+                    if (selectedImage) uploadImage(profileData.id)
+                    else { close(), router.replace(router.asPath) }
+                } else console.error(response.body)
             })
             .catch(error => console.error(error))
     }
+
+    async function uploadImage(id: string) {
+        let input = document.querySelector('input[type="file"]') as HTMLInputElement
+        if (input && input.files && input.files.length > 0) {
+            let data = new FormData()
+            data.append('file', input.files[0])
+            data.append('profileId', id)
+
+            await fetch(`http://localhost:3000/api/profile/image/${id}`, {
+                method: 'POST',
+                body: data
+            }).then(response => {
+                if (response.ok) {
+                    setSelectedImage("")
+                    router.replace(router.asPath)
+                    close()
+                }
+                else console.error(response.body)
+            })
+        } else console.error("File input is empty")
+    }
+
 
     return (
         <div className="w-full">
@@ -54,13 +84,13 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                 </span>
                 <div className="flex justify-between items-start flex-wrap gap-10">
                     <button
-                        className="btn btn-sm btn-error"
+                        className="btn btn-sm btn-error text-white"
                         onClick={() => close()}
                     >
                         Back
                     </button>
                     <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-success text-white"
                         onClick={() => saveOrUpdate()}
                     >
                         {profile ? 'Update' : 'Save'}
@@ -81,7 +111,13 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                             : <MdAccountCircle className="text-[200px] h-[100%]" />
                     }
                 </div>
-                <input type="file" className="file-input w-full mb-10" />
+                <input
+                    type="file"
+                    name="profileImage"
+                    className="file-input w-full mb-10"
+                    value={selectedImage}
+                    onChange={(e) => setSelectedImage(e.target.value)}
+                />
                 <div className="form-control w-full">
                     <label className="label">
                         <span className="label-text text-gray-600">ID Number</span>

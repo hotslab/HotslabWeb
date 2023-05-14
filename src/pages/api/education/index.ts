@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Education } from '@prisma/client'
@@ -11,17 +10,12 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    // const body = JSON.parse(req.body);
     const session: Session | null = await getServerSession(req, res, {})
-    switch (req.method) {
-        case 'POST':
-            create(req, res, session)
-        case 'PUT':
-            update(req, res, session)
-        case 'DELETE':
-            erase(req, res, session)
-        default:
-            index(req, res, session)
+    if (req.method === 'GET') index(req, res, session)
+    else if (req.method === 'POST') create(req, res, session)
+    else {
+        res.setHeader('Allow', ['GET', 'POST'])
+        res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }
 
@@ -30,8 +24,17 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const educations: Education[] = await prisma.education.findMany()
-    res.status(200).json({ data: educations })
+    try {
+        const { query }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {
+            profile: true
+        }
+        const educations: Education[] = await prisma.education.findMany({ ...selectData, include: includeData })
+        res.status(200).json({ data: educations })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function create(
@@ -39,54 +42,23 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const newEducation = await prisma.education.create({
-            data: {
-                profileId: body.data.profileId,
-                title: body.data.title,
-                school: body.data.school,
-                location: body.data.location,
-                description: body.data.description,
-                startDate: body.data.startDate,
-                endDate: body.data.endDate,
-            },
-        })
-        res.status(200).json({ data: newEducation })
-    } else throw new Error("Unauthorized")
-}
-
-async function update(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const updatedEducation = await prisma.education.update({
-            where: { id: body.data.id },
-            data: {
-                profileId: body.data.profileId,
-                title: body.data.title,
-                school: body.data.school,
-                location: body.data.location,
-                description: body.data.description,
-                startDate: body.data.startDate,
-                endDate: body.data.endDate,
-            },
-        })
-        res.status(200).json({ data: updatedEducation })
-    } else throw new Error("Unauthorized")
-}
-
-async function erase(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedEducation = await prisma.education.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedEducation })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body } = req
+            const newEducation: Education = await prisma.education.create({
+                data: {
+                    profileId: body.profileId,
+                    title: body.title,
+                    school: body.school,
+                    location: body.location,
+                    description: body.description,
+                    startDate: body.startDate,
+                    endDate: body.endDate,
+                }
+            })
+            res.status(200).json({ data: newEducation })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

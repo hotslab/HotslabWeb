@@ -1,19 +1,33 @@
 import { Interest, ProfileExtended } from "@prisma/client"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 import InterestEdit from "@/components/Interest/InterestEdit"
 import { useState } from "react"
+import { useRouter } from "next/router"
 
 type props = { interests: Interest[], profile: ProfileExtended, close: Function }
 
 export default function Interests({ interests, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedInterest, setSelectedInterest] = useState<Interest | null>(null)
+
+    const router = useRouter()
+
     function openEdit(interest: Interest | null) {
         setSelectedInterest(interest)
         setShowEdit(true)
     }
-    function deleteItem(interest: Interest) {
-        //
+    async function deleteItem(interest: Interest) {
+        await fetch(
+            `http://localhost:3000/api/interest/${interest.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                },
+            }).then(async response => {
+                if (response.ok) router.replace(router.asPath)
+                else console.error(response.body)
+            })
     }
     function closeEdit() {
         setSelectedInterest(null)
@@ -30,13 +44,13 @@ export default function Interests({ interests, profile, close }: props) {
                             </span>
                             <div className="flex justify-between items-start flex-wrap gap-10">
                                 <button
-                                    className="btn btn-sm btn-error"
+                                    className="btn btn-sm btn-error text-white"
                                     onClick={() => close()}
                                 >
                                     Back
                                 </button>
                                 <button
-                                    className="btn btn-sm btn-success"
+                                    className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
                                     New Interest
@@ -58,14 +72,14 @@ export default function Interests({ interests, profile, close }: props) {
                                         (interest: Interest, index: number, array: Interest[]) => (
                                             <tr key={index} className="hover">
                                                 <th className="flex justify-start items-center gap-5 py-5">
-                                                    <MdEdit
+                                                    <MdEditSquare
                                                         title="Edit"
-                                                        className=""
+                                                        className="text-success cursor-pointer"
                                                         onClick={() => openEdit(interest)}
                                                     />
                                                     <MdDelete
                                                         title="Delete"
-                                                        className=""
+                                                        className="text-error cursor-pointer"
                                                         onClick={() => deleteItem(interest)}
                                                     />
                                                 </th>

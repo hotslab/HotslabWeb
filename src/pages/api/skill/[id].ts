@@ -10,7 +10,6 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    // const body = JSON.parse(req.body);
     const session: Session | null = await getServerSession(req, res, {})
     if (req.method === 'GET') index(req, res, session)
     else if (req.method === 'PUT') update(req, res, session)

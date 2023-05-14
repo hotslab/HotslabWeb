@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Layout from "@/components/Layout"
 import { useRouter } from 'next/router'
 import { Country, ProfileExtended, SkillExtended } from "@prisma/client"
-import { MdDelete, MdEdit } from "react-icons/md"
+import { MdDelete, MdEditSquare } from "react-icons/md"
 
 export default function ProfileEdit() {
     const [profile, setProfile] = useState<ProfileExtended | null>(null)
@@ -52,7 +52,7 @@ export default function ProfileEdit() {
                                     onClick={() => deleteProfile()}
                                 />
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-error text-white"
                                     onClick={() => router.push("/profiles")}
                                 >
                                     Back

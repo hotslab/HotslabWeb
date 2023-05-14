@@ -41,7 +41,7 @@ export default function Projects({ projects }: Props) {
                                     <h6 className="card-title text-md">{project.projectName}</h6>
                                     <div className="card-actions justify-end w-full">
                                         <button
-                                            className="btn btn-primary"
+                                            className="btn btn-success text-white"
                                             onClick={() => Router.push(`/projects/${project.id}`)}
                                         >
                                             open
