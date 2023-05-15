@@ -138,7 +138,11 @@ export default function Layout(props: Props) {
             <li onClick={() => Router.push('/skills')}><a>Skills</a></li>
           }
           {
-            status != "authenticated" &&
+            status !== "authenticated" &&
+            <li onClick={() => Router.push('/profiles/1')}><a>Profile</a></li>
+          }
+          {
+            status !== "authenticated" &&
             <li onClick={() => Router.push('/auth/login')}><a>Login</a></li>
           }
         </ul>

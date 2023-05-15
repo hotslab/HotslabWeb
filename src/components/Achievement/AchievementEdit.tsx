@@ -1,5 +1,6 @@
 import { Achievement, ProfileExtended } from "@prisma/client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus";
 import { use, useState } from "react"
 
 type props = { achievement: Achievement | null, profile: ProfileExtended, close: Function }
@@ -11,6 +12,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             achievement ? `http://localhost:3000/api/achievement/${achievement.id}` : `http://localhost:3000/api/achievement`,
             {
@@ -22,8 +24,9 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 method: achievement ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                if (response.ok) { close(), await router.replace(router.asPath) }
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
             .catch(error => console.error(error))
     }

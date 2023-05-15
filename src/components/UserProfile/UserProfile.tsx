@@ -23,6 +23,7 @@ import Achievements from "@/components/Achievement/Achievements"
 import Educations from "@/components/Education/Educations"
 import Experiences from "@/components/Experience/Experiences"
 import Projects from "@/components/Project/Projects"
+import { useSession } from "next-auth/react"
 
 type Props = {
     profile: ProfileExtended
@@ -33,6 +34,9 @@ type Props = {
 
 export default function UserProfile({ profile, skills, countries, roles }: Props) {
     const [editSection, setEditSection] = useState<string | null>(null)
+
+    const { data: session, status } = useSession()
+
     function openEdit(section: string) {
         setEditSection(section)
     }
@@ -65,20 +69,25 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mt-6 mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Personal Information</span>
-                    <div className="flex justify-between items-start flex-wrap gap-10">
-                        <button
-                            className="btn btn-sm btn-success text-white"
-                            onClick={() => openEdit('user')}
-                        >
-                            Edit User
-                        </button>
-                        <button
-                            className="btn btn-sm btn-success text-white"
-                            onClick={() => openEdit('profile')}
-                        >
-                            Edit Profile
-                        </button>
-                    </div>
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+                        <div className="flex justify-between items-start flex-wrap gap-10">
+                            <button
+                                className="btn btn-sm btn-success text-white"
+                                onClick={() => openEdit('user')}
+                            >
+                                Edit User
+                            </button>
+                            <button
+                                className="btn btn-sm btn-success text-white"
+                                onClick={() => openEdit('profile')}
+                            >
+                                Edit Profile
+                            </button>
+                        </div>
+                    }
                 </dt>
                 <div className="">
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -147,11 +156,17 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mt-6 mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Links</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('links')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('links')}
+                        />
+                    }
                 </dt>
                 <div className="">
                     {profile.links.map(
@@ -184,11 +199,16 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Projects</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('projects')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('projects')}
+                        />
+                    }
                 </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.projects.map(
@@ -271,11 +291,17 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Work Experience</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('experiences')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('experiences')}
+                        />
+                    }
                 </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.experiences.map(
@@ -333,11 +359,16 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Education</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('educations')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('educations')}
+                        />
+                    }
                 </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.educations.map(
@@ -383,11 +414,16 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Achievements</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('achievements')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('achievements')}
+                        />
+                    }
                 </dt>
                 <div className="w-full flex flex-col justify-between items-center gap-3">
                     {profile.achievements.map(
@@ -413,11 +449,16 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
                     <span>Interests</span>
-                    <MdEditSquare
-                        title="Edit"
-                        className="text-success text-xl cursor-pointer"
-                        onClick={() => openEdit('interests')}
-                    />
+                    {
+                        status === "authenticated"
+                        && (session.user.role === "Owner" || session.user.role === "Admin")
+                        &&
+                        <MdEditSquare
+                            title="Edit"
+                            className="text-success text-xl cursor-pointer"
+                            onClick={() => openEdit('interests')}
+                        />
+                    }
                 </dt>
                 <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                     {profile.interests.map(

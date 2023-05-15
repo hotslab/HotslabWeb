@@ -2,14 +2,13 @@ import Layout from "@/components/Layout"
 import UserProfile from '@/components/UserProfile/UserProfile'
 import { useRouter } from 'next/router'
 import { Country, ProfileExtended, Role, SkillExtended } from "@prisma/client"
-import { useState } from "react"
+import { useSession } from "next-auth/react"
 
 type Props = { profile: ProfileExtended, skills: SkillExtended[], countries: Country[], roles: Role[] }
 
 export default function Profile({ profile, skills, countries, roles }: Props) {
     const router = useRouter()
-    const [editProfile, setEditProfile] = useState(false)
-    const dataString: string | null = typeof router.query.data == 'string' ? router.query.data : null
+    const { data: session, status } = useSession()
 
     return (
         <Layout>
@@ -24,14 +23,19 @@ export default function Profile({ profile, skills, countries, roles }: Props) {
                                         : 'Profile'
                                 }
                             </span>
-                            <div className="flex justify-between items-center gap-5">
-                                <button
-                                    className="btn btn-error text-white"
-                                    onClick={editProfile ? () => setEditProfile(false) : () => router.push("/profiles")}
-                                >
-                                    Back
-                                </button>
-                            </div>
+                            {
+                                status === "authenticated"
+                                && (session.user.role === "Owner" || session.user.role === "Admin")
+                                &&
+                                <div className="flex justify-between items-center gap-5">
+                                    <button
+                                        className="btn btn-error text-white"
+                                        onClick={() => router.push("/profiles")}
+                                    >
+                                        Back
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
                     <UserProfile profile={profile} skills={skills} countries={countries} roles={roles} />

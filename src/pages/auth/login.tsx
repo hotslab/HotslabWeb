@@ -5,6 +5,7 @@ import { useRouter } from "next/router"
 import { useSession, signIn, SignInResponse, getSession } from "next-auth/react"
 import { Session } from "next-auth"
 import { MdOutlineCancel } from "react-icons/md"
+import eventBus from "@/lib/eventBus"
 
 export default function Login() {
     const router = useRouter()
@@ -14,16 +15,17 @@ export default function Login() {
     const { data: session, status } = useSession()
 
     async function login() {
+        eventBus.dispatch("openLoadingPage", true)
         signIn('credentials', { redirect: false, email: email, password: password })
             .then(async (response: SignInResponse | undefined) => {
                 if (response) {
                     const session: Session | null = await getSession()
-                    response.error ?
-                        setErrorMessage(response.error)
+                    response.error
+                        ? eventBus.dispatch("openErrorModal", response.error)
                         : await router.push({ pathname: `/profiles/${session?.user.id}` })
                 } else setErrorMessage('No Response From Server')
+                eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(e => console.error(e))
     }
 
     return (
