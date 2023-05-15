@@ -1,12 +1,12 @@
-import { Education, ProfileExtended } from "@prisma/client"
+import { Country, Education, ProfileExtended } from "@prisma/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 
-type props = { education: Education | null, profile: ProfileExtended, close: Function }
+type props = { education: Education | null, countries: Country[], profile: ProfileExtended, close: Function }
 
-export default function EducationEdit({ education, profile, close }: props) {
+export default function EducationEdit({ education, countries, profile, close }: props) {
     const [title, setTitle] = useState(education?.title || "")
     const [school, setSchool] = useState(education?.school || "")
     const [location, setLocation] = useState(education?.location || "")
@@ -40,25 +40,25 @@ export default function EducationEdit({ education, profile, close }: props) {
 
     return (
         <div className="w-full">
-            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                <span className="text-lg">
-                    {education ? `Update ${education.school}` : 'Create Education'}
-                </span>
-                <div className="flex justify-between items-start flex-wrap gap-10">
-                    <button
-                        className="btn btn-sm btn-error text-white"
-                        onClick={() => close()}
-                    >
-                        Back
-                    </button>
-                    <button
-                        className="btn btn-sm btn-success text-white"
-                        onClick={() => saveOrUpdate()}
-                    >
-                        {education ? 'Update' : 'Save'}
-                    </button>
+            <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                    <span>{education ? `Update ${education.title}` : 'Create Education'}</span>
+                    <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => close()}
+                        >
+                            Back
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => saveOrUpdate()}
+                        >
+                            {education ? 'Update' : 'Save'}
+                        </button>
+                    </div>
                 </div>
-            </dt>
+            </div>
             <div className="">
                 <div className="form-control w-full">
                     <label className="label">
@@ -92,15 +92,18 @@ export default function EducationEdit({ education, profile, close }: props) {
                     <label className="label">
                         <span className="label-text text-gray-600">Location</span>
                     </label>
-                    <input
-                        type="text"
-                        name="location"
-                        placeholder="location"
-                        autoComplete="location"
-                        className="input input-bordered w-full"
+                    <select
+                        className="select select-bordered"
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                    />
+                        onChange={e => setLocation(e.target.value)}
+                    >
+                        {
+                            countries.map((country: Country, index: number, array: Country[]) => (
+
+                                <option key={index} value={country.name}>{country.name}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="form-control w-full">
                     <label className="label">

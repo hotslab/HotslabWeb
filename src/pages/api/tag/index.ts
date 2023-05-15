@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Tag } from '@prisma/client'
@@ -11,17 +10,12 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    // const body = JSON.parse(req.body);
     const session: Session | null = await getServerSession(req, res, {})
-    switch (req.method) {
-        case 'POST':
-            create(req, res, session)
-        case 'PUT':
-            update(req, res, session)
-        case 'DELETE':
-            erase(req, res, session)
-        default:
-            index(req, res, session)
+    if (req.method === 'GET') index(req, res, session)
+    else if (req.method === 'POST') create(req, res, session)
+    else {
+        res.setHeader('Allow', ['GET', 'POST'])
+        res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }
 
@@ -30,8 +24,17 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const tags: Tag[] = await prisma.tag.findMany()
-    res.status(200).json({ data: tags })
+    try {
+        const { query }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {
+            projects: { select: { id: true, project: true } }
+        }
+        const tags: Tag[] = await prisma.tag.findMany({ ...selectData, include: includeData })
+        res.status(200).json({ data: tags })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function create(
@@ -39,38 +42,15 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const newTag = await prisma.tag.create({
-            data: { name: body.data.name },
-        })
-        res.status(200).json({ data: newTag })
-    } else throw new Error("Unauthorized")
-}
-
-async function update(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const updatedTag = await prisma.tag.update({
-            where: { id: body.data.id },
-            data: { name: body.data.name },
-        })
-        res.status(200).json({ data: updatedTag })
-    } else throw new Error("Unauthorized")
-}
-
-async function erase(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: Session | null
-) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedTag = await prisma.tag.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedTag })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body } = req
+            const newTag = await prisma.tag.create({
+                data: { name: body.name }
+            })
+            res.status(200).json({ data: newTag })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

@@ -1,10 +1,8 @@
 import Layout from "@/components/Layout"
-import UserProfile from '@/components/Profile/UserProfile'
-import UserProfileEdit from "@/components/Profile/UserProfileEdit"
+import UserProfile from '@/components/UserProfile/UserProfile'
 import { useRouter } from 'next/router'
 import { Country, ProfileExtended, Role, SkillExtended } from "@prisma/client"
 import { useState } from "react"
-import { MdDelete, MdEditSquare } from "react-icons/md"
 
 type Props = { profile: ProfileExtended, skills: SkillExtended[], countries: Country[], roles: Role[] }
 

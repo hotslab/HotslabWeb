@@ -11,8 +11,8 @@ export default function Profiles({ profiles }: Props) {
     const { status } = useSession()
     const router = useRouter()
 
-    function getProfileImage(image: string | null) {
-        return image ? `http://localhost:3000${image}` : ""
+    function getDisplayImage(url: string | null): string | null {
+        return url ? `'http://localhost:3000/${url}'` : null
     }
 
     return (
@@ -26,32 +26,37 @@ export default function Profiles({ profiles }: Props) {
                         </div>
                     </div>
                     {profiles.length > 0 ?
-                        <div className="">
+                        <div className="flex justify-between items-center flex-wrap gap-3">
                             {profiles.map((profile: ProfileExtended) => (
                                 <div key={profile.id}
-                                    className="bg-base-100 shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col sm:flex-row justify-center items-center"
+                                    className="bg-base-100 shadow-xl flex flex-col justify-center items-center h-[300px] w-[300px]"
                                 >
-                                    <div className="w-full h-1/3 sm:h-full sm:w-1/5 p-6 flex justify-center items-center">
+                                    <div className="w-full pt-6 flex justify-center items-center">
                                         {
                                             profile.imageUrl
-                                                ? <Image
-                                                    src={profile.imageUrl}
-                                                    alt={`${profile.user.name} ${profile.user.surname}`}
-                                                    width={100}
-                                                    height={100}
-                                                    className="mask mask-circle"
-                                                />
+                                                ?
+                                                <div
+                                                    title={`${profile.user.name} ${profile.user.surname}`}
+                                                    style={{
+                                                        backgroundImage: `url(${getDisplayImage(profile.imageUrl)}`,
+                                                        backgroundSize: "contain",
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "center"
+                                                    }}
+                                                    className="w-[100px] h-[100px] p-0 rounded-full"
+                                                >
+                                                </div>
                                                 : <MdAccountCircle className="text-[100px]" />
                                         }
                                     </div>
-                                    <div className="w-full h-2/3 sm:h-full sm:w-4/5 h-full sm:h-[200px] p-6 flex flex-col justify-between items-start gap-5">
-                                        <div className="w-full flex justify-between items-center flex-wrap gap-3">
-                                            <h6 className="card-title text-md">{profile.user.name} {profile.user.surname}</h6>
-                                            <p className="card-title text-sm">{profile.user.role.name}</p>
+                                    <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
+                                        <div className="w-full flex flex-col justify-between items-start flex-wrap gap-3">
+                                            <p className="card-title text-md sm:text-lg">{profile.user.name} {profile.user.surname}</p>
+                                            <p className="card-title text-xs sm:text-sm">{profile.user.role.name}</p>
                                         </div>
                                         <div className="card-actions justify-end w-full">
                                             <button
-                                                className="btn btn-success text-white"
+                                                className="btn btn-md btn-success text-white"
                                                 onClick={() => router.push({ pathname: `/profiles/${profile.userId}` })}
                                             >
                                                 open

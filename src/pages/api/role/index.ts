@@ -24,17 +24,17 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method, body }: NextApiRequest = req
-    let selectData: { [key: string]: any } = { where: {} }
-    let includeData: { [key: string]: any } = {
-        users: true
+    try {
+        const { query }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {
+            users: true
+        }
+        const roles: Role[] = await prisma.role.findMany({ ...selectData, include: includeData })
+        res.status(200).json({ data: roles })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
     }
-
-    selectData.where = {
-        active: true
-    }
-    const roles: Role[] = await prisma.role.findMany({ ...selectData, include: includeData })
-    res.status(200).json({ data: roles })
 }
 
 async function create(
@@ -42,11 +42,15 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const { body }: NextApiRequest = req
-        const newRole = await prisma.role.create({
-            data: { name: body.data.name, active: body.data.active },
-        })
-        res.status(200).json({ data: newRole })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body } = req
+            const newRole = await prisma.role.create({
+                data: { name: body.name, active: true }
+            })
+            res.status(200).json({ data: newRole })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

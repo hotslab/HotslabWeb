@@ -1,13 +1,13 @@
-import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill } from "@prisma/client";
+import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill, Country } from "@prisma/client";
 import { useState, useEffect } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdAddBox } from "react-icons/md"
 import { useRouter } from "next/router";
 
-type props = { experience: ExperienceExtended | null, profile: ProfileExtended | null, close: Function }
+type props = { experience: ExperienceExtended | null, countries: Country[], profile: ProfileExtended | null, close: Function }
 
-export default function ExperienceEdit({ experience, profile, close }: props) {
+export default function ExperienceEdit({ experience, countries, profile, close }: props) {
     const [editSection, setEditSection] = useState<string | null>(null)
     const [title, setTitle] = useState(experience?.title || "")
     const [employmentType, setEmploymentType] = useState(experience?.employmentType || "")
@@ -136,25 +136,25 @@ export default function ExperienceEdit({ experience, profile, close }: props) {
         <div>
             {editSection === null &&
                 <div className="w-full">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                        <span className="text-lg">
-                            {experience ? `Update ${experience.title}` : 'Create Experience'}
-                        </span>
-                        <div className="flex justify-between items-start flex-wrap gap-10">
-                            <button
-                                className="btn btn-sm btn-error text-white"
-                                onClick={() => close()}
-                            >
-                                Back
-                            </button>
-                            <button
-                                className="btn btn-sm btn-success text-white"
-                                onClick={() => saveOrUpdate()}
-                            >
-                                {experience ? 'Update' : 'Save'}
-                            </button>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>{experience ? `Update ${experience.title}` : 'Create Experience'}</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => close()}
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    className="btn btn-sm btn-success text-white"
+                                    onClick={() => saveOrUpdate()}
+                                >
+                                    {experience ? 'Update' : 'Save'}
+                                </button>
+                            </div>
                         </div>
-                    </dt>
+                    </div>
                     <div className="">
                         <div className="form-control w-full">
                             <label className="label">
@@ -174,15 +174,17 @@ export default function ExperienceEdit({ experience, profile, close }: props) {
                             <label className="label">
                                 <span className="label-text text-gray-600">Employment Type</span>
                             </label>
-                            <input
-                                type="text"
-                                name="employmentType"
-                                placeholder="employmentType"
-                                autoComplete="employmentType"
-                                className="input input-bordered w-full"
-                                value={employmentType}
-                                onChange={(e) => setEmploymentType(e.target.value)}
-                            />
+                            <select
+                                className="select select-bordered"
+                                value={locationType}
+                                onChange={e => setLocationType(e.target.value)}
+                            >
+                                <option value="FullTime">Full Time</option>
+                                <option value="PartTime">Part Time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Temporary">Onsite</option>
+                                <option value="SelfEmployed">Self Employed</option>
+                            </select>
                         </div>
                         <div className="form-control w-full">
                             <label className="label">
@@ -202,29 +204,32 @@ export default function ExperienceEdit({ experience, profile, close }: props) {
                             <label className="label">
                                 <span className="label-text text-gray-600">Location</span>
                             </label>
-                            <input
-                                type="text"
-                                name="location"
-                                placeholder="location"
-                                autoComplete="location"
-                                className="input input-bordered w-full"
+                            <select
+                                className="select select-bordered"
                                 value={location}
-                                onChange={(e) => setLocation(e.target.value)}
-                            />
+                                onChange={e => setLocation(e.target.value)}
+                            >
+                                {
+                                    countries.map((country: Country, index: number, array: Country[]) => (
+
+                                        <option key={index} value={country.name}>{country.name}</option>
+                                    ))
+                                }
+                            </select>
                         </div>
                         <div className="form-control w-full">
                             <label className="label">
                                 <span className="label-text text-gray-600">Location Type</span>
                             </label>
-                            <input
-                                type="text"
-                                name="locationType"
-                                placeholder="locationType"
-                                autoComplete="locationType"
-                                className="input input-bordered w-full"
+                            <select
+                                className="select select-bordered"
                                 value={locationType}
-                                onChange={(e) => setLocationType(e.target.value)}
-                            />
+                                onChange={e => setLocationType(e.target.value)}
+                            >
+                                <option value="Hybrid">Hybrid</option>
+                                <option value="Remote">Remote</option>
+                                <option value="Onsite">Onsite</option>
+                            </select>
                         </div>
                         <div className="form-control w-full">
                             <label className="label">
@@ -382,15 +387,19 @@ export default function ExperienceEdit({ experience, profile, close }: props) {
             {
                 editSection === "skills" &&
                 <div className="">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Link Unlinked Skills</span>
-                        <button
-                            className="btn btn-sm btn-error text-white"
-                            onClick={() => closeEditSection()}
-                        >
-                            Back
-                        </button>
-                    </dt>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Link Unlinked Skills</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                         {
 
@@ -416,15 +425,19 @@ export default function ExperienceEdit({ experience, profile, close }: props) {
             {
                 editSection === "projects" &&
                 <div className="">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Link Unlinked Projects</span>
-                        <button
-                            className="btn btn-sm btn-error text-white"
-                            onClick={() => closeEditSection()}
-                        >
-                            Back
-                        </button>
-                    </dt>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Link Unlinked Projects</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                         {
 

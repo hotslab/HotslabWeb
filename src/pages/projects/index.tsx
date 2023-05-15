@@ -8,7 +8,7 @@ type Props = { projects: ProjectExtended[] }
 export default function Projects({ projects }: Props) {
 
     function getFirstImage(images: ProjectImage[] | undefined): string {
-        if (images && images.length > 0) return `http://localhost:3000${images[0].url}`
+        if (images && images.length > 0) return `'http://localhost:3000${images[0].url}'`
         return "http://localhost:3000/assets/icon.png"
     }
 
@@ -22,23 +22,24 @@ export default function Projects({ projects }: Props) {
                             <span>{projects.length}</span>
                         </div>
                     </div>
-                    <div className="">
+                    <div className="flex justify-center items-center flex-wrap gap-2">
                         {projects.map((project: ProjectExtended) => (
                             <div
                                 key={project.id}
-                                className="bg-base-100 shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col sm:flex-row justify-center items-center"
+                                className="bg-base-100 w-[300px] h-[300px] shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col justify-center items-center"
                             >
                                 <div
                                     style={{
-                                        backgroundImage: `url(${getFirstImage(project.images)}`,
+                                        backgroundImage: `url(${getFirstImage(project.images)})`,
                                         backgroundSize: "cover",
-                                        backgroundRepeat: "no-repeat"
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "center"
                                     }}
-                                    className="w-full sm:w-1/3 h-[200px] p-0"
+                                    className="w-full h-[300px] p-0"
                                 >
                                 </div>
-                                <div className="w-full sm:w-2/3 h-full sm:h-[200px] p-6 flex flex-col justify-between items-start gap-5">
-                                    <h6 className="card-title text-md">{project.projectName}</h6>
+                                <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
+                                    <p className="font-bold text-md sm:text-xl">{project.projectName}</p>
                                     <div className="card-actions justify-end w-full">
                                         <button
                                             className="btn btn-success text-white"

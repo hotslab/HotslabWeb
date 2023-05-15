@@ -20,6 +20,10 @@ import {
 } from "@prisma/client"
 
 declare module "@prisma/client" {
+    interface RoleExtended extends Role {
+        users: User[]
+    }
+
     interface UserExtended extends User {
         role: Role
         profile: Profile

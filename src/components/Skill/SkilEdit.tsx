@@ -1,13 +1,16 @@
-import { Skill } from "@prisma/client";
+import { SkillExtended } from "@prisma/client"
+import { useRouter } from "next/router"
 import { useState } from "react"
 
 type props = {
-    skill: Skill | null
+    skill: SkillExtended | null
     close: Function
 }
 
 export default function LinkEdit({ skill, close }: props) {
     const [name, setName] = useState(skill?.name || "")
+
+    const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
@@ -17,32 +20,33 @@ export default function LinkEdit({ skill, close }: props) {
                 method: skill ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                close()
+                if (response.ok) { close(), router.replace(router.asPath) }
+                else console.error(response.body)
             })
             .catch(error => console.error(error))
     }
 
     return (
         <div className="w-full">
-            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                <span className="text-lg">
-                    {skill ? `Update ${skill.name}` : 'Create Skill'}
-                </span>
-                <div className="flex justify-between items-start flex-wrap gap-10">
-                    <button
-                        className="btn btn-sm btn-error text-white"
-                        onClick={() => close()}
-                    >
-                        Back
-                    </button>
-                    <button
-                        className="btn btn-sm btn-success text-white"
-                        onClick={() => saveOrUpdate()}
-                    >
-                        {skill ? 'Update' : 'Save'}
-                    </button>
+            <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                    <span>{skill ? `Update ${skill.name}` : 'Create Skill'}</span>
+                    <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => close()}
+                        >
+                            Back
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => saveOrUpdate()}
+                        >
+                            {skill ? 'Update' : 'Save'}
+                        </button>
+                    </div>
                 </div>
-            </dt>
+            </div>
             <div className="">
                 <div className="form-control w-full">
                     <label className="label">

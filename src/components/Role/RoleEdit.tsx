@@ -1,35 +1,37 @@
-import { Interest, ProfileExtended } from "@prisma/client";
-import { useRouter } from "next/router";
+import { Role } from "@prisma/client"
+import { useRouter } from "next/router"
 import { useState } from "react"
 
-type props = { interest: Interest | null, profile: ProfileExtended, close: Function }
+type props = {
+    role: Role | null
+    close: Function
+}
 
-export default function InterestEdit({ interest, profile, close }: props) {
-    const [name, setName] = useState(interest?.name || "")
+export default function RoleEdit({ role, close }: props) {
+    const [name, setName] = useState(role?.name || "")
+    const [active, setActive] = useState(role?.active ? Boolean(role.active) : false)
 
     const router = useRouter()
 
     async function saveOrUpdate() {
         await fetch(
-            interest ? `http://localhost:3000/api/interest/${interest.id}` : `http://localhost:3000/api/interest`,
+            role ? `http://localhost:3000/api/role/${role.id}` : `http://localhost:3000/api/role`,
             {
-                body: JSON.stringify({
-                    name: name,
-                    profileId: profile?.id || null
-                }),
-                method: interest ? "PUT" : "POST",
+                body: JSON.stringify({ name: name }),
+                method: role ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
                 else console.error(response.body)
             })
+            .catch(error => console.error(error))
     }
 
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
                 <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
-                    <span>{interest ? `Update ${interest.name}` : 'Create Interest'}</span>
+                    <span>{role ? `Update ${role.name}` : 'Create Role'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button
                             className="btn btn-sm btn-error text-white"
@@ -41,7 +43,7 @@ export default function InterestEdit({ interest, profile, close }: props) {
                             className="btn btn-sm btn-success text-white"
                             onClick={() => saveOrUpdate()}
                         >
-                            {interest ? 'Update' : 'Save'}
+                            {role ? 'Update' : 'Save'}
                         </button>
                     </div>
                 </div>
@@ -59,6 +61,18 @@ export default function InterestEdit({ interest, profile, close }: props) {
                         className="input input-bordered w-full"
                         value={name}
                         onChange={e => setName(e.target.value)}
+                    />
+                </div>
+                <div className="form-control w-full">
+                    <label className="label">
+                        <span className="label-text text-gray-600">Active</span>
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="active"
+                        className="toggle"
+                        checked={Boolean(active)}
+                        onChange={() => setActive(active ? false : true)}
                     />
                 </div>
             </div>

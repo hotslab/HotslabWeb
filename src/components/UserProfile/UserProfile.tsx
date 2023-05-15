@@ -1,12 +1,23 @@
-import { Achievement, Country, Education, Experience, Interest, Link, ProfileExtended, ProjectClientExtended, ProjectExtended, ProjectSkillExtended, ProjectTagExtended, Role, SkillExtended } from "@prisma/client"
-import Image from "next/image"
+import {
+    Achievement,
+    Country,
+    Education,
+    Experience,
+    Interest,
+    Link,
+    ProfileExtended,
+    ProjectExtended,
+    ProjectSkillExtended,
+    ProjectTagExtended,
+    Role,
+    SkillExtended
+} from "@prisma/client"
 import { format } from 'date-fns'
 import { MdEditSquare, MdAccountCircle } from "react-icons/md"
 import { useState } from "react"
 import UserEdit from "@/components/User/UserEdit"
 import ProfileEdit from "@/components/Profile/ProfileEdit"
 import Links from "@/components/Link/Links"
-import Skills from "@/components/Skill/Skills"
 import Interests from "@/components/Interest/Interests"
 import Achievements from "@/components/Achievement/Achievements"
 import Educations from "@/components/Education/Educations"
@@ -28,20 +39,27 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
     function close() {
         setEditSection(null)
     }
+    function getDisplayImage(url: string | null): string | null {
+        return url ? `'http://localhost:3000/${url}'` : null
+    }
 
     return (
         <div>
-            <div className="px-4 py-6 bg-base-100 w-full min-[420px]:w-1/3 lg:w-1/4 mb-10 flex items-center justify-center">
+            <div className="p-0 w-full flex items-center justify-start">
                 {
-                    profile.imageUrl
-                        ? <Image
-                            src={profile.imageUrl}
-                            alt={`${profile.user.name} ${profile.user.surname}`}
-                            width={200}
-                            height={200}
-                            className="mask mask-circle"
-                        />
-                        : <MdAccountCircle className="text-[200px] h-[100%]" />
+                    profile && profile.imageUrl
+                        ? <div
+                            title={`${profile.user.name} ${profile.user.surname}`}
+                            style={{
+                                backgroundImage: `url(${getDisplayImage(profile.imageUrl)}`,
+                                backgroundSize: "contain",
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "center"
+                            }}
+                            className="w-[100px] sm:w-[200px] h-[100px] sm:h-[200px] p-0 rounded-full"
+                        >
+                        </div>
+                        : <MdAccountCircle className="text-[200px] text-success h-[100%] p-0 m-0" />
                 }
             </div>
             <div className="mt-6 mb-10">
@@ -465,6 +483,7 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                     < Educations
                                         educations={profile.educations}
                                         profile={profile}
+                                        countries={countries}
                                         close={close}
                                     />
                                 }
@@ -473,6 +492,7 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                     <Experiences
                                         experiences={profile.experiences}
                                         profile={profile}
+                                        countries={countries}
                                         close={close}
                                     />
                                 }

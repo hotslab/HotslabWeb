@@ -1,13 +1,13 @@
-import { ProfileExtended, ExperienceExtended } from "@prisma/client"
+import { ProfileExtended, ExperienceExtended, Country } from "@prisma/client"
 import { MdDelete, MdEditSquare } from "react-icons/md"
 import ExperienceEdit from "@/components/Experience/ExperienceEdit"
 import { useState } from "react"
 import { format } from 'date-fns'
 import { useRouter } from "next/router"
 
-type props = { experiences: ExperienceExtended[], profile: ProfileExtended, close: Function }
+type props = { experiences: ExperienceExtended[], countries: Country[], profile: ProfileExtended, close?: Function }
 
-export default function Experiences({ experiences, profile, close }: props) {
+export default function Experiences({ experiences, countries, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedExperience, setSelectedExperience] = useState<ExperienceExtended | null>(null)
 
@@ -39,22 +39,26 @@ export default function Experiences({ experiences, profile, close }: props) {
             {
                 !showEdit ?
                     <div>
-                        <div className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                            <span className="text-lg">
-                                Experiences
-                            </span>
-                            <div className="flex justify-between items-start flex-wrap gap-10">
+                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                                <span>Experiences</span>
+                                <span>{experiences.length}</span>
+                            </div>
+                            <div className="mt-2 flex justify-start sm:justify-end items-start flex-wrap gap-5">
+                                {
+                                    close &&
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => close()}
+                                    >
+                                        Back
+                                    </button>
+                                }
                                 <button
-                                    className="btn btn-sm text-white btn-error"
-                                    onClick={() => close()}
-                                >
-                                    Back
-                                </button>
-                                <button
-                                    className="btn btn-sm text-white btn-success"
+                                    className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
-                                    New Experiences
+                                    New Experience
                                 </button>
                             </div>
                         </div>
@@ -112,7 +116,7 @@ export default function Experiences({ experiences, profile, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <ExperienceEdit experience={selectedExperience} profile={profile} close={closeEdit} />}
+                    : <ExperienceEdit experience={selectedExperience} countries={countries} profile={profile} close={closeEdit} />}
         </div>
     )
 }

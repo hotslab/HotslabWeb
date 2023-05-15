@@ -38,6 +38,9 @@ export default function Layout(props: Props) {
     }
     return 'Profile'
   }
+  function getDisplayImage(url: string | null | undefined): string | null {
+    return url ? `'http://localhost:3000/${url}'` : null
+  }
 
   return (
     <div className="drawer">
@@ -68,7 +71,21 @@ export default function Layout(props: Props) {
             {
               status === "authenticated" &&
               <button className="btn btn-square btn-ghost" onClick={() => setShowMenu(showMenu ? false : true)}>
-                <MdAccountCircle className="text-2xl" />
+                {
+                  session && session.user && session.user.image
+                    ? <div
+                      title={`${session.user.name} ${session.user.surname}`}
+                      style={{
+                        backgroundImage: `url(${getDisplayImage(session.user.image)}`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center"
+                      }}
+                      className="w-[30px] h-[30px] p-0 rounded-full"
+                    >
+                    </div>
+                    : <MdAccountCircle className="text-2xl" />
+                }
               </button>
             }
             {
@@ -103,8 +120,23 @@ export default function Layout(props: Props) {
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
         <ul className="menu p-4 w-52 bg-base-100 text-base-content">
           <li onClick={() => Router.push('/')}><a>Home</a></li>
-          <li onClick={() => Router.push('/profiles')}><a>Profiles</a></li>
           <li onClick={() => Router.push('/projects')}><a>Portfolio</a></li>
+          {
+            status === "authenticated" &&
+            <li onClick={() => Router.push('/profiles')}><a>Profiles</a></li>
+          }
+          {
+            status === "authenticated" &&
+            <li onClick={() => Router.push('/roles')}><a>Roles</a></li>
+          }
+          {
+            status === "authenticated" &&
+            <li onClick={() => Router.push('/tags')}><a>Tags</a></li>
+          }
+          {
+            status === "authenticated" &&
+            <li onClick={() => Router.push('/skills')}><a>Skills</a></li>
+          }
           {
             status != "authenticated" &&
             <li onClick={() => Router.push('/auth/login')}><a>Login</a></li>

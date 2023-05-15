@@ -41,25 +41,25 @@ export default function UserEdit({ user, roles, close }: props) {
 
     return (
         <div className="w-full">
-            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                <span className="text-lg">
-                    {user ? `Update ${user.name} ${user.surname}` : 'Create ser'}
-                </span>
-                <div className="flex justify-between items-start flex-wrap gap-10">
-                    <button
-                        className="btn btn-sm btn-error text-white"
-                        onClick={() => close()}
-                    >
-                        Back
-                    </button>
-                    <button
-                        className="btn btn-sm btn-success text-white"
-                        onClick={() => saveOrUpdate()}
-                    >
-                        {user ? 'Update' : 'Save'}
-                    </button>
+            <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                    <span>{user ? `Update ${user.name} ${user.surname}` : 'Create User'}</span>
+                    <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => close()}
+                        >
+                            Back
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => saveOrUpdate()}
+                        >
+                            {user ? 'Update' : 'Save'}
+                        </button>
+                    </div>
                 </div>
-            </dt>
+            </div>
             <div className="">
                 <div className="form-control w-full">
                     <label className="label">

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
-import { Skill, SkillExtended } from '@prisma/client'
+import { Role } from '@prisma/client'
 
 type Data = { data: any }
 
@@ -27,14 +27,12 @@ async function index(
 ) {
     try {
         const { query }: NextApiRequest = req
-        const skill = await prisma.skill.findUnique({
-            where: { id: Number(query.id) },
-            include: {
-                experiences: { include: { experience: true } },
-                projects: { include: { project: true } }
-            }
+        const id = parseInt(query.id as string, 10)
+        const role: Role | null = await prisma.role.findUnique({
+            where: { id: id },
+            include: { users: true }
         })
-        res.status(200).json({ data: skill })
+        res.status(200).json({ data: role })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
     }
@@ -47,12 +45,12 @@ async function update(
 ) {
     try {
         if (session) {
-            const { body, query } = req
-            const updatedSkill = await prisma.skill.update({
+            const { query, body }: NextApiRequest = req
+            const updatedRole = await prisma.role.update({
                 where: { id: Number(query.id) },
-                data: { name: body.name },
+                data: { name: body.name, active: body.active },
             })
-            res.status(200).json({ data: updatedSkill })
+            res.status(200).json({ data: updatedRole })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
@@ -67,8 +65,8 @@ async function erase(
     try {
         if (session) {
             const { query } = req
-            const deletedSkill = await prisma.skill.delete({ where: { id: Number(query.id) } })
-            res.status(200).json({ data: deletedSkill })
+            const deletedRole = await prisma.role.delete({ where: { id: Number(query.id) } })
+            res.status(200).json({ data: deletedRole })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

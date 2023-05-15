@@ -36,6 +36,9 @@ export default function ProjectEdit({ project, profile, close }: props) {
         setSelectedImage(projectImage)
         if (projectImage) setImageCaption(projectImage.caption)
     }
+    function getDisplayImage(url: string): string | null {
+        return url ? `'http://localhost:3000/${url}'` : null
+    }
     async function unlinkProjectSkill(projectSkillId: number) {
         await fetch(`http://localhost:3000/api/project/skill/?id=${projectSkillId}`, {
             method: "DELETE",
@@ -209,25 +212,25 @@ export default function ProjectEdit({ project, profile, close }: props) {
         <div>
             {editSection === null &&
                 <div className="w-full">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                        <span className="text-lg">
-                            {project ? `Update ${project.projectName}` : 'Create Project'}
-                        </span>
-                        <div className="flex justify-between items-start flex-wrap gap-10">
-                            <button
-                                className="btn btn-sm text-white btn-error"
-                                onClick={() => close()}
-                            >
-                                Back
-                            </button>
-                            <button
-                                className="btn btn-sm  text-white btn-success"
-                                onClick={() => saveOrUpdate()}
-                            >
-                                {project ? 'Update' : 'Save'}
-                            </button>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>{project ? `Update ${project.projectName}` : 'Create Project'}</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => close()}
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    className="btn btn-sm btn-success text-white"
+                                    onClick={() => saveOrUpdate()}
+                                >
+                                    {project ? 'Update' : 'Save'}
+                                </button>
+                            </div>
                         </div>
-                    </dt>
+                    </div>
                     <div className="">
                         <div className="form-control w-full">
                             <label className="label">
@@ -441,35 +444,34 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                     project && project.images
                                         ? project.images.map(
                                             (projectImage: ProjectImage, index: number, array: ProjectImage[]) => (
-                                                <div key={index} className="card w-[300px] bg-base-100 shadow-xl">
-                                                    <div className="card-body">
-                                                        <div className="flex gap-5 justify-between items-center flex-wrap">
-                                                            <p className="text-xl font-bold text-white">
-                                                                {projectImage.caption}
-                                                            </p>
-                                                            <div className="flex gap-5 justify-end items-center flex-wrap">
-                                                                <MdDelete
-                                                                    title="Delete"
-                                                                    className="text-error font-bold text-xl cursor-pointer"
-                                                                    onClick={() => deleteImage(projectImage.id)}
-                                                                />
-                                                                <MdEditSquare
-                                                                    title="Edit"
-                                                                    className="text-success font-bold text-xl cursor-pointer"
-                                                                    onClick={() => openEditImage(projectImage)}
-                                                                />
-                                                            </div>
+                                                <div key={index} className="flex flex-col justify-between items-center w-[300px] bg-base-100 shadow-xl">
+                                                    <div className="w-full py-6 px-4 flex gap-5 justify-between items-center flex-wrap">
+                                                        <p className="text-lg font-bold text-white">
+                                                            {projectImage.caption}
+                                                        </p>
+                                                        <div className="flex gap-5 justify-end items-center flex-wrap">
+                                                            <MdDelete
+                                                                title="Delete"
+                                                                className="text-error font-bold text-xl cursor-pointer"
+                                                                onClick={() => deleteImage(projectImage.id)}
+                                                            />
+                                                            <MdEditSquare
+                                                                title="Edit"
+                                                                className="text-success font-bold text-xl cursor-pointer"
+                                                                onClick={() => openEditImage(projectImage)}
+                                                            />
                                                         </div>
                                                     </div>
-                                                    <figure>
-                                                        <Image
-                                                            src={projectImage.url}
-                                                            alt={projectImage.caption}
-                                                            height={100}
-                                                            width={100}
-                                                            className="h-[200px] w-[300px]"
-                                                        />
-                                                    </figure>
+                                                    <div
+                                                        style={{
+                                                            backgroundImage: `url(${getDisplayImage(projectImage.url)}`,
+                                                            backgroundSize: "cover",
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "center"
+                                                        }}
+                                                        className="w-full h-[100px] sm:h-[200px] p-0"
+                                                    >
+                                                    </div>
                                                 </div>
                                             ))
                                         : <span>No images listed</span>
@@ -482,15 +484,19 @@ export default function ProjectEdit({ project, profile, close }: props) {
             {
                 editSection === "skills" &&
                 <div className="">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Link Unlinked Skills</span>
-                        <button
-                            className="btn btn-sm btn-error text-white"
-                            onClick={() => closeEditSection()}
-                        >
-                            Back
-                        </button>
-                    </dt>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Link Unlinked Skills</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                         {
 
@@ -516,15 +522,19 @@ export default function ProjectEdit({ project, profile, close }: props) {
             {
                 editSection === "tags" &&
                 <div className="">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Link Unlinked Tags</span>
-                        <button
-                            className="btn btn-sm btn-error text-white"
-                            onClick={() => closeEditSection()}
-                        >
-                            Back
-                        </button>
-                    </dt>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Link Unlinked Tags</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                         {
 
@@ -550,15 +560,19 @@ export default function ProjectEdit({ project, profile, close }: props) {
             {
                 editSection === "experiences" &&
                 <div className="">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Link Unlinked Experiences</span>
-                        <button
-                            className="btn btn-sm btn-error text-white"
-                            onClick={() => closeEditSection()}
-                        >
-                            Back
-                        </button>
-                    </dt>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Link Unlinked Experiences</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                         {
 
@@ -584,35 +598,40 @@ export default function ProjectEdit({ project, profile, close }: props) {
             {
                 editSection === "images" &&
                 <div className="my-8">
-                    <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                        <span>Image</span>
-                        <div className="flex justify-between items-center flex-wrap gap-5">
-
-                            <button
-                                className="btn btn-sm btn-error text-white"
-                                onClick={() => closeEditSection()}
-                            >
-                                Back
-                            </button>
-                            <button
-                                className="btn btn-sm btn-success text-white"
-                                onClick={() => saveOrUpdateImage()}
-                            >
-                                Save
-                            </button>
+                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <span>Image</span>
+                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                <button
+                                    className="btn btn-sm btn-error text-white"
+                                    onClick={() => closeEditSection()}
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    className="btn btn-sm btn-success text-white"
+                                    onClick={() => saveOrUpdateImage()}
+                                >
+                                    Save
+                                </button>
+                            </div>
                         </div>
-                    </dt>
+                    </div>
                     <div>
                         <div className="px-4 py-6 w-full flex items-center justify-center">
                             {
                                 selectedImage !== null
-                                    ? <Image
-                                        src={selectedImage.url}
-                                        alt={selectedImage.caption}
-                                        width={200}
-                                        height={200}
-                                        className="w-[600px]"
-                                    />
+                                    ?
+                                    <div
+                                        style={{
+                                            backgroundImage: `url(${getDisplayImage(selectedImage.url)}`,
+                                            backgroundSize: "contain",
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "center"
+                                        }}
+                                        className="w-full h-[200px] sm:h-[400px] p-0"
+                                    >
+                                    </div>
                                     : <MdImage className="text-success text-[200px] w-[200px] h-[100%]" />
                             }
                         </div>

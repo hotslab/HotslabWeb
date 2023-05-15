@@ -1,23 +1,39 @@
-import { ProfileExtended, ProjectExtended } from "@prisma/client"
+import { RoleExtended } from "@prisma/client"
 import { MdDelete, MdEditSquare } from "react-icons/md"
-import ProjectEdit from "@/components/Project/ProjectEdit"
+import RoleEdit from "@/components/Role/RoleEdit"
 import { useState } from "react"
-import { format } from 'date-fns'
+import { useRouter } from "next/router"
 
-type props = { projects: ProjectExtended[], profile: ProfileExtended, close?: Function }
+type props = {
+    roles: RoleExtended[] | []
+    close?: Function
+}
 
-export default function Projects({ projects, profile, close }: props) {
+export default function Roles({ roles, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
-    const [selectedProject, setSelectedProject] = useState<ProjectExtended | null>(null)
-    function openEdit(project: ProjectExtended | null) {
-        setSelectedProject(project)
+    const [selectedRole, setSelectedRole] = useState<RoleExtended | null>(null)
+
+    const router = useRouter()
+
+    function openEdit(role: RoleExtended | null) {
+        setSelectedRole(role)
         setShowEdit(true)
     }
-    function deleteItem(experience: ProjectExtended) {
-        //
+    async function deleteItem(role: RoleExtended) {
+        await fetch(
+            `http://localhost:3000/api/role/${role.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                },
+            }).then(async response => {
+                if (response.ok) router.replace(router.asPath)
+                else console.error(response.body)
+            })
     }
     function closeEdit() {
-        setSelectedProject(null)
+        setSelectedRole(null)
         setShowEdit(false)
     }
     return (
@@ -27,8 +43,8 @@ export default function Projects({ projects, profile, close }: props) {
                     <div>
                         <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
                             <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
-                                <span>Projects</span>
-                                <span>{projects.length}</span>
+                                <span>Roles</span>
+                                <span>{roles.length}</span>
                             </div>
                             <div className="mt-2 flex justify-start sm:justify-end items-start flex-wrap gap-5">
                                 {
@@ -44,55 +60,48 @@ export default function Projects({ projects, profile, close }: props) {
                                     className="btn btn-sm btn-success text-white"
                                     onClick={() => openEdit(null)}
                                 >
-                                    New Project
+                                    New Role
                                 </button>
                             </div>
                         </div>
-                        <div className="overflow-x-auto bg-white">
-                            <table className="table bg-white w-full">
-                                {/* head */}
+                        <div className="overflow-x-auto">
+                            <table className="table w-full">
                                 <thead>
                                     <tr>
                                         <th>Edit</th>
                                         <th>ID</th>
-                                        <th>Project</th>
-                                        <th>Is Ongoing?</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
+                                        <th>Name</th>
+                                        <th>Active</th>
+                                        <th>Users</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {projects.map(
-                                        (project: ProjectExtended, index: number, array: ProjectExtended[]) => (
+                                    {roles.map(
+                                        (role: RoleExtended, index: number, array: RoleExtended[]) => (
                                             <tr key={index} className="hover">
                                                 <th className="flex justify-start items-center gap-5 py-5">
                                                     <MdEditSquare
                                                         title="Edit"
                                                         className="text-success cursor-pointer"
-                                                        onClick={() => openEdit(project)}
+                                                        onClick={() => openEdit(role)}
                                                     />
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(project)}
+                                                        onClick={() => deleteItem(role)}
                                                     />
                                                 </th>
-                                                <td>{project.id}</td>
-                                                <td>{project.projectName}</td>
-                                                <td>{project.isOngoing}</td>
-                                                <td>
-                                                    {project.startDate ? format(new Date(project.startDate), 'yyyy-MM-dd') : '-'}
-                                                </td>
-                                                <td>
-                                                    {project.endDate ? format(new Date(project.endDate), 'yyyy-MM-dd') : '-'}
-                                                </td>
+                                                <td>{role.id}</td>
+                                                <td>{role.name}</td>
+                                                <td>{Boolean(role.active) ? "Yes" : "No"}</td>
+                                                <td>{role.users.length}</td>
                                             </tr>
                                         ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    : <ProjectEdit project={selectedProject} profile={profile} close={closeEdit} />}
+                    : <RoleEdit role={selectedRole} close={closeEdit} />}
         </div>
     )
 }

@@ -23,6 +23,10 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
 
     const router = useRouter()
 
+    function getDisplayImage(url: string | null): string | null {
+        console.log(url)
+        return url ? `'http://localhost:3000/${url}'` : null
+    }
     async function saveOrUpdate() {
         await fetch(
             profile ? `http://localhost:3000/api/profile/${profile.id}` : `http://localhost:3000/api/profile`,
@@ -78,46 +82,55 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
 
     return (
         <div className="w-full">
-            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-start flex-wrap gap-10">
-                <span>
-                    {user ? `Update ${user.name} ${user.surname} Profile` : 'Create Profile'}
-                </span>
-                <div className="flex justify-between items-start flex-wrap gap-10">
-                    <button
-                        className="btn btn-sm btn-error text-white"
-                        onClick={() => close()}
-                    >
-                        Back
-                    </button>
-                    <button
-                        className="btn btn-sm btn-success text-white"
-                        onClick={() => saveOrUpdate()}
-                    >
-                        {profile ? 'Update' : 'Save'}
-                    </button>
+            <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                    <span>{user ? `Update ${user.name} ${user.surname} Profile` : 'Create Profile'}</span>
+                    <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => close()}
+                        >
+                            Back
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => saveOrUpdate()}
+                        >
+                            {profile ? 'Update' : 'Save'}
+                        </button>
+                    </div>
                 </div>
-            </dt>
+            </div>
             <div className="">
-                <div className="px-4 py-6 bg-base-100 w-full min-[420px]:w-1/3 lg:w-1/4 mb-5 flex items-center justify-center">
+                <div className="p-0 w-full flex items-center justify-start">
                     {
-                        profile?.imageUrl
-                            ? <Image
-                                src={profile.imageUrl}
-                                alt={`${profile.user.name} ${profile.user.surname}`}
-                                width={200}
-                                height={200}
-                                className="mask mask-circle"
-                            />
-                            : <MdAccountCircle className="text-[200px] h-[100%]" />
+                        profile && profile.imageUrl
+                            ? <div
+                                title={`${profile.user.name} ${profile.user.surname}`}
+                                style={{
+                                    backgroundImage: `url(${getDisplayImage(profile.imageUrl)}`,
+                                    backgroundSize: "contain",
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "center"
+                                }}
+                                className="w-[100px] sm:w-[200px] h-[100px] sm:h-[200px] p-0 rounded-full mb-5"
+                            >
+                            </div>
+                            : <MdAccountCircle className="text-[200px] text-success h-[100%] p-0 m-0 mb-5" />
                     }
                 </div>
-                <input
-                    type="file"
-                    name="profileImage"
-                    className="file-input w-full mb-10"
-                    value={selectedImage}
-                    onChange={(e) => setSelectedImage(e.target.value)}
-                />
+                <div className="form-control w-full">
+                    <label className="label">
+                        <span className="label-text text-gray-600">Profile Image</span>
+                    </label>
+                    <input
+                        type="file"
+                        name="profileImage"
+                        className="file-input w-full"
+                        value={selectedImage}
+                        onChange={(e) => setSelectedImage(e.target.value)}
+                    />
+                </div>
                 <div className="form-control w-full">
                     <label className="label">
                         <span className="label-text text-gray-600">ID Number</span>
@@ -220,15 +233,18 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     <label className="label">
                         <span className="label-text text-gray-600">Country</span>
                     </label>
-                    <input
-                        type="text"
-                        name="country"
-                        placeholder="country"
-                        autoComplete="country"
-                        className="input input-bordered w-full"
+                    <select
+                        className="select select-bordered"
                         value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                    />
+                        onChange={e => setCountry(e.target.value)}
+                    >
+                        {
+                            countries.map((country: Country, index: number, array: Country[]) => (
+
+                                <option key={index} value={country.name}>{country.name}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="form-control w-full">
                     <label className="label">

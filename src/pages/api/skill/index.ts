@@ -25,27 +25,32 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query }: NextApiRequest = req
-    let selectData: { [key: string]: any } = { where: {} }
-    let includeData: { [key: string]: any } = {}
-    if (query.userId) selectData.where.projects = {
-        every: {
-            project: {
-                is: { profile: { is: { user: { is: { id: Number(query.userId) } } } } }
+    try {
+        const { query }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {}
+        if (query.userId) selectData.where.projects = {
+            every: {
+                project: {
+                    is: { profile: { is: { user: { is: { id: Number(query.userId) } } } } }
+                }
             }
         }
-    }
-    if (query.notExperienceId) selectData.where.experiences = {
-        every: {
-            experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+        if (query.notExperienceId) selectData.where.experiences = {
+            every: {
+                experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+            }
         }
+        includeData = {
+            experiences: { select: { id: true, experience: true } },
+            projects: { select: { id: true, project: true } }
+        }
+        const skills: Skill[] = await prisma.skill.findMany({ ...selectData, include: includeData })
+        res.status(200).json({ data: skills })
+
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
     }
-    includeData = {
-        experiences: { select: { id: true, experience: true } },
-        projects: { select: { id: true, project: true } }
-    }
-    const skills: Skill[] = await prisma.skill.findMany({ ...selectData, include: includeData })
-    res.status(200).json({ data: skills })
 }
 
 async function create(
@@ -53,11 +58,15 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const newSkill = await prisma.skill.create({
-            data: { name: body.data.name },
-        })
-        res.status(200).json({ data: newSkill })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body } = req
+            const newSkill = await prisma.skill.create({
+                data: { name: body.name },
+            })
+            res.status(200).json({ data: newSkill })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

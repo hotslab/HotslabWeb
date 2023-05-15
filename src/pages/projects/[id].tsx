@@ -3,21 +3,34 @@ import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended
 import Image from "next/image"
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from "react"
 
 type Props = { project: ProjectExtended }
 
 export default function Project({ project }: Props) {
+    const [displayImage, setDisplayImage] = useState<string | null>(null)
     const router = useRouter()
+
+    function setCurrentDisplayImage(url: string | null) {
+        const imageUrl = url ? `'http://localhost:3000/${url}'` : null
+        setDisplayImage(imageUrl)
+    }
+
+    useEffect(() => {
+        const images = project.images
+        const url = project && project.images && project.images.length > 0 ? project.images[0].url : null
+        setCurrentDisplayImage(url)
+    }, [])
 
     return (
         <Layout>
             <div className="min-h-full bg-white">
                 <div className="container mx-auto py-10 px-4">
-                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3" id="image-container">
                         <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                             <span>{project.projectName}</span>
                             <button
-                                className="btn btn-error text-white"
+                                className="btn btn-md btn-error text-white"
                                 onClick={() => router.push("/projects")}
                             >
                                 Back
@@ -33,29 +46,34 @@ export default function Project({ project }: Props) {
                             ))}
                         </div>
                     </div>
-                    {project.images && project.images?.length > 0 &&
-                        <div className="slideshow mb-10">
-                            <div className="carousel w-full">
-                                {project.images?.map((image: ProjectImage, index: number) => (
-                                    <div key={image.id} id={`item${index + 1}`} className="carousel-item w-full">
-                                        <Image
-                                            src={image.url}
-                                            alt={image.caption}
-                                            width={100}
-                                            height={100}
-                                            className="h-[300px] w-full"
-                                        />
-                                    </div>
-                                ))}
+
+                    <div className="slideshow mb-10">
+                        <div className="carousel w-full">
+                            <div
+                                className="carousel-item w-full h-[200px] sm:h-[400px]"
+                                style={{
+                                    backgroundImage: `url(${displayImage}`,
+                                    backgroundPosition: "center",
+                                    backgroundSize: "contain",
+                                    backgroundRepeat: "no-repeat"
+                                }}
+                            >
                             </div>
-                            <div className="flex justify-center w-full py-2 gap-2">
-                                {project.images?.map((image: ProjectImage, index: number) => (
-                                    <a key={image.id} id={`item${index + 1}`} href="#item1" className="btn btn-xs">
+                        </div>
+                        <div className="flex justify-center w-full py-2 gap-2">
+                            {project.images && project.images?.length > 0 &&
+                                project.images?.map((image: ProjectImage, index: number) => (
+                                    <a
+                                        key={image.id} id={`item${index + 1}`}
+                                        href="#image-container"
+                                        className="btn btn-xs"
+                                        onClick={() => setCurrentDisplayImage(image.url)}
+                                    >
                                         {index + 1}
                                     </a>
                                 ))}
-                            </div>
-                        </div>}
+                        </div>
+                    </div>
                     <p className="text-gray-500 mb-10">
                         {project.description}
                     </p>
@@ -108,7 +126,7 @@ export default function Project({ project }: Props) {
                     </dl>
                 </div>
             </div>
-        </Layout>
+        </Layout >
     )
 }
 
