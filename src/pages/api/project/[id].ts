@@ -27,20 +27,23 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method } = req
-    const id = parseInt(query.id as string, 10)
-    const project = await prisma.project.findUnique({
-        where: { id: id },
-        include: {
-            profile: true,
-            skills: { include: { skill: true } },
-            images: true,
-            tags: { include: { tag: true } },
-            experiences: { include: { experience: true } },
-            clients: { include: { client: true } },
-        }
-    })
-    res.status(200).json({ data: project })
+    try {
+        const { query } = req
+        const project = await prisma.project.findUnique({
+            where: { id: Number(query.id) },
+            include: {
+                profile: true,
+                skills: { include: { skill: true } },
+                images: true,
+                tags: { include: { tag: true } },
+                experiences: { include: { experience: true } },
+                clients: { include: { client: true } },
+            }
+        })
+        res.status(200).json({ data: project })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function update(
@@ -48,21 +51,25 @@ async function update(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const updatedProject = await prisma.project.update({
-            where: { id: body.data.id },
-            data: {
-                profileId: body.data.profileId,
-                projectName: body.data.projectName,
-                isOngoing: body.data.isOngoing,
-                startDate: body.data.startDate,
-                endDate: body.data.endDate,
-                description: body.data.description,
-            },
-        })
-        res.status(200).json({ data: updatedProject })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body, query } = req
+            const updatedProject = await prisma.project.update({
+                where: { id: Number(query.id) },
+                data: {
+                    profileId: body.profileId,
+                    projectName: body.projectName,
+                    isOngoing: body.isOngoing,
+                    startDate: body.startDate,
+                    endDate: body.endDate,
+                    description: body.description,
+                },
+            })
+            res.status(200).json({ data: updatedProject })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }
 
 async function erase(
@@ -70,9 +77,13 @@ async function erase(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedProject = await prisma.project.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedProject })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { query } = req
+            const deletedProject = await prisma.project.delete({ where: { id: Number(query.id) } })
+            res.status(200).json({ data: deletedProject })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

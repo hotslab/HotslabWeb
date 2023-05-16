@@ -3,12 +3,15 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import LinkEdit from "@/components/Link/LinkEdit"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = { links: Link[], profile: ProfileExtended, close?: Function }
 
 export default function Links({ links, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedLink, setSelectedLink] = useState<Link | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -16,9 +19,14 @@ export default function Links({ links, profile, close }: props) {
         setSelectedLink(link)
         setShowEdit(true)
     }
-    async function deleteItem(link: Link) {
+    function openOrCloseDelete(link: Link | null = null) {
+        setSelectedLink(link)
+        setShowConfirmModal(link ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            `http://localhost:3000/api/link/${link.id}`,
+            `http://localhost:3000/api/link/${selectedLink.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -26,7 +34,9 @@ export default function Links({ links, profile, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -85,7 +95,7 @@ export default function Links({ links, profile, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(link)}
+                                                        onClick={() => openOrCloseDelete(link)}
                                                     />
                                                 </th>
                                                 <td>{link.id}</td>
@@ -97,7 +107,32 @@ export default function Links({ links, profile, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <LinkEdit link={selectedLink} profile={profile} close={closeEdit} />}
+                    : <LinkEdit link={selectedLink} profile={profile} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedLink?.name}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

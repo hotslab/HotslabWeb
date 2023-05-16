@@ -74,9 +74,10 @@ async function index(
                         startDate: true,
                         endDate: true,
                         description: true,
-                        experiences: { select: { experience: true } },
-                        skills: { select: { skill: true } },
-                        tags: { select: { tag: true } },
+                        clients: { select: { id: true, client: true } },
+                        experiences: { select: { id: true, experience: true } },
+                        skills: { select: { id: true, skill: true } },
+                        tags: { select: { id: true, tag: true } },
                         images: true
                     }
                 },

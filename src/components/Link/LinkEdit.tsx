@@ -1,6 +1,7 @@
-import { Link, ProfileExtended } from "@prisma/client";
-import { useRouter } from "next/router";
+import { Link, ProfileExtended } from "@prisma/client"
+import { useRouter } from "next/router"
 import { useState } from "react"
+import eventBus from "@/lib/eventBus"
 
 type props = { link: Link | null, profile: ProfileExtended, close: Function }
 
@@ -11,6 +12,7 @@ export default function LinkEdit({ link, profile, close }: props) {
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             link ? `http://localhost:3000/api/link/${link.id}` : `http://localhost:3000/api/link`,
             {
@@ -25,7 +27,8 @@ export default function LinkEdit({ link, profile, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
 

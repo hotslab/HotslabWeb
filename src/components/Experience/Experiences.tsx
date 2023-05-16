@@ -4,12 +4,15 @@ import ExperienceEdit from "@/components/Experience/ExperienceEdit"
 import { useState } from "react"
 import { format } from 'date-fns'
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = { experiences: ExperienceExtended[], countries: Country[], profile: ProfileExtended, close?: Function }
 
 export default function Experiences({ experiences, countries, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedExperience, setSelectedExperience] = useState<ExperienceExtended | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -17,9 +20,14 @@ export default function Experiences({ experiences, countries, profile, close }: 
         setSelectedExperience(experience)
         setShowEdit(true)
     }
-    async function deleteItem(experience: ExperienceExtended) {
+    function openOrCloseDelete(experience: ExperienceExtended | null = null) {
+        setSelectedExperience(experience)
+        setShowConfirmModal(experience ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            `http://localhost:3000/api/experience/${experience.id}`,
+            `http://localhost:3000/api/experience/${selectedExperience.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -27,7 +35,9 @@ export default function Experiences({ experiences, countries, profile, close }: 
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -93,7 +103,7 @@ export default function Experiences({ experiences, countries, profile, close }: 
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(experience)}
+                                                        onClick={() => openOrCloseDelete(experience)}
                                                     />
                                                 </th>
                                                 <td>{experience.id}</td>
@@ -116,7 +126,32 @@ export default function Experiences({ experiences, countries, profile, close }: 
                             </table>
                         </div>
                     </div>
-                    : <ExperienceEdit experience={selectedExperience} countries={countries} profile={profile} close={closeEdit} />}
+                    : <ExperienceEdit experience={selectedExperience} countries={countries} profile={profile} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedExperience?.title}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

@@ -1,10 +1,10 @@
-import { ProjectExtended, ProfileExtended, ProjectSkillExtended, Tag, Skill, ProjectTagExtended, Experience, ProjectExperienceExtended, ProjectImage } from "@prisma/client";
+import { ProjectExtended, ProfileExtended, ProjectSkillExtended, Tag, Skill, ProjectTagExtended, Experience, ProjectExperienceExtended, ProjectImage } from "@prisma/client"
 import { useState, useEffect } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdEditSquare, MdAddBox, MdImage } from "react-icons/md"
-import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
 
 type props = { project: ProjectExtended | null, profile: ProfileExtended, close: Function }
 
@@ -40,6 +40,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
         return url ? `'http://localhost:3000/${url}'` : null
     }
     async function unlinkProjectSkill(projectSkillId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/skill/?id=${projectSkillId}`, {
             method: "DELETE",
             headers: {
@@ -47,10 +48,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function linkSkill(skill: Skill) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/skill`, {
             body: JSON.stringify({
                 skillId: skill.id,
@@ -62,10 +65,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function unlinkProjectTag(projectTagId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/tag/?id=${projectTagId}`, {
             method: "DELETE",
             headers: {
@@ -73,10 +78,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function linkTag(tag: Tag) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/tag`, {
             body: JSON.stringify({
                 tagId: tag.id,
@@ -88,10 +95,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function unlinkProjectExperience(projectExperienceId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/experience/?id=${projectExperienceId}`, {
             method: "DELETE",
             headers: {
@@ -99,10 +108,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function linkExperience(experience: Experience) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/experience`, {
             body: JSON.stringify({
                 experienceId: experience.id,
@@ -114,7 +125,8 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function getUnlinkedExperiences() {
@@ -126,7 +138,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 },
             }).then(async response => {
                 setUnlinkedExperiences((await response.json()).data)
-            }).catch(error => console.error(error))
+            })
         }
     }
     async function getUnlinkedTags() {
@@ -138,7 +150,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 },
             }).then(async response => {
                 setUnlinkedTags((await response.json()).data)
-            }).catch(error => console.error(error))
+            })
         }
     }
     async function getUnlinkedSkills() {
@@ -150,10 +162,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 },
             }).then(async response => {
                 setUnlinkedSkills((await response.json()).data)
-            }).catch(error => console.error(error))
+            })
         }
     }
     async function deleteImage(projectImageId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/image/?id=${projectImageId}`, {
             method: "DELETE",
             headers: {
@@ -161,10 +174,12 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function saveOrUpdateImage() {
+        eventBus.dispatch("openLoadingPage", true)
         let input = document.querySelector('input[type="file"]') as HTMLInputElement
         if (input && input.files && input.files.length) {
             let data = new FormData()
@@ -182,11 +197,16 @@ export default function ProjectEdit({ project, profile, close }: props) {
                     router.replace(router.asPath)
                     close()
                 }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
-        } else console.error("File input is empty")
+        } else {
+            eventBus.dispatch("openErrorModal", "File input is empty")
+            eventBus.dispatch("openLoadingPage", false)
+        }
     }
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             project ? `http://localhost:3000/api/project/${project.id}` : `http://localhost:3000/api/project`,
             {
@@ -201,9 +221,10 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 method: project ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                close()
+                if (response.ok) { close(), router.replace(router.asPath) }
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(error => console.error(error))
     }
 
     useEffect(() => { getUnlinkedExperiences(), getUnlinkedTags(), getUnlinkedSkills() }, [])
@@ -464,7 +485,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                                     </div>
                                                     <div
                                                         style={{
-                                                            backgroundImage: `url(${getDisplayImage(projectImage.url)}`,
+                                                            backgroundImage: `url(${getDisplayImage(projectImage.url)})`,
                                                             backgroundSize: "cover",
                                                             backgroundRepeat: "no-repeat",
                                                             backgroundPosition: "center"
@@ -624,7 +645,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                     ?
                                     <div
                                         style={{
-                                            backgroundImage: `url(${getDisplayImage(selectedImage.url)}`,
+                                            backgroundImage: `url(${getDisplayImage(selectedImage.url)})`,
                                             backgroundSize: "contain",
                                             backgroundRepeat: "no-repeat",
                                             backgroundPosition: "center"

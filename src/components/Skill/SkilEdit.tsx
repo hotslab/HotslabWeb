@@ -1,3 +1,4 @@
+import eventBus from "@/lib/eventBus"
 import { SkillExtended } from "@prisma/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -13,6 +14,7 @@ export default function LinkEdit({ skill, close }: props) {
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             skill ? `http://localhost:3000/api/skill/${skill.id}` : `http://localhost:3000/api/skill`,
             {
@@ -21,9 +23,9 @@ export default function LinkEdit({ skill, close }: props) {
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(error => console.error(error))
     }
 
     return (

@@ -3,18 +3,42 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import ProjectEdit from "@/components/Project/ProjectEdit"
 import { useState } from "react"
 import { format } from 'date-fns'
+import eventBus from "@/lib/eventBus"
+import { useRouter } from "next/router"
+import Modal from "@/components/Modal"
 
 type props = { projects: ProjectExtended[], profile: ProfileExtended, close?: Function }
 
 export default function Projects({ projects, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedProject, setSelectedProject] = useState<ProjectExtended | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
+
+    const router = useRouter()
+
     function openEdit(project: ProjectExtended | null) {
         setSelectedProject(project)
         setShowEdit(true)
     }
-    function deleteItem(experience: ProjectExtended) {
-        //
+    function openOrCloseDelete(project: ProjectExtended | null = null) {
+        setSelectedProject(project)
+        setShowConfirmModal(project ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
+        await fetch(
+            `http://localhost:3000/api/project/${selectedProject.id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json",
+                },
+            }).then(async response => {
+                if (response.ok) router.replace(router.asPath)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
+            })
     }
     function closeEdit() {
         setSelectedProject(null)
@@ -74,7 +98,7 @@ export default function Projects({ projects, profile, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(project)}
+                                                        onClick={() => openOrCloseDelete(project)}
                                                     />
                                                 </th>
                                                 <td>{project.id}</td>
@@ -92,7 +116,32 @@ export default function Projects({ projects, profile, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <ProjectEdit project={selectedProject} profile={profile} close={closeEdit} />}
+                    : <ProjectEdit project={selectedProject} profile={profile} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedProject?.projectName}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

@@ -1,6 +1,7 @@
-import { Interest, ProfileExtended } from "@prisma/client";
-import { useRouter } from "next/router";
+import { Interest, ProfileExtended } from "@prisma/client"
+import { useRouter } from "next/router"
 import { useState } from "react"
+import eventBus from "@/lib/eventBus"
 
 type props = { interest: Interest | null, profile: ProfileExtended, close: Function }
 
@@ -10,6 +11,7 @@ export default function InterestEdit({ interest, profile, close }: props) {
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             interest ? `http://localhost:3000/api/interest/${interest.id}` : `http://localhost:3000/api/interest`,
             {
@@ -21,7 +23,8 @@ export default function InterestEdit({ interest, profile, close }: props) {
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
 

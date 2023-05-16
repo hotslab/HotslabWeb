@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+table th:first-child {
+  z-index: 0 !important;
+}

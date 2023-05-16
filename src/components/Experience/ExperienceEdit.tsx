@@ -1,9 +1,10 @@
-import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill, Country } from "@prisma/client";
+import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill, Country } from "@prisma/client"
 import { useState, useEffect } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdAddBox } from "react-icons/md"
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
 
 type props = { experience: ExperienceExtended | null, countries: Country[], profile: ProfileExtended | null, close: Function }
 
@@ -31,6 +32,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
         setEditSection(null)
     }
     async function unlinkProjectExperience(projectExperienceId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/experience/project?id=${projectExperienceId}`, {
             method: "DELETE",
             headers: {
@@ -38,10 +40,12 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function linkProject(project: Project) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/experience/project`, {
             body: JSON.stringify({
                 experienceId: experience?.id,
@@ -53,10 +57,12 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function unlinkExperienceSkill(experienceSkillId: number) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/experience/skill?id=${experienceSkillId}`, {
             method: "DELETE",
             headers: {
@@ -64,10 +70,12 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function linkSkill(skill: Skill) {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/experience/skill`, {
             body: JSON.stringify({
                 experienceId: experience?.id,
@@ -79,7 +87,8 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else console.error(response.body)
+            else eventBus.dispatch("openErrorModal", response.body)
+            eventBus.dispatch("openLoadingPage", false)
         })
     }
     async function getUnlinkedProjects() {
@@ -106,8 +115,8 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             })
         }
     }
-    useEffect(() => { getUnlinkedProjects(), getUnlinkedSkills() }, [])
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             experience ? `http://localhost:3000/api/experience/${experience.id}` : `http://localhost:3000/api/experience`,
             {
@@ -128,9 +137,12 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
+
+    useEffect(() => { getUnlinkedProjects(), getUnlinkedSkills() }, [])
 
     return (
         <div>

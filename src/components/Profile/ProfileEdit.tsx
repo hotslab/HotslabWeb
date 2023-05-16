@@ -2,9 +2,9 @@ import { useState } from "react"
 import { ProfileExtended, UserExtended, Sex, Country } from "@prisma/client"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import Image from "next/image"
 import { MdAccountCircle } from "react-icons/md"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
 
 type props = { profile: ProfileExtended | null, user: UserExtended | null, countries: Country[], close: Function }
 
@@ -28,6 +28,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
         return url ? `'http://localhost:3000/${url}'` : null
     }
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             profile ? `http://localhost:3000/api/profile/${profile.id}` : `http://localhost:3000/api/profile`,
             {
@@ -49,16 +50,15 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                 },
             }).then(async response => {
                 if (response.ok) {
-                    console.log(selectedImage, "IMAGE")
                     const profileData = (await response.json()).data
                     if (selectedImage) uploadImage(profileData.id)
                     else { close(), router.replace(router.asPath) }
-                } else console.error(response.body)
+                } else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(error => console.error(error))
     }
-
     async function uploadImage(id: string) {
+        eventBus.dispatch("openLoadingPage", true)
         let input = document.querySelector('input[type="file"]') as HTMLInputElement
         if (input && input.files && input.files.length > 0) {
             let data = new FormData()
@@ -68,17 +68,20 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
             await fetch(`http://localhost:3000/api/profile/image/${id}`, {
                 method: 'POST',
                 body: data
-            }).then(response => {
+            }).then(async response => {
                 if (response.ok) {
                     setSelectedImage("")
                     router.replace(router.asPath)
                     close()
                 }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
-        } else console.error("File input is empty")
+        } else {
+            eventBus.dispatch("openErrorModal", "File input is empty")
+            eventBus.dispatch("openLoadingPage", false)
+        }
     }
-
 
     return (
         <div className="w-full">
@@ -108,7 +111,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                             ? <div
                                 title={`${profile.user.name} ${profile.user.surname}`}
                                 style={{
-                                    backgroundImage: `url(${getDisplayImage(profile.imageUrl)}`,
+                                    backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
                                     backgroundSize: "contain",
                                     backgroundRepeat: "no-repeat",
                                     backgroundPosition: "center"

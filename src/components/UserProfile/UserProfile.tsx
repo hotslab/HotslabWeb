@@ -55,7 +55,7 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                         ? <div
                             title={`${profile.user.name} ${profile.user.surname}`}
                             style={{
-                                backgroundImage: `url(${getDisplayImage(profile.imageUrl)}`,
+                                backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
                                 backgroundSize: "contain",
                                 backgroundRepeat: "no-repeat",
                                 backgroundPosition: "center"

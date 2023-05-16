@@ -3,6 +3,8 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import TagEdit from "@/components/Tag/TagEdit"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = {
     tags: Tag[] | []
@@ -12,6 +14,7 @@ type props = {
 export default function Tags({ tags, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedTag, setSelectedTag] = useState<Tag | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -19,9 +22,14 @@ export default function Tags({ tags, close }: props) {
         setSelectedTag(skill)
         setShowEdit(true)
     }
-    async function deleteItem(tag: Tag) {
+    function openOrCloseDelete(tag: Tag | null = null) {
+        setSelectedTag(tag)
+        setShowConfirmModal(tag ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            `http://localhost:3000/api/tag/${tag.id}`,
+            `http://localhost:3000/api/tag/${selectedTag.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -29,7 +37,9 @@ export default function Tags({ tags, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -86,7 +96,7 @@ export default function Tags({ tags, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(tag)}
+                                                        onClick={() => openOrCloseDelete(tag)}
                                                     />
                                                 </th>
                                                 <td>{tag.id}</td>
@@ -97,7 +107,32 @@ export default function Tags({ tags, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <TagEdit tag={selectedTag} close={closeEdit} />}
+                    : <TagEdit tag={selectedTag} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedTag?.name}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

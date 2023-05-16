@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import eventBus from "@/lib/eventBus"
 
 type props = { education: Education | null, countries: Country[], profile: ProfileExtended, close: Function }
 
@@ -17,6 +18,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             education ? `http://localhost:3000/api/education/${education.id}` : `http://localhost:3000/api/education`,
             {
@@ -33,7 +35,8 @@ export default function EducationEdit({ education, countries, profile, close }: 
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
             .catch(error => console.error(error))
     }

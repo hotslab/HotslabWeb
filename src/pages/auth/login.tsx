@@ -6,6 +6,7 @@ import { useSession, signIn, SignInResponse, getSession } from "next-auth/react"
 import { Session } from "next-auth"
 import { MdOutlineCancel } from "react-icons/md"
 import eventBus from "@/lib/eventBus"
+import hotslabImage from "../../../public/assets/hotslab.svg"
 
 export default function Login() {
     const router = useRouter()
@@ -41,23 +42,26 @@ export default function Login() {
                     </div>
                 </div>
             }
-            <div className="bg-white flex min-h-screen flex flex-col items-center justify-center px-4 lg:px-12">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <Image
-                        className="mx-auto h-10 w-auto"
-                        src="/assets/hotslab.svg"
-                        alt="Your Company"
-                        width={100}
-                        height={100}
-                    />
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <div className="bg-white flex min-h-screen flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
+                <div className="mt-10 mb-5 sm:mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div
+                        title="Hotslab Logo"
+                        style={{
+                            backgroundImage: `url(${hotslabImage.src})`,
+                            backgroundSize: "contain",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "center"
+                        }}
+                        className="mx-auto w-full h-[50px]"
+                    >
+                    </div>
+                    <h2 className="mt-2 text-center text-xl font-bold leading-9 tracking-tight text-gray-900">
                         Sign in to your account
                     </h2>
                 </div>
-
                 <div className="form-control w-full max-w-xs">
                     <label className="label">
-                        <span className="label-text text-gray-400 font-bold">Email?</span>
+                        <span className="label-text text-gray-600">Email?</span>
                     </label>
                     <input
                         type="text"
@@ -71,7 +75,7 @@ export default function Login() {
                 </div>
                 <div className="form-control w-full max-w-xs">
                     <label className="label">
-                        <span className="label-text text-gray-400 font-bold">Password?</span>
+                        <span className="label-text text-gray-600">Password?</span>
                     </label>
                     <input
                         type="password"
@@ -83,10 +87,9 @@ export default function Login() {
                         onChange={e => setPasssword(e.target.value)}
                     />
                 </div>
-                {/* onClick={() => login()} */}
                 <button
                     onClick={() => login()}
-                    className="btn btn-lg sm:btn-wide mt-10 text-white"
+                    className="w-full max-w-xs btn btn-md btn-success mt-5 text-white"
                 >
                     Login
                 </button>

@@ -5,7 +5,6 @@ import { Session } from 'next-auth'
 import { Project } from '@prisma/client'
 
 type Data = { data: any }
-// type Select = 
 
 export default async function handler(
     req: NextApiRequest,
@@ -25,32 +24,35 @@ async function index(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    const { query, method }: NextApiRequest = req
-    let select: { [key: string]: any } = { where: {} }
-    let selectData: { [key: string]: any } = { where: {} }
-    let includeData: { [key: string]: any } = {
-        profile: true,
-        skills: { select: { id: true, skill: true } },
-        images: true,
-        tags: { select: { id: true, tag: true } },
-        experiences: { select: { id: true, experience: true } },
-        clients: { select: { id: true, client: true } },
-    }
-    if (query.tags) selectData.where.tags = {
-        every: {
-            tag: { is: { OR: ((query as any).tags.split(",")).map((tag: string) => { return { name: tag } }) } }
+    try {
+        const { query, method }: NextApiRequest = req
+        let selectData: { [key: string]: any } = { where: {} }
+        let includeData: { [key: string]: any } = {
+            profile: true,
+            skills: { select: { id: true, skill: true } },
+            images: true,
+            tags: { select: { id: true, tag: true } },
+            experiences: { select: { id: true, experience: true } },
+            clients: { select: { id: true, client: true } },
         }
-    }
-    if (query.notExperienceId) selectData.where.experiences = {
-        every: {
-            experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+        if (query.tags) selectData.where.tags = {
+            every: {
+                tag: { is: { OR: ((query as any).tags.split(",")).map((tag: string) => { return { name: tag } }) } }
+            }
         }
+        if (query.notExperienceId) selectData.where.experiences = {
+            every: {
+                experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+            }
+        }
+        const projects: Project[] = await prisma.project.findMany({
+            ...selectData,
+            include: includeData
+        })
+        res.status(200).json({ data: projects })
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
     }
-    const projects: Project[] = await prisma.project.findMany({
-        ...selectData,
-        include: includeData
-    })
-    res.status(200).json({ data: projects })
 }
 
 async function create(
@@ -58,18 +60,23 @@ async function create(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const newProject = await prisma.project.create({
-            data: {
-                profileId: body.data.profileId,
-                projectName: body.data.projectName,
-                isOngoing: body.data.isOngoing,
-                startDate: body.data.startDate,
-                endDate: body.data.endDate,
-                description: body.data.Description,
-            },
-        })
-        res.status(200).json({ data: newProject })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { body } = req
+            const newProject = await prisma.project.create({
+                data: {
+                    profileId: body.profileId,
+                    projectName: body.projectName,
+                    isOngoing: body.isOngoing,
+                    startDate: body.startDate,
+                    endDate: body.endDate,
+                    description: body.description,
+                },
+            })
+            res.status(200).json({ data: newProject })
+        } else res.status(400).json({ data: "Unauthorized" })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

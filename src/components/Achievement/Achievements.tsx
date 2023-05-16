@@ -3,12 +3,15 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import AchievementEdit from "@/components/Achievement/AchievementEdit"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = { achievements: Achievement[], profile: ProfileExtended, close?: Function }
 
 export default function Achievements({ achievements, profile, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -16,9 +19,14 @@ export default function Achievements({ achievements, profile, close }: props) {
         setSelectedAchievement(achievement)
         setShowEdit(true)
     }
-    async function deleteItem(achievement: Achievement) {
+    function openOrCloseDelete(achievement: Achievement | null = null) {
+        setSelectedAchievement(achievement)
+        setShowConfirmModal(achievement ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            `http://localhost:3000/api/achievement/${achievement.id}`,
+            `http://localhost:3000/api/achievement/${selectedAchievement.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -26,7 +34,9 @@ export default function Achievements({ achievements, profile, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -84,7 +94,7 @@ export default function Achievements({ achievements, profile, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(achievement)}
+                                                        onClick={() => openOrCloseDelete(achievement)}
                                                     />
                                                 </th>
                                                 <td>{achievement.id}</td>
@@ -95,7 +105,32 @@ export default function Achievements({ achievements, profile, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <AchievementEdit achievement={selectedAchievement} profile={profile} close={closeEdit} />}
+                    : <AchievementEdit achievement={selectedAchievement} profile={profile} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedAchievement?.name}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

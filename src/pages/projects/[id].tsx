@@ -52,7 +52,7 @@ export default function Project({ project }: Props) {
                             <div
                                 className="carousel-item w-full h-[200px] sm:h-[400px]"
                                 style={{
-                                    backgroundImage: `url(${displayImage}`,
+                                    backgroundImage: `url(${displayImage})`,
                                     backgroundPosition: "center",
                                     backgroundSize: "contain",
                                     backgroundRepeat: "no-repeat"

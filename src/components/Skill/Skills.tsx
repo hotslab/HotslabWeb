@@ -3,6 +3,8 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import SkillEdit from "@/components/Skill/SkilEdit"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = {
     skills: SkillExtended[] | []
@@ -12,6 +14,7 @@ type props = {
 export default function Skills({ skills, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedSkill, setSelectedSkill] = useState<SkillExtended | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -19,9 +22,14 @@ export default function Skills({ skills, close }: props) {
         setSelectedSkill(skill)
         setShowEdit(true)
     }
-    async function deleteItem(skill: SkillExtended) {
+    function openOrCloseDelete(skill: SkillExtended | null = null) {
+        setSelectedSkill(skill)
+        setShowConfirmModal(skill ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", false)
         await fetch(
-            `http://localhost:3000/api/skill/${skill.id}`,
+            `http://localhost:3000/api/skill/${selectedSkill.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -29,7 +37,9 @@ export default function Skills({ skills, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -87,7 +97,7 @@ export default function Skills({ skills, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(skill)}
+                                                        onClick={() => openOrCloseDelete(skill)}
                                                     />
                                                 </th>
                                                 <td>{skill.id}</td>
@@ -98,7 +108,32 @@ export default function Skills({ skills, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <SkillEdit skill={selectedSkill} close={closeEdit} />}
+                    : <SkillEdit skill={selectedSkill} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedSkill?.name}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

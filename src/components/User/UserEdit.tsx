@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Role, UserExtended } from "@prisma/client"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
 
 type props = { user: UserExtended | null, roles: Role[], close: Function }
 
@@ -16,6 +17,7 @@ export default function UserEdit({ user, roles, close }: props) {
     const router = useRouter()
 
     async function saveOrUpdate() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
             user ? `http://localhost:3000/api/user/${user.id}` : `http://localhost:3000/api/user`,
             {
@@ -35,7 +37,8 @@ export default function UserEdit({ user, roles, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
 

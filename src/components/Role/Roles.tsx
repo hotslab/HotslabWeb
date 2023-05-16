@@ -3,6 +3,8 @@ import { MdDelete, MdEditSquare } from "react-icons/md"
 import RoleEdit from "@/components/Role/RoleEdit"
 import { useState } from "react"
 import { useRouter } from "next/router"
+import eventBus from "@/lib/eventBus"
+import Modal from "@/components/Modal"
 
 type props = {
     roles: RoleExtended[] | []
@@ -12,6 +14,7 @@ type props = {
 export default function Roles({ roles, close }: props) {
     const [showEdit, setShowEdit] = useState<boolean>(false)
     const [selectedRole, setSelectedRole] = useState<RoleExtended | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -19,9 +22,14 @@ export default function Roles({ roles, close }: props) {
         setSelectedRole(role)
         setShowEdit(true)
     }
-    async function deleteItem(role: RoleExtended) {
+    function openOrCloseDelete(role: RoleExtended | null = null) {
+        setSelectedRole(role)
+        setShowConfirmModal(role ? true : false)
+    }
+    async function deleteItem() {
+        eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            `http://localhost:3000/api/role/${role.id}`,
+            `http://localhost:3000/api/role/${selectedRole.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -29,7 +37,9 @@ export default function Roles({ roles, close }: props) {
                 },
             }).then(async response => {
                 if (response.ok) router.replace(router.asPath)
-                else console.error(response.body)
+                else eventBus.dispatch("openErrorModal", response.body)
+                openOrCloseDelete()
+                eventBus.dispatch("openLoadingPage", false)
             })
     }
     function closeEdit() {
@@ -88,7 +98,7 @@ export default function Roles({ roles, close }: props) {
                                                     <MdDelete
                                                         title="Delete"
                                                         className="text-error cursor-pointer"
-                                                        onClick={() => deleteItem(role)}
+                                                        onClick={() => openOrCloseDelete(role)}
                                                     />
                                                 </th>
                                                 <td>{role.id}</td>
@@ -101,7 +111,32 @@ export default function Roles({ roles, close }: props) {
                             </table>
                         </div>
                     </div>
-                    : <RoleEdit role={selectedRole} close={closeEdit} />}
+                    : <RoleEdit role={selectedRole} close={closeEdit} />
+            }
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-info">{selectedRole?.name}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => openOrCloseDelete()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => deleteItem()}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }

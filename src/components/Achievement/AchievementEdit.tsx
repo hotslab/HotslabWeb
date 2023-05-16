@@ -24,7 +24,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 method: achievement ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                if (response.ok) { close(), await router.replace(router.asPath) }
+                if (response.ok) { close(), router.replace(router.asPath) }
                 else eventBus.dispatch("openErrorModal", response.body)
                 eventBus.dispatch("openLoadingPage", false)
             })

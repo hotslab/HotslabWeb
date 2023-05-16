@@ -1,62 +1,75 @@
 import Layout from "@/components/Layout"
-import Image from 'next/image'
+import hotslabImage from "../../public/assets/hotslab.svg"
+import computerImage from "../../public/assets/computer.svg"
+import tabletImage from "../../public/assets/tablet.svg"
+import artBoardImage from "../../public/assets/artboard.svg"
 
 export default function Home() {
+
   return (
     <Layout>
       <div className="bg-white">
         <div className="min-h-screen flex flex-col items-center justify-center" id="hotslab-logo">
-          <div id="logo-image" className="p-0 mt-10">
-            <Image
-              src="/assets/hotslab.svg"
-              alt="Hotslab lLogo"
-              height={100}
-              width={100}
-              className="h-[200px] min-[566px]:h-[250px] w-full"
-            />
+          <div
+            id="logo-image"
+            title="Software Development"
+            style={{
+              backgroundImage: `url(${hotslabImage.src})`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center"
+            }}
+            className="mt-10 h-[120px] w-[120px]"
+          >
           </div>
-          <h1 id="logo-text" className="text-white pt-10 text-xl9 mb-10">HOTSLAB</h1>
+          <span id="logo-text" className="text-white pt-5 font-bold text-white text-sm mt-5 mb-10">HOTSLAB</span>
           <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
-            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
-              <div className="flex justify-between items-center">
-                <Image
-                  src="/assets/computer.svg"
-                  alt="Software Development"
-                  height={100}
-                  width={100}
-                  className="w-full"
-                />
+            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
+              <div
+                title="Software Development"
+                style={{
+                  backgroundImage: `url(${computerImage.src})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center"
+                }}
+                className="w-full h-[80px]"
+              >
               </div>
-              <div className="flex flex-col justify-between items-center text-center w-full">
-                <h2 className="card-title">Software Development</h2>
-              </div>
-            </div>
-            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
-              <div className="flex justify-between items-center">
-                <Image
-                  src="/assets/tablet.svg"
-                  alt="App Development"
-                  height={100}
-                  width={100}
-                  className="w-full"
-                />
-              </div>
-              <div className="flex flex-col justify-between items-center text-center w-full">
-                <h2 className="card-title">Mobile Applications</h2>
+              <div className="flex flex-col justify-between items-center text-center w-full h-full">
+                <span className="font-bold text-md text-white">Software Development</span>
               </div>
             </div>
-            <div className="px-8 py-6 w-full min-[480px]:w-52 bg-base-100 hotslab-shadow grid gap-5">
-              <div className="flex justify-between items-center">
-                <Image
-                  src="/assets/artboard.svg"
-                  alt="Graphic Design"
-                  height={100}
-                  width={100}
-                  className="w-full"
-                />
+            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
+              <div
+                title="App Development"
+                style={{
+                  backgroundImage: `url(${tabletImage.src})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center"
+                }}
+                className="w-full h-[80px]"
+              >
               </div>
-              <div className="flex flex-col justify-between items-center text-center w-full">
-                <h2 className="card-title">Graphic Designs</h2>
+              <div className="flex flex-col justify-between items-center text-center w-full h-full">
+                <span className="font-bold text-md text-white">Mobile Applications</span>
+              </div>
+            </div>
+            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
+              <div
+                title="Graphic Design"
+                style={{
+                  backgroundImage: `url(${artBoardImage.src})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center"
+                }}
+                className="w-full h-[80px]"
+              >
+              </div>
+              <div className="flex flex-col justify-between items-center text-center w-full h-full">
+                <span className="font-bold text-md text-white">Graphic Designs</span>
               </div>
             </div>
           </div>

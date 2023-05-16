@@ -76,7 +76,7 @@ export default function Layout(props: Props) {
                     ? <div
                       title={`${session.user.name} ${session.user.surname}`}
                       style={{
-                        backgroundImage: `url(${getDisplayImage(session.user.image)}`,
+                        backgroundImage: `url(${getDisplayImage(session.user.image)})`,
                         backgroundSize: "contain",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center"
