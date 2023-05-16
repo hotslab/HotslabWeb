@@ -52,6 +52,10 @@ async function create(
                 if (!fs.existsSync(profileDirectory)) fs.mkdirSync(profileDirectory, { recursive: true })
                 const imagePath = path.resolve(`./public/uploads/project/${projectId}/${fileData.originalFilename}`)
                 fs.renameSync(fileData.filepath, imagePath)
+                fs.unlink(fileData.filepath, (deleteError) => {
+                    if (deleteError) console.log("Temporary file delete error", deleteError)
+                    console.log('Temporary file deleted!')
+                })
                 const projectImage: ProjectImage = projectImageId ? await prisma.projectImage.update({
                     where: { id: Number(projectImageId) },
                     data: {

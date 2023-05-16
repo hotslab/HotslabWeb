@@ -51,6 +51,10 @@ async function create(
                 const imagePath = path.resolve(`./public/uploads/profile/${id}/${fileData.originalFilename}`)
                 console.log("moving file: ", fileData.filepath, " to ", imagePath)
                 fs.renameSync(fileData.filepath, imagePath)
+                fs.unlink(fileData.filepath, (deleteError) => {
+                    if (deleteError) console.log("Temporary file delete error", deleteError)
+                    console.log('Temporary file deleted!')
+                })
                 await prisma.profile.update({
                     where: { id: id },
                     data: { imageUrl: `/uploads/profile/${id}/${fileData.originalFilename}` }
