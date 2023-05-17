@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdAddBox } from "react-icons/md"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
+import TinyEditor from "@/components/TinyEditor"
 
 type props = { experience: ExperienceExtended | null, countries: Country[], profile: ProfileExtended | null, close: Function }
 
@@ -40,7 +41,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -57,7 +58,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -70,7 +71,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -87,7 +88,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -137,7 +138,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
@@ -188,8 +189,8 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                             </label>
                             <select
                                 className="select select-bordered"
-                                value={locationType}
-                                onChange={e => setLocationType(e.target.value)}
+                                value={employmentType}
+                                onChange={e => setEmploymentType(e.target.value)}
                             >
                                 <option value="FullTime">Full Time</option>
                                 <option value="PartTime">Part Time</option>
@@ -261,14 +262,9 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                             <label className="label">
                                 <span className="label-text text-gray-600">Description</span>
                             </label>
-                            <textarea
-                                name="description"
-                                placeholder="description"
-                                className="textarea textarea-bordered"
-                                cols={30}
-                                rows={5}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                            <TinyEditor
+                                content={description}
+                                onChange={(e: string) => setDescription(e)}
                             />
                         </div>
                         <div className="form-control w-full">

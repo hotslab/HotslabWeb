@@ -6,6 +6,7 @@ import { ProjectImage } from '@prisma/client'
 import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
 import path from 'path'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -24,7 +25,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -48,31 +49,43 @@ async function create(
                 const projectImageId = Array.isArray(fields.projectImageId) ? fields.projectImageId[0] : fields.projectImageId
                 const caption = Array.isArray(fields.caption) ? fields.caption[0] : fields.caption
                 const fileData = Array.isArray(files.file) ? files.file[0] : files.file
-                const profileDirectory = path.resolve(`./public/uploads/project/${projectId}/`)
-                if (!fs.existsSync(profileDirectory)) fs.mkdirSync(profileDirectory, { recursive: true })
-                const imagePath = path.resolve(`./public/uploads/project/${projectId}/${fileData.originalFilename}`)
-                fs.renameSync(fileData.filepath, imagePath)
-                fs.unlink(fileData.filepath, (deleteError) => {
-                    if (deleteError) console.log("Temporary file delete error", deleteError)
-                    console.log('Temporary file deleted!')
+                const validationResponse = await validator({
+                    projectId: projectId,
+                    projectImageId: projectImageId,
+                    caption: caption,
+                }, {
+                    projectId: "required|numeric",
+                    projectImageId: "required|numeric",
+                    caption, "required|string",
                 })
-                const projectImage: ProjectImage = projectImageId ? await prisma.projectImage.update({
-                    where: { id: Number(projectImageId) },
-                    data: {
-                        url: `/uploads/project/${projectId}/${fileData.originalFilename}`,
-                        caption: caption
-                    }
-                })
-                    : await prisma.projectImage.create({
+                if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+                else {
+                    const profileDirectory = path.resolve(`./public/uploads/project/${projectId}/`)
+                    if (!fs.existsSync(profileDirectory)) fs.mkdirSync(profileDirectory, { recursive: true })
+                    const imagePath = path.resolve(`./public/uploads/project/${projectId}/${fileData.originalFilename}`)
+                    fs.renameSync(fileData.filepath, imagePath)
+                    fs.unlink(fileData.filepath, (deleteError) => {
+                        if (deleteError) console.log("Temporary file delete error", deleteError)
+                        console.log('Temporary file deleted!')
+                    })
+                    const projectImage: ProjectImage = projectImageId ? await prisma.projectImage.update({
+                        where: { id: Number(projectImageId) },
                         data: {
-                            projectId: Number(projectId),
                             url: `/uploads/project/${projectId}/${fileData.originalFilename}`,
                             caption: caption
                         }
                     })
-                res.status(200).json({ data: { projectImage: projectImage, fields: fields, file: files } })
+                        : await prisma.projectImage.create({
+                            data: {
+                                projectId: Number(projectId),
+                                url: `/uploads/project/${projectId}/${fileData.originalFilename}`,
+                                caption: caption
+                            }
+                        })
+                    res.status(200).json({ data: { projectImage: projectImage, fields: fields, file: files } })
+                }
             })
-        }
+        } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
     }
@@ -87,6 +100,13 @@ async function erase(
         if (session) {
             const { query } = req
             const deletedProjectImage: ProjectImage = await prisma.projectImage.delete({ where: { id: Number(query.id) } })
+            if (deletedProjectImage && deletedProjectImage.url) {
+                const oldImagePath = path.resolve(`./public${deletedProjectImage.url}`)
+                fs.unlink(oldImagePath, (deleteError) => {
+                    if (deleteError) console.log("Old file delete error", deleteError)
+                    console.log('Old file deleted!')
+                })
+            }
             res.status(200).json({ data: deletedProjectImage })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {

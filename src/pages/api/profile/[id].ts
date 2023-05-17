@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Profile } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -16,7 +17,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -26,10 +27,9 @@ async function index(
     session: Session | null
 ) {
     try {
-        const { query, method } = req
-        const id = parseInt(query.id as string, 10)
+        const { query } = req
         const profile: Profile | null = await prisma.profile.findUnique({
-            where: { userId: parseInt(req.query.id as string, 10) },
+            where: { id: Number(query.id) },
             include: {
                 user: {
                     select: {
@@ -98,25 +98,38 @@ async function update(
 ) {
     try {
         if (session) {
-            console.log(req.body)
             const { query, body } = req
-            const id = parseInt(query.id as string, 10)
-            const updatedProfile = await prisma.profile.update({
-                where: { id: id },
-                data: {
-                    idNumber: body.idNumber,
-                    dob: body.dob,
-                    sex: body.sex,
-                    countryCode: body.countryCode,
-                    phoneNumber: body.phoneNumber,
-                    address: body.address,
-                    city: body.city,
-                    country: body.country,
-                    postcode: body.postcode,
-                    summary: body.summary,
-                },
+            const validationResponse = await validator(body, {
+                idNumber: "required|string",
+                dob: "required|date",
+                sex: "required|string",
+                countryCode: "required|string",
+                phoneNumber: "required|numeric",
+                address: "required|string",
+                city: "required|string",
+                country: "required|string",
+                postcode: "required|string",
+                summary: "required|string",
             })
-            res.status(200).json({ data: updatedProfile })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const updatedProfile = await prisma.profile.update({
+                    where: { id: Number(query.id) },
+                    data: {
+                        idNumber: body.idNumber,
+                        dob: body.dob,
+                        sex: body.sex,
+                        countryCode: body.countryCode,
+                        phoneNumber: body.phoneNumber,
+                        address: body.address,
+                        city: body.city,
+                        country: body.country,
+                        postcode: body.postcode,
+                        summary: body.summary,
+                    },
+                })
+                res.status(200).json({ data: updatedProfile })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
@@ -131,8 +144,8 @@ async function erase(
 ) {
     try {
         if (session) {
-            const body = JSON.parse(req.body)
-            const deletedProfile = await prisma.profile.delete({ where: { id: body.data.id } })
+            const { query } = req
+            const deletedProfile = await prisma.profile.delete({ where: { id: Number(query.id) } })
             res.status(200).json({ data: deletedProfile })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {

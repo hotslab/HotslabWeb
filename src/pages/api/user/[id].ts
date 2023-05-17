@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { User } from '@prisma/client'
 import * as argon2 from "argon2"
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -17,7 +18,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -27,10 +28,9 @@ async function index(
     session: Session | null
 ) {
     try {
-        const { query, method } = req
-        const id = parseInt(query.id as string, 10)
+        const { query } = req
         const user: User | null = await prisma.user.findUnique({
-            where: { id: parseInt(req.query.id as string, 10) },
+            where: { id: Number(query.id) },
             include: {
                 profile: true,
                 role: true
@@ -50,27 +50,41 @@ async function update(
 ) {
     try {
         if (session) {
-            const { body } = req
-            const { id, email, name, surname, password, showProfile, roleId } = body
-            const userExists: User[] = await prisma.user.findMany({
-                where: {
-                    AND: [
-                        { email: email },
-                        { id: { not: id } }
-                    ]
-                }
+            const { query, body } = req
+            body.password = body.password.trim()
+            const validationResponse = await validator(body, {
+                email: "required|string|email",
+                name: "required|string",
+                surname: "required|string",
+                showProfile: "required|boolean",
+                roleId: "required|numeric",
+                password: "alpha_num|min:8"
             })
-            if (userExists.length > 0) res.status(400).json({ data: "This email already belongs to another user" })
-            let data: { [key: string]: any } = {
-                email: email,
-                name: name,
-                surname: surname,
-                showProfile: showProfile,
-                roleId: roleId
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const userExists: User[] = await prisma.user.findMany({
+                    where: {
+                        AND: [
+                            { email: body.email },
+                            { id: { not: Number(query.id) } }
+                        ]
+                    }
+                })
+                if (userExists.length > 0) {
+                    res.status(400).json({ data: "This email already belongs to another user" })
+                } else {
+                    let data: { [key: string]: any } = {
+                        email: body.email,
+                        name: body.name,
+                        surname: body.surname,
+                        showProfile: body.showProfile,
+                        roleId: body.roleId
+                    }
+                    if (body.password) data.password = await argon2.hash(body.password)
+                    const updatedUser = await prisma.user.update({ where: { id: Number(query.id) }, data: data })
+                    res.status(200).json({ data: updatedUser })
+                }
             }
-            if (password) data.password = await argon2.hash(password)
-            const updatedUser = await prisma.user.update({ where: { id: id }, data: data })
-            res.status(200).json({ data: updatedUser })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
@@ -82,9 +96,13 @@ async function erase(
     res: NextApiResponse<Data>,
     session: Session | null
 ) {
-    if (session) {
-        const body = JSON.parse(req.body)
-        const deletedUser = await prisma.user.delete({ where: { id: body.data.id } })
-        res.status(200).json({ data: deletedUser })
-    } else throw new Error("Unauthorized")
+    try {
+        if (session) {
+            const { query } = req
+            const deletedUser = await prisma.user.delete({ where: { id: Number(query.id) } })
+            res.status(200).json({ data: deletedUser })
+        } else throw new Error("Unauthorized")
+    } catch (error) {
+        res.status(400).json({ data: "Unknown Server Error" })
+    }
 }

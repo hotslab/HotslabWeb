@@ -24,20 +24,22 @@ export default function Links({ links, profile, close }: props) {
         setShowConfirmModal(link ? true : false)
     }
     async function deleteItem() {
-        eventBus.dispatch("openLoadingPage", true)
-        await fetch(
-            `http://localhost:3000/api/link/${selectedLink.id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "content-type": "application/json",
-                },
-            }).then(async response => {
-                if (response.ok) router.replace(router.asPath)
-                else eventBus.dispatch("openErrorModal", response.body)
-                openOrCloseDelete()
-                eventBus.dispatch("openLoadingPage", false)
-            })
+        if (selectedLink) {
+            eventBus.dispatch("openLoadingPage", true)
+            await fetch(
+                `http://localhost:3000/api/link/${selectedLink.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                }).then(async response => {
+                    if (response.ok) router.replace(router.asPath)
+                    else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                    openOrCloseDelete()
+                    eventBus.dispatch("openLoadingPage", false)
+                })
+        } else eventBus.dispatch("openErrorModal", "Link selected for deletion is missing")
     }
     function closeEdit() {
         setSelectedLink(null)

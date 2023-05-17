@@ -23,7 +23,7 @@ export default function TagEdit({ tag, close }: props) {
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }

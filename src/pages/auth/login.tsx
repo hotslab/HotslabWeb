@@ -23,7 +23,7 @@ export default function Login() {
                     const session: Session | null = await getSession()
                     response.error
                         ? eventBus.dispatch("openErrorModal", response.error)
-                        : await router.push({ pathname: `/profiles/${session?.user.id}` })
+                        : await router.push({ pathname: `/profiles/${session?.user.profileId}` })
                 } else setErrorMessage('No Response From Server')
                 eventBus.dispatch("openLoadingPage", false)
             })

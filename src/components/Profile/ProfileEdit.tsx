@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import { MdAccountCircle } from "react-icons/md"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
+import TinyEditor from "@/components/TinyEditor"
 
 type props = { profile: ProfileExtended | null, user: UserExtended | null, countries: Country[], close: Function }
 
@@ -53,7 +54,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     const profileData = (await response.json()).data
                     if (selectedImage) uploadImage(profileData.id)
                     else { close(), router.replace(router.asPath) }
-                } else eventBus.dispatch("openErrorModal", response.body)
+                } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
@@ -74,7 +75,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     router.replace(router.asPath)
                     close()
                 }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
         } else {
@@ -112,7 +113,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                                 title={`${profile.user.name} ${profile.user.surname}`}
                                 style={{
                                     backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
-                                    backgroundSize: "contain",
+                                    backgroundSize: "cover",
                                     backgroundRepeat: "no-repeat",
                                     backgroundPosition: "center"
                                 }}
@@ -129,6 +130,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     <input
                         type="file"
                         name="profileImage"
+                        accept=".png,.jpg,.jpeg,.svg"
                         className="file-input w-full"
                         value={selectedImage}
                         onChange={(e) => setSelectedImage(e.target.value)}
@@ -267,14 +269,9 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     <label className="label">
                         <span className="label-text text-gray-600">Summary</span>
                     </label>
-                    <textarea
-                        name="summary"
-                        placeholder="summary"
-                        className="textarea textarea-bordered"
-                        cols={30}
-                        rows={5}
-                        value={summary}
-                        onChange={(e) => setSummary(e.target.value)}
+                    <TinyEditor
+                        content={summary}
+                        onChange={(e: string) => setSummary(e)}
                     />
                 </div>
             </div>

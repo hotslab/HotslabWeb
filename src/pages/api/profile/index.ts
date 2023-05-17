@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Profile } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -15,7 +16,7 @@ export default async function handler(
     else if (req.method === 'POST') create(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -25,7 +26,7 @@ async function index(
     session: Session | null
 ) {
     try {
-        const { query, method }: NextApiRequest = req
+        const { query }: NextApiRequest = req
         let selectData: { [key: string]: any } = { where: {} }
         let includeData: { [key: string]: any } = {
             user: {
@@ -68,23 +69,38 @@ async function create(
 ) {
     try {
         if (session) {
-            const body = JSON.parse(req.body)
-            const newProfile = await prisma.profile.create({
-                data: {
-                    userId: body.data.userId,
-                    idNumber: body.data.idNumber,
-                    dob: body.data.dob,
-                    sex: body.data.sex,
-                    countryCode: body.data.countryCode,
-                    phoneNumber: body.data.phoneNumber,
-                    address: body.data.address,
-                    city: body.data.city,
-                    country: body.data.country,
-                    postcode: body.data.postcode,
-                    summary: body.data.summary,
-                },
+            const { body } = req
+            const validationResponse = await validator(body, {
+                idNumber: "required|string",
+                dob: "required|date",
+                sex: "required|string",
+                countryCode: "required|string",
+                phoneNumber: "required|numeric",
+                address: "required|string",
+                city: "required|string",
+                country: "required|string",
+                postcode: "required|string",
+                summary: "required|string",
             })
-            res.status(200).json({ data: newProfile })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const newProfile = await prisma.profile.create({
+                    data: {
+                        userId: body.userId,
+                        idNumber: body.idNumber,
+                        dob: body.dob,
+                        sex: body.sex,
+                        countryCode: body.countryCode,
+                        phoneNumber: body.phoneNumber,
+                        address: body.address,
+                        city: body.city,
+                        country: body.country,
+                        postcode: body.postcode,
+                        summary: body.summary,
+                    },
+                })
+                res.status(200).json({ data: newProfile })
+            }
         } else throw new Error("Unauthorized")
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

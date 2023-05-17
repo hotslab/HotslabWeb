@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Skill, SkillExtended } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -16,7 +17,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -48,11 +49,17 @@ async function update(
     try {
         if (session) {
             const { body, query } = req
-            const updatedSkill = await prisma.skill.update({
-                where: { id: Number(query.id) },
-                data: { name: body.name },
+            const validationResponse = await validator(body, {
+                name: "required|string",
             })
-            res.status(200).json({ data: updatedSkill })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const updatedSkill = await prisma.skill.update({
+                    where: { id: Number(query.id) },
+                    data: { name: body.name },
+                })
+                res.status(200).json({ data: updatedSkill })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

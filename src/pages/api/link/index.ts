@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Link } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -15,7 +16,7 @@ export default async function handler(
     else if (req.method === 'POST') create(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -45,10 +46,18 @@ async function create(
     try {
         if (session) {
             const { body } = req
-            const newLink = await prisma.link.create({
-                data: { name: body.name, url: body.url, profileId: body.profileId }
+            const validationResponse = await validator(body, {
+                profileId: "required|numeric",
+                name: "required|string",
+                url: "required|string|url",
             })
-            res.status(200).json({ data: newLink })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const newLink = await prisma.link.create({
+                    data: { name: body.name, url: body.url, profileId: body.profileId }
+                })
+                res.status(200).json({ data: newLink })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

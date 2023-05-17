@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Experience } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -16,7 +17,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -51,24 +52,39 @@ async function update(
     try {
         if (session) {
             const { query, body } = req
-            const id = parseInt(query.id as string, 10)
-            const updatedExperience = await prisma.experience.update({
-                where: { id: id },
-                data: {
-                    profileId: body.profileId,
-                    title: body.title,
-                    employmentType: body.employmentType,
-                    companyName: body.companyName,
-                    location: body.location,
-                    locationType: body.locationType,
-                    isCurrentPosition: body.isCurrentPosition,
-                    startDate: body.startDate,
-                    endDate: body.endDate,
-                    industry: body.industry,
-                    description: body.description,
-                },
+            const validationResponse = await validator(body, {
+                profileId: "required|numeric",
+                title: "required|string",
+                employmentType: "required|string",
+                companyName: "required|string",
+                location: "required|string",
+                locationType: "required|string",
+                isCurrentPosition: "required|boolean",
+                startDate: "required|date",
+                endDate: "required|date",
+                industry: "required|string",
+                description: "required|string",
             })
-            res.status(200).json({ data: updatedExperience })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const updatedExperience = await prisma.experience.update({
+                    where: { id: Number(query.id) },
+                    data: {
+                        profileId: body.profileId,
+                        title: body.title,
+                        employmentType: body.employmentType,
+                        companyName: body.companyName,
+                        location: body.location,
+                        locationType: body.locationType,
+                        isCurrentPosition: body.isCurrentPosition,
+                        startDate: body.startDate,
+                        endDate: body.endDate,
+                        industry: body.industry,
+                        description: body.description,
+                    },
+                })
+                res.status(200).json({ data: updatedExperience })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

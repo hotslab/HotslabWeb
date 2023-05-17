@@ -27,20 +27,22 @@ export default function Roles({ roles, close }: props) {
         setShowConfirmModal(role ? true : false)
     }
     async function deleteItem() {
-        eventBus.dispatch("openLoadingPage", true)
-        await fetch(
-            `http://localhost:3000/api/role/${selectedRole.id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "content-type": "application/json",
-                },
-            }).then(async response => {
-                if (response.ok) router.replace(router.asPath)
-                else eventBus.dispatch("openErrorModal", response.body)
-                openOrCloseDelete()
-                eventBus.dispatch("openLoadingPage", false)
-            })
+        if (selectedRole) {
+            eventBus.dispatch("openLoadingPage", true)
+            await fetch(
+                `http://localhost:3000/api/role/${selectedRole.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                }).then(async response => {
+                    if (response.ok) router.replace(router.asPath)
+                    else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                    openOrCloseDelete()
+                    eventBus.dispatch("openLoadingPage", false)
+                })
+        } else eventBus.dispatch("openErrorModal", "Role selected for deletion is missing")
     }
     function closeEdit() {
         setSelectedRole(null)

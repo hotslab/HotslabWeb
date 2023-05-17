@@ -27,20 +27,22 @@ export default function Skills({ skills, close }: props) {
         setShowConfirmModal(skill ? true : false)
     }
     async function deleteItem() {
-        eventBus.dispatch("openLoadingPage", false)
-        await fetch(
-            `http://localhost:3000/api/skill/${selectedSkill.id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "content-type": "application/json",
-                },
-            }).then(async response => {
-                if (response.ok) router.replace(router.asPath)
-                else eventBus.dispatch("openErrorModal", response.body)
-                openOrCloseDelete()
-                eventBus.dispatch("openLoadingPage", false)
-            })
+        if (selectedSkill) {
+            eventBus.dispatch("openLoadingPage", false)
+            await fetch(
+                `http://localhost:3000/api/skill/${selectedSkill.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                }).then(async response => {
+                    if (response.ok) router.replace(router.asPath)
+                    else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                    openOrCloseDelete()
+                    eventBus.dispatch("openLoadingPage", false)
+                })
+        } else eventBus.dispatch("openErrorModal", "Skill selected for deletion is missing")
     }
     function closeEdit() {
         setSelectedSkill(null)

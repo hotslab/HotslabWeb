@@ -24,6 +24,7 @@ import Educations from "@/components/Education/Educations"
 import Experiences from "@/components/Experience/Experiences"
 import Projects from "@/components/Project/Projects"
 import { useSession } from "next-auth/react"
+import DOMPurify from "isomorphic-dompurify"
 
 type Props = {
     profile: ProfileExtended
@@ -56,7 +57,7 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                             title={`${profile.user.name} ${profile.user.surname}`}
                             style={{
                                 backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
-                                backgroundSize: "contain",
+                                backgroundSize: "cover",
                                 backgroundRepeat: "no-repeat",
                                 backgroundPosition: "center"
                             }}
@@ -96,7 +97,10 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                     </div>
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-secondary">Summary</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.summary || 'No summary information'}</dd>
+                        <dd
+                            className="mt-2 text-sm text-gray-400"
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(profile.summary || 'No summary information') }}
+                        />
                     </div>
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-secondary">Email</dt>
@@ -221,9 +225,10 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                 <div className="collapse-content">
                                     <div className="mt-5 mb-10">
                                         <dt className="font-medium mb-3">Description</dt>
-                                        <dd className="mt-2 text-sm text-gray-400">
-                                            {project.description}
-                                        </dd>
+                                        <dd
+                                            className="mt-2 text-sm text-gray-400"
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(project.description) }}
+                                        />
                                     </div>
                                     <div className="mb-10">
                                         <dt className="font-medium mb-3">Duration</dt>
@@ -346,9 +351,10 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                     </div>
                                     <div className="mb-10">
                                         <dt className="font-medium mb-3">Description</dt>
-                                        <dd className="mt-2 text-sm text-gray-400">
-                                            {experience.description}
-                                        </dd>
+                                        <dd
+                                            className="mt-2 text-sm text-gray-400"
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(experience.description) }}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -387,9 +393,10 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                     </div>
                                     <div className="mb-10">
                                         <dt className="font-medium mb-3">Description</dt>
-                                        <dd className="mt-2 text-sm text-gray-400">
-                                            {education.description}
-                                        </dd>
+                                        <dd
+                                            className="mt-2 text-sm text-gray-400"
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(education.description) }}
+                                        />
                                     </div>
                                     <div className="mb-10">
                                         <dt className="font-medium mb-3">Location</dt>
@@ -436,9 +443,10 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
                                 <div className="collapse-content">
                                     <div className="mt-5 mb-10">
                                         <dt className="font-medium mb-3">Description</dt>
-                                        <dd className="mt-2 text-sm text-gray-400">
-                                            {achievement.description}
-                                        </dd>
+                                        <dd
+                                            className="mt-2 text-sm text-gray-400"
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(achievement.description) }}
+                                        />
                                     </div>
                                 </div>
                             </div>

@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdEditSquare, MdAddBox, MdImage } from "react-icons/md"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
+import TinyEditor from "@/components/TinyEditor"
 
 type props = { project: ProjectExtended | null, profile: ProfileExtended, close: Function }
 
@@ -48,7 +49,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -65,7 +66,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -78,7 +79,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -95,7 +96,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -108,7 +109,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -125,7 +126,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -174,7 +175,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             },
         }).then(async response => {
             if (response.ok) { close(), router.replace(router.asPath) }
-            else eventBus.dispatch("openErrorModal", response.body)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
     }
@@ -190,14 +191,14 @@ export default function ProjectEdit({ project, profile, close }: props) {
             await fetch(`http://localhost:3000/api/project/image`, {
                 method: 'POST',
                 body: data
-            }).then(response => {
+            }).then(async response => {
                 if (response.ok) {
                     setSelectedImage(null)
                     setImageCaption("")
                     router.replace(router.asPath)
                     close()
                 }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
         } else {
@@ -222,12 +223,16 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
 
-    useEffect(() => { getUnlinkedExperiences(), getUnlinkedTags(), getUnlinkedSkills() }, [])
+    useEffect(() => {
+        getUnlinkedExperiences()
+        getUnlinkedTags()
+        getUnlinkedSkills()
+    }, [])
 
     return (
         <div>
@@ -293,14 +298,9 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             <label className="label">
                                 <span className="label-text text-gray-600">Description</span>
                             </label>
-                            <textarea
-                                name="description"
-                                placeholder="description"
-                                className="textarea textarea-bordered"
-                                cols={30}
-                                rows={5}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                            <TinyEditor
+                                content={description}
+                                onChange={(e: string) => setDescription(e)}
                             />
                         </div>
                         <div className="form-control w-full">
@@ -352,7 +352,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                                             </div>
                                                         </div>
                                                     ))
-                                                : <div className="">No tags listed</div>
+                                                : <div className="text-white w-full text-left">No tags listed</div>
                                         }
                                     </div>
                                 </div>
@@ -396,7 +396,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                                             </div>
                                                         </div>
                                                     ))
-                                                : <div className="">No tags listed</div>
+                                                : <div className="text-white w-full text-left">No experiences listed</div>
                                         }
                                     </div>
                                 </div>
@@ -440,7 +440,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                                             </div>
                                                         </div>
                                                     ))
-                                                : <div className="">No skills listed</div>
+                                                : <div className="text-white w-full text-left">No skills listed</div>
                                         }
                                     </div>
                                 </div>
@@ -462,7 +462,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             </dt>
                             <dd className="mt-2 text-sm text-gray-500 flex justify-center items-center flex-wrap gap-5">
                                 {
-                                    project && project.images
+                                    project && project.images && project.images.length > 0
                                         ? project.images.map(
                                             (projectImage: ProjectImage, index: number, array: ProjectImage[]) => (
                                                 <div key={index} className="flex flex-col justify-between items-center w-[300px] bg-base-100 shadow-xl">
@@ -495,7 +495,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                                     </div>
                                                 </div>
                                             ))
-                                        : <span>No images listed</span>
+                                        : <div className="text-gray-600 w-full text-left">No images listed</div>
                                 }
                             </dd>
                         </div>
@@ -660,7 +660,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             <label className="label">
                                 <span className="label-text text-gray-600">Image</span>
                             </label>
-                            <input type="file" className="file-input w-full mb-10" />
+                            <input
+                                type="file"
+                                accept=".png,.jpg,.jpeg,.svg"
+                                className="file-input w-full mb-10"
+                            />
                         </div>
                         <div className="form-control w-full">
                             <label className="label">

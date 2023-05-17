@@ -90,7 +90,7 @@ model Profile {
   city         String?
   country      String?
   postcode     String?
-  summary      String?
+  summary      String?       @db.VarChar(7000)
   experiences  Experience[]
   educations   Education[]
   projects     Project[]

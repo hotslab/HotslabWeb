@@ -22,7 +22,7 @@ export default function Layout(props: Props) {
   async function goTo(route: string) {
     setShowMenu(false)
     if (route == 'profile')
-      router.push({ pathname: `/profiles/${session?.user.id}` })
+      router.push({ pathname: `/profiles/${session?.user.profileId}` })
   }
   async function logOut() {
     setShowMenu(false)
@@ -77,7 +77,7 @@ export default function Layout(props: Props) {
                       title={`${session.user.name} ${session.user.surname}`}
                       style={{
                         backgroundImage: `url(${getDisplayImage(session.user.image)})`,
-                        backgroundSize: "contain",
+                        backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center"
                       }}

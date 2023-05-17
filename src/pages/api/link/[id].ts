@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Link } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -16,7 +17,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -46,12 +47,18 @@ async function update(
     try {
         if (session) {
             const { query, body }: NextApiRequest = req
-            const id = parseInt(query.id as string, 10)
-            const updatedSkill = await prisma.link.update({
-                where: { id: id },
-                data: { name: body.name, url: body.url },
+            const validationResponse = await validator(body, {
+                name: "required|string",
+                url: "required|string|url",
             })
-            res.status(200).json({ data: updatedSkill })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const updatedSkill = await prisma.link.update({
+                    where: { id: Number(query.id) },
+                    data: { name: body.name, url: body.url },
+                })
+                res.status(200).json({ data: updatedSkill })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
@@ -66,8 +73,7 @@ async function erase(
     try {
         if (session) {
             const { query } = req
-            const id = parseInt(query.id as string, 10)
-            const deletedLink = await prisma.link.delete({ where: { id: id } })
+            const deletedLink = await prisma.link.delete({ where: { id: Number(query.id) } })
             res.status(200).json({ data: deletedLink })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Project } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -18,7 +19,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -54,18 +55,29 @@ async function update(
     try {
         if (session) {
             const { body, query } = req
-            const updatedProject = await prisma.project.update({
-                where: { id: Number(query.id) },
-                data: {
-                    profileId: body.profileId,
-                    projectName: body.projectName,
-                    isOngoing: body.isOngoing,
-                    startDate: body.startDate,
-                    endDate: body.endDate,
-                    description: body.description,
-                },
+            const validationResponse = await validator(body, {
+                profileId: "required|numeric",
+                projectName: "required|string",
+                isOngoing: "required|boolean",
+                startDate: "required|date",
+                endDate: "required|date",
+                description: "required|string",
             })
-            res.status(200).json({ data: updatedProject })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const updatedProject = await prisma.project.update({
+                    where: { id: Number(query.id) },
+                    data: {
+                        profileId: body.profileId,
+                        projectName: body.projectName,
+                        isOngoing: body.isOngoing,
+                        startDate: body.startDate,
+                        endDate: body.endDate,
+                        description: body.description,
+                    },
+                })
+                res.status(200).json({ data: updatedProject })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })

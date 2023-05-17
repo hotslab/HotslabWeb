@@ -7,21 +7,27 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "npx ts-node --esm prisma/seed.ts"
+    "seed": "npx ts-node --esm prisma/seed.ts",
+    "assets": "npx ts-node --esm assets.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.14.0",
+    "@tinymce/tinymce-react": "^4.3.0",
+    "@types/dompurify": "^3.0.2",
     "@types/formidable": "^2.0.6",
     "@types/node": "18.16.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
+    "@types/validatorjs": "^3.15.0",
     "argon2": "^0.30.3",
     "autoprefixer": "10.4.14",
+    "copy-webpack-plugin": "^11.0.0",
     "daisyui": "^2.51.6",
     "date-fns": "^2.30.0",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "formidable": "^3.2.5",
+    "isomorphic-dompurify": "^1.5.0",
     "next": "13.3.1",
     "next-auth": "^4.22.1",
     "postcss": "8.4.23",
@@ -30,7 +36,9 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "tailwindcss": "3.3.1",
-    "typescript": "5.0.4"
+    "tinymce": "^6.4.2",
+    "typescript": "5.0.4",
+    "validatorjs": "^3.22.1"
   },
   "devDependencies": {
     "prisma": "^4.14.0"

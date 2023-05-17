@@ -4,6 +4,7 @@ import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import eventBus from "@/lib/eventBus"
+import TinyEditor from "@/components/TinyEditor"
 
 type props = { education: Education | null, countries: Country[], profile: ProfileExtended, close: Function }
 
@@ -35,7 +36,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
             .catch(error => console.error(error))
@@ -112,14 +113,9 @@ export default function EducationEdit({ education, countries, profile, close }: 
                     <label className="label">
                         <span className="label-text text-gray-600">Description</span>
                     </label>
-                    <textarea
-                        name="description"
-                        placeholder="description"
-                        className="textarea textarea-bordered"
-                        cols={30}
-                        rows={5}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                    <TinyEditor
+                        content={description}
+                        onChange={(e: string) => setDescription(e)}
                     />
                 </div>
                 <div className="form-control w-full">

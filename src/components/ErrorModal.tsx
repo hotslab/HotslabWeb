@@ -1,4 +1,5 @@
 type props = { errorMessage: string, close: Function }
+import DOMPurify from "isomorphic-dompurify"
 
 export default function ErrorModal({ errorMessage, close }: props) {
     return (
@@ -10,7 +11,10 @@ export default function ErrorModal({ errorMessage, close }: props) {
                         {/* Content */}
                         <div className="flex flex-col justify-between items-start flex-wrap gap-5">
                             <h2 className="text-error font-md text-xl">Error</h2>
-                            <span className="text-gray-600 text-md">{errorMessage}</span>
+                            <div
+                                className="text-gray-600 text-md"
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorMessage) }}
+                            />
                             <div className='w-full flex justify-end items-center'>
                                 <button
                                     className="btn btn-sm btn-error text-white"

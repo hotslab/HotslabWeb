@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Achievement } from '@prisma/client'
+import validator from '@/lib/validator'
+
 
 type Data = { data: any }
 
@@ -15,7 +17,7 @@ export default async function handler(
     else if (req.method === 'POST') create(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -45,12 +47,21 @@ async function create(
     try {
         if (session) {
             const { body } = req
-            const newAchievement: Achievement = await prisma.achievement.create({
-                data: { name: body.name, description: body.description, profileId: body.profileId }
+            const validationResponse = await validator(body, {
+                name: "required|string",
+                description: "required|string",
+                profileId: "required|numeric"
             })
-            res.status(200).json({ data: newAchievement })
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const newAchievement: Achievement = await prisma.achievement.create({
+                    data: { name: body.name, description: body.description, profileId: body.profileId }
+                })
+                res.status(200).json({ data: newAchievement })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

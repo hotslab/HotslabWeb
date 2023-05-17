@@ -25,20 +25,22 @@ export default function Experiences({ experiences, countries, profile, close }: 
         setShowConfirmModal(experience ? true : false)
     }
     async function deleteItem() {
-        eventBus.dispatch("openLoadingPage", true)
-        await fetch(
-            `http://localhost:3000/api/experience/${selectedExperience.id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "content-type": "application/json",
-                },
-            }).then(async response => {
-                if (response.ok) router.replace(router.asPath)
-                else eventBus.dispatch("openErrorModal", response.body)
-                openOrCloseDelete()
-                eventBus.dispatch("openLoadingPage", false)
-            })
+        if (selectedExperience) {
+            eventBus.dispatch("openLoadingPage", true)
+            await fetch(
+                `http://localhost:3000/api/experience/${selectedExperience.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                }).then(async response => {
+                    if (response.ok) router.replace(router.asPath)
+                    else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                    openOrCloseDelete()
+                    eventBus.dispatch("openLoadingPage", false)
+                })
+        } else eventBus.dispatch("openErrorModal", "Experience selected for deletion is missing")
     }
     function closeEdit() {
         setSelectedExperience(null)

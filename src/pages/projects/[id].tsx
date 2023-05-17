@@ -1,9 +1,9 @@
 import Layout from "@/components/Layout"
 import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended, Tag } from "@prisma/client"
-import Image from "next/image"
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
+import DOMPurify from 'isomorphic-dompurify'
 
 type Props = { project: ProjectExtended }
 
@@ -17,9 +17,9 @@ export default function Project({ project }: Props) {
     }
 
     useEffect(() => {
-        const images = project.images
-        const url = project && project.images && project.images.length > 0 ? project.images[0].url : null
-        setCurrentDisplayImage(url)
+        setCurrentDisplayImage(
+            project && project.images && project.images.length > 0 ? project.images[0].url : null
+        )
     }, [])
 
     return (
@@ -74,10 +74,10 @@ export default function Project({ project }: Props) {
                                 ))}
                         </div>
                     </div>
-                    <p className="text-gray-500 mb-10">
-                        {project.description}
-                    </p>
-
+                    <div
+                        className="text-gray-500 mb-10"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(project.description) }}
+                    />
                     <dl className="mb-10 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-8">
                         {project.skills && project.skills?.length > 0 &&
                             <div className="border-t border-gray-200 pt-4">

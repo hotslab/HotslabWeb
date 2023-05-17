@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { ProjectExperience } from '@prisma/client'
+import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -15,7 +16,7 @@ export default async function handler(
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+        res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
 
@@ -27,21 +28,28 @@ async function create(
     try {
         if (session) {
             const { body } = req
-            const exists = await prisma.projectExperience.findMany({
-                where: {
-                    projectId: body.projectId,
-                    experienceId: body.experienceId
-                }
+            const validationResponse = await validator(body, {
+                projectId: "required|numeric",
+                experienceId: "required|numeric",
             })
-            if (exists.length === 0) {
-                const newProjectExperience: ProjectExperience = await prisma.projectExperience.create({
-                    data: {
+            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
+            else {
+                const exists = await prisma.projectExperience.findMany({
+                    where: {
                         projectId: body.projectId,
                         experienceId: body.experienceId
-                    },
+                    }
                 })
-                res.status(200).json({ data: newProjectExperience })
-            } else res.status(400).json({ data: "Experience is already linked to project" })
+                if (exists.length === 0) {
+                    const newProjectExperience: ProjectExperience = await prisma.projectExperience.create({
+                        data: {
+                            projectId: body.projectId,
+                            experienceId: body.experienceId
+                        },
+                    })
+                    res.status(200).json({ data: newProjectExperience })
+                } else res.status(400).json({ data: "Experience is already linked to project" })
+            }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)

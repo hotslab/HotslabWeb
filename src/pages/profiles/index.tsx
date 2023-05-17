@@ -39,7 +39,7 @@ export default function Profiles({ profiles }: Props) {
                                                     title={`${profile.user.name} ${profile.user.surname}`}
                                                     style={{
                                                         backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
-                                                        backgroundSize: "contain",
+                                                        backgroundSize: "cover",
                                                         backgroundRepeat: "no-repeat",
                                                         backgroundPosition: "center"
                                                     }}
@@ -57,7 +57,7 @@ export default function Profiles({ profiles }: Props) {
                                         <div className="card-actions justify-end w-full">
                                             <button
                                                 className="btn btn-md btn-success text-white"
-                                                onClick={() => router.push({ pathname: `/profiles/${profile.userId}` })}
+                                                onClick={() => router.push({ pathname: `/profiles/${profile.id}` })}
                                             >
                                                 open
                                             </button>

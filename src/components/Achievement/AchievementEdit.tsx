@@ -1,7 +1,8 @@
 import { Achievement, ProfileExtended } from "@prisma/client";
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus";
-import { use, useState } from "react"
+import { useState } from "react"
+import TinyEditor from "@/components/TinyEditor"
 
 type props = { achievement: Achievement | null, profile: ProfileExtended, close: Function }
 
@@ -25,7 +26,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 headers: { "content-type": "application/json" },
             }).then(async response => {
                 if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", response.body)
+                else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
             .catch(error => console.error(error))
@@ -71,14 +72,9 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                     <label className="label">
                         <span className="label-text text-gray-600">Description</span>
                     </label>
-                    <textarea
-                        name="description"
-                        placeholder="description"
-                        className="textarea textarea-bordered"
-                        cols={30}
-                        rows={5}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                    <TinyEditor
+                        content={description}
+                        onChange={(e: string) => setDescription(e)}
                     />
                 </div>
             </div>
