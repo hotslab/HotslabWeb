@@ -57,23 +57,19 @@ export async function getServerSideProps(context: any) {
             "content-type": "application/json",
         },
     }).then(async response => profile = (await response.json()).data)
-        .catch(error => console.error(error))
     await fetch(`http://localhost:3000/api/skill?userId=${context.query.id}`, {
         method: "GET",
         headers: {
             "content-type": "application/json",
         },
     }).then(async response => skills = (await response.json()).data)
-        .catch(error => console.error(error))
     await fetch(`http://localhost:3000/api/country`, {
         method: "GET",
         headers: { "content-type": "application/json" },
     }).then(async response => countries = (await response.json()).data)
-        .catch(error => console.error(error))
     await fetch(`http://localhost:3000/api/role`, {
         method: "GET",
         headers: { "content-type": "application/json" },
     }).then(async response => roles = (await response.json()).data)
-        .catch(error => console.error(error))
     return { props: { profile, skills, countries, roles } }
 }

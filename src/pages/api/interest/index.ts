@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
 import { Session } from 'next-auth'
 import { Interest } from '@prisma/client'
-import zodValidator from '@/lib/zodValidator'
 import validator from '@/lib/validator'
 
 type Data = { data: any }

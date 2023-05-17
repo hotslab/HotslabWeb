@@ -228,11 +228,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             })
     }
 
-    useEffect(() => {
-        getUnlinkedExperiences()
-        getUnlinkedTags()
-        getUnlinkedSkills()
-    }, [])
+    useEffect(() => { getUnlinkedExperiences(), getUnlinkedTags(), getUnlinkedSkills() }, [])
 
     return (
         <div>

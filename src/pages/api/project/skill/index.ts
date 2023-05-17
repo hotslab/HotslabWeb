@@ -52,7 +52,6 @@ async function create(
             }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
-        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -70,7 +69,6 @@ async function erase(
             res.status(200).json({ data: deletedProjectSkill })
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
-        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

@@ -25,7 +25,6 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     const router = useRouter()
 
     function getDisplayImage(url: string | null): string | null {
-        console.log(url)
         return url ? `'http://localhost:3000/${url}'` : null
     }
     async function saveOrUpdate() {

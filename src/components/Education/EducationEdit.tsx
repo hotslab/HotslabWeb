@@ -39,7 +39,6 @@ export default function EducationEdit({ education, countries, profile, close }: 
                 else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(error => console.error(error))
     }
 
     return (

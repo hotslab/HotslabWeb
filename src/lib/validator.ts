@@ -7,7 +7,6 @@ export type ValidatorResponse = {
 
 const validator = async (body: any, rules: Rules, customMessages: ErrorMessages = {}): Promise<ValidatorResponse> => {
     const validation = new Validator(body, rules, customMessages)
-    console.log(validation.passes(), validation.fails(), validation.errors.all())
     if (validation.passes()) return { failed: false, errors: null }
     const errors = Object.entries(validation.errors.all())
 

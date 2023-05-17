@@ -29,7 +29,6 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                 else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
-            .catch(error => console.error(error))
     }
 
     return (

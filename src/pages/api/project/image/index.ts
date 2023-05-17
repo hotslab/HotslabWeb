@@ -56,7 +56,7 @@ async function create(
                 }, {
                     projectId: "required|numeric",
                     projectImageId: "required|numeric",
-                    caption, "required|string",
+                    caption: "required|string"
                 })
                 if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
                 else {
