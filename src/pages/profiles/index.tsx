@@ -2,13 +2,12 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout"
 import { ProfileExtended } from "@prisma/client"
 import { useSession } from "next-auth/react"
-import Image from 'next/image'
 import { MdAccountCircle } from "react-icons/md"
+import { ComponentWithAuth } from "../../../types/authenticated"
 
 type Props = { profiles: ProfileExtended[] }
 
-export default function Profiles({ profiles }: Props) {
-    const { status } = useSession()
+const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
     const router = useRouter()
 
     function getDisplayImage(url: string | null): string | null {
@@ -78,13 +77,18 @@ export default function Profiles({ profiles }: Props) {
 
 
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const response = await fetch("http://localhost:3000/api/profile", {
         method: "GET",
         headers: {
             "content-type": "application/json",
+            "cookie": context.req.headers.cookie || ""
         },
     })
     const profiles = (await response.json()).data
     return { props: { profiles } }
 }
+
+Profiles.auth = true
+
+export default Profiles

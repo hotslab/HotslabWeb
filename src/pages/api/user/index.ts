@@ -1,8 +1,7 @@
 import prisma from "@/lib/prisma"
 import { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth/next"
 import * as argon2 from "argon2"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import { User } from '@prisma/client'
 import validator from "@/lib/validator"
 
@@ -13,7 +12,7 @@ export default async function handler(
     res: NextApiResponse<Data>
 ) {
     try {
-        const session: Session | null = await getServerSession(req, res, {})
+        const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
         if (req.method === 'GET') index(req, res, session)
         else if (req.method === 'POST') create(req, res, session)
         else {
@@ -28,7 +27,7 @@ export default async function handler(
 async function index(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     const users: User[] = await prisma.user.findMany({ where: { active: true } })
     res.status(200).json({ data: users })
@@ -37,10 +36,10 @@ async function index(
 async function create(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { body } = req
             const validationResponse = await validator(body, {
                 email: "required|string|email",

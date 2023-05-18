@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
-// import { authOptions } from "../auth/[...nextauth]"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import { Project } from '@prisma/client'
 import validator from '@/lib/validator'
 
@@ -12,8 +10,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    // const body = JSON.parse(req.body);
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
     else if (req.method === 'PUT') update(req, res, session)
     else if (req.method === 'DELETE') erase(req, res, session)
@@ -26,11 +23,11 @@ export default async function handler(
 async function index(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
         const { query } = req
-        const project = await prisma.project.findUnique({
+        const project: Project | null = await prisma.project.findUnique({
             where: { id: Number(query.id) },
             include: {
                 profile: true,
@@ -50,10 +47,10 @@ async function index(
 async function update(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { body, query } = req
             const validationResponse = await validator(body, {
                 profileId: "required|numeric",
@@ -87,10 +84,10 @@ async function update(
 async function erase(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query } = req
             const deletedProject = await prisma.project.delete({ where: { id: Number(query.id) } })
             res.status(200).json({ data: deletedProject })

@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
-import { Skill, SkillExtended } from '@prisma/client'
+import { getToken, JWT } from 'next-auth/jwt'
 import validator from '@/lib/validator'
 
 type Data = { data: any }
@@ -11,7 +9,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
     else if (req.method === 'PUT') update(req, res, session)
     else if (req.method === 'DELETE') erase(req, res, session)
@@ -24,7 +22,7 @@ export default async function handler(
 async function index(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
         const { query }: NextApiRequest = req
@@ -44,10 +42,10 @@ async function index(
 async function update(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { body, query } = req
             const validationResponse = await validator(body, {
                 name: "required|string",
@@ -69,10 +67,10 @@ async function update(
 async function erase(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query } = req
             const deletedSkill = await prisma.skill.delete({ where: { id: Number(query.id) } })
             res.status(200).json({ data: deletedSkill })

@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout"
 import { SkillExtended } from "@prisma/client"
 import Skills from "@/components/Skill/Skills"
+import { ComponentWithAuth } from "../../../types/authenticated"
 
 type Props = { skills: SkillExtended[] | [] }
 
-export default function SkillList({ skills }: Props) {
+const SkillList: ComponentWithAuth<Props> = ({ skills }: Props) => {
     return (
         <Layout>
             <div className="min-h-full bg-white">
@@ -18,13 +19,18 @@ export default function SkillList({ skills }: Props) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const response = await fetch("http://localhost:3000/api/skill", {
         method: "GET",
         headers: {
             "content-type": "application/json",
+            "cookie": context.req.headers.cookie || ""
         },
     })
     const skills = (await response.json()).data
     return { props: { skills } }
 }
+
+SkillList.auth = true
+
+export default SkillList

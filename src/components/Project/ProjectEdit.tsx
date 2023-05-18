@@ -1,5 +1,5 @@
 import { ProjectExtended, ProfileExtended, ProjectSkillExtended, Tag, Skill, ProjectTagExtended, Experience, ProjectExperienceExtended, ProjectImage } from "@prisma/client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdEditSquare, MdAddBox, MdImage } from "react-icons/md"
@@ -130,7 +130,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             eventBus.dispatch("openLoadingPage", false)
         })
     }
-    async function getUnlinkedExperiences() {
+    const getUnlinkedExperiences = useCallback(async () => {
         if (project && project.id && unlinkedExperiences.length === 0) {
             await fetch(`http://localhost:3000/api/experience?notProjectId=${project.id}`, {
                 method: "GET",
@@ -141,9 +141,9 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 setUnlinkedExperiences((await response.json()).data)
             })
         }
-    }
-    async function getUnlinkedTags() {
-        if (project && project.id && unlinkedExperiences.length === 0) {
+    }, [project, unlinkedExperiences])
+    const getUnlinkedTags = useCallback(async () => {
+        if (project && project.id && unlinkedTags.length === 0) {
             await fetch(`http://localhost:3000/api/tag?notProjectId=${project.id}`, {
                 method: "GET",
                 headers: {
@@ -153,9 +153,9 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 setUnlinkedTags((await response.json()).data)
             })
         }
-    }
-    async function getUnlinkedSkills() {
-        if (project && project.id && unlinkedExperiences.length === 0) {
+    }, [project, unlinkedTags])
+    const getUnlinkedSkills = useCallback(async () => {
+        if (project && project.id && unlinkedSkills.length === 0) {
             await fetch(`http://localhost:3000/api/skill?notProjectId=${project.id}`, {
                 method: "GET",
                 headers: {
@@ -165,7 +165,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 setUnlinkedSkills((await response.json()).data)
             })
         }
-    }
+    }, [project, unlinkedSkills])
     async function deleteImage(projectImageId: number) {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(`http://localhost:3000/api/project/image/?id=${projectImageId}`, {
@@ -228,7 +228,9 @@ export default function ProjectEdit({ project, profile, close }: props) {
             })
     }
 
-    useEffect(() => { getUnlinkedExperiences(), getUnlinkedTags(), getUnlinkedSkills() }, [])
+    useEffect(() => { getUnlinkedExperiences(), getUnlinkedTags(), getUnlinkedSkills() },
+        [getUnlinkedExperiences, getUnlinkedTags, getUnlinkedSkills]
+    )
 
     return (
         <div>

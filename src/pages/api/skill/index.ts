@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import { Skill } from '@prisma/client'
 import validator from '@/lib/validator'
 
@@ -11,7 +10,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
     else if (req.method === 'POST') create(req, res, session)
     else {
@@ -23,17 +22,15 @@ export default async function handler(
 async function index(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
         const { query }: NextApiRequest = req
         let selectData: { [key: string]: any } = { where: {} }
         let includeData: { [key: string]: any } = {}
-        if (query.userId) selectData.where.projects = {
+        if (query.profileId) selectData.where.projects = {
             every: {
-                project: {
-                    is: { profile: { is: { user: { is: { id: Number(query.userId) } } } } }
-                }
+                project: { is: { id: Number(query.profileId) } }
             }
         }
         if (query.notExperienceId) selectData.where.experiences = {
@@ -56,10 +53,10 @@ async function index(
 async function create(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { body } = req
             const validationResponse = await validator(body, {
                 name: "required|string",

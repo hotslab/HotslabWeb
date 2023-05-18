@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import { Experience } from '@prisma/client'
 import validator from '@/lib/validator'
 
@@ -11,7 +10,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
     else if (req.method === 'PUT') update(req, res, session)
     else if (req.method === 'DELETE') erase(req, res, session)
@@ -24,7 +23,7 @@ export default async function handler(
 async function index(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
         const { query } = req
@@ -47,10 +46,10 @@ async function index(
 async function update(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query, body } = req
             const validationResponse = await validator(body, {
                 profileId: "required|numeric",
@@ -94,10 +93,10 @@ async function update(
 async function erase(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query } = req
             const id = parseInt(query.id as string, 10)
             const deletedExperience = await prisma.experience.delete({ where: { id: id } })

@@ -1,18 +1,30 @@
 import '@/styles/globals.css'
 import { SessionProvider } from "next-auth/react"
-import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import LoadingModal from "@/components/LoadingModal"
 import eventBus from '@/lib/eventBus'
 import ErrorModal from '@/components/ErrorModal'
+import Auth from '@/components/Auth'
+import fetchInterceptor from '@/lib/fetchInterceptor'
+import { signOut } from "next-auth/react"
+import { AppAuthProps } from '../../types/authenticated'
 
-export default function App({ Component, pageProps }: AppProps) {
+// export function reportWebVitals(metric: any) {
+//   console.log(metric)
+// }
+
+
+export default function App({ Component, pageProps }: AppAuthProps) {
   const [pageLoading, setPageLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const router = useRouter()
 
+  async function logOut() {
+    await signOut({ redirect: false })
+    router.push({ pathname: "/auth/login" })
+  }
   function closeErrorModal() {
     setErrorMessage(null)
   }
@@ -25,17 +37,23 @@ export default function App({ Component, pageProps }: AppProps) {
     router.events.on('routeChangeError', handleComplete)
   }, [router])
   useEffect(() => {
+    fetchInterceptor()
     eventBus.on("openErrorModal", (e: string) => setErrorMessage(e))
     eventBus.on("openLoadingPage", (e: boolean) => setPageLoading(e))
+    eventBus.on("logOut", () => logOut())
     return () => {
       eventBus.remove("openErrorModal", () => setErrorMessage(null))
       eventBus.remove("openLoadingPage", () => setPageLoading(false))
+      eventBus.remove("logOut", () => logOut())
     }
   }, [])
 
   return (
     <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
+      {Component.auth
+        ? <Auth><Component {...pageProps} /></Auth>
+        : <Component {...pageProps} />
+      }
       {
         pageLoading &&
         <LoadingModal />

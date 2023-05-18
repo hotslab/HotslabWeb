@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
 import { Profile } from '@prisma/client'
-import validator from '@/lib/validator'
 
 type Data = { data: any }
 
@@ -12,10 +11,8 @@ export default async function handler(
 ) {
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
-    else if (req.method === 'PUT') update(req, res, session)
-    else if (req.method === 'DELETE') erase(req, res, session)
     else {
-        res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
+        res.setHeader('Allow', ['GET', 'POST'])
         res.status(405).json({ data: `Method ${req.method} Not Allowed` })
     }
 }
@@ -27,8 +24,9 @@ async function index(
 ) {
     try {
         const { query } = req
-        const profile: Profile | null = await prisma.profile.findUnique({
-            where: { id: Number(query.id) },
+        const profile: Profile | null = await prisma.profile.findFirst({
+            where: { user: { email: "joseph.nyahuye@gmail.com" } }
+            ,
             include: {
                 user: {
                     select: {
@@ -85,67 +83,6 @@ async function index(
             }
         })
         res.status(200).json({ data: profile })
-    } catch (error) {
-        res.status(400).json({ data: "Unknown Server Error" })
-    }
-}
-
-async function update(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: JWT | null
-) {
-    try {
-        if (session && ["Owner", "Admin"].includes(session.user.role)) {
-            const { query, body } = req
-            const validationResponse = await validator(body, {
-                idNumber: "required|string",
-                dob: "required|date",
-                sex: "required|string",
-                countryCode: "required|string",
-                phoneNumber: "required|numeric",
-                address: "required|string",
-                city: "required|string",
-                country: "required|string",
-                postcode: "required|string",
-                summary: "required|string",
-            })
-            if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
-            else {
-                const updatedProfile = await prisma.profile.update({
-                    where: { id: Number(query.id) },
-                    data: {
-                        idNumber: body.idNumber,
-                        dob: body.dob,
-                        sex: body.sex,
-                        countryCode: body.countryCode,
-                        phoneNumber: body.phoneNumber,
-                        address: body.address,
-                        city: body.city,
-                        country: body.country,
-                        postcode: body.postcode,
-                        summary: body.summary,
-                    },
-                })
-                res.status(200).json({ data: updatedProfile })
-            }
-        } else res.status(400).json({ data: "Unauthorized" })
-    } catch (error) {
-        res.status(400).json({ data: "Unknown Server Error" })
-    }
-}
-
-async function erase(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>,
-    session: JWT | null
-) {
-    try {
-        if (session && ["Owner", "Admin"].includes(session.user.role)) {
-            const { query } = req
-            const deletedProfile = await prisma.profile.delete({ where: { id: Number(query.id) } })
-            res.status(200).json({ data: deletedProfile })
-        } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
         res.status(400).json({ data: "Unknown Server Error" })
     }

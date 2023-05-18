@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import { ProjectImage } from '@prisma/client'
 import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
@@ -20,7 +19,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'POST') create(req, res, session)
     else if (req.method === 'DELETE') erase(req, res, session)
     else {
@@ -32,10 +31,10 @@ export default async function handler(
 async function create(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const tempUploadDir = path.resolve(`./public/uploads/temp`)
             if (!fs.existsSync(tempUploadDir)) fs.mkdirSync(tempUploadDir, { recursive: true })
             const form = formidable({ multiples: true, keepExtensions: true, uploadDir: tempUploadDir })
@@ -94,10 +93,10 @@ async function create(
 async function erase(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query } = req
             const deletedProjectImage: ProjectImage = await prisma.projectImage.delete({ where: { id: Number(query.id) } })
             if (deletedProjectImage && deletedProjectImage.url) {

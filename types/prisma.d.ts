@@ -26,7 +26,8 @@ declare module "@prisma/client" {
 
     interface UserExtended extends User {
         role: Role
-        profile: Profile
+        profile?: Profile
+        client?: Client
     }
 
     interface ProfileExtended extends Profile {

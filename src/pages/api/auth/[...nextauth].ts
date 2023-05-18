@@ -2,7 +2,7 @@ import NextAuth, { Session } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
 import * as argon2 from "argon2"
-import { UserExtended, User } from "@prisma/client"
+import { User, UserExtended } from "@prisma/client"
 
 type CallbackSession = {
     session: Session
@@ -27,26 +27,39 @@ export default NextAuth({
         }),
     ],
     callbacks: {
-        session: async ({ session, token }: CallbackSession) => {
-            session.user.id = parseInt(token.sub)
-            const user = await prisma.user.findUnique({
-                where: { id: parseInt(token.sub) },
-                include: {
-                    role: true,
-                    profile: { select: { id: true, imageUrl: true } },
-                    client: { select: { id: true, imageUrl: true } }
+        async jwt({ token, user }) {
+            /* Step 1: update the token based on the user object */
+            if (token.sub) {
+                const userData = await prisma.user.findUnique({
+                    where: { id: Number(token.sub) },
+                    include: {
+                        role: true,
+                        profile: { select: { id: true, imageUrl: true } },
+                        client: { select: { id: true, imageUrl: true } }
+                    }
+                })
+                if (userData) {
+                    token = {
+                        ...token,
+                        user: {
+                            id: userData.id,
+                            name: userData.name,
+                            surname: userData.surname,
+                            role: userData.role.name,
+                            roleId: userData.roleId,
+                            active: userData.active,
+                            showProfile: userData.showProfile,
+                            image: userData.profile?.imageUrl || userData.client?.imageUrl || null,
+                            profileId: userData.profile?.id || null,
+                            clientId: userData.client?.id || null,
+                        }
+                    }
                 }
-            })
-            if (user) {
-                session.user.surname = user.surname
-                session.user.role = user.role.name
-                session.user.roleId = user.roleId
-                session.user.active = user.active
-                session.user.showProfile = user.showProfile
-                session.user.image = user.profile?.imageUrl || user.client?.imageUrl || null
-                session.user.profileId = user.profile?.id || null
-                session.user.clientId = user.client?.id || null
             }
+            return token;
+        },
+        session: async ({ session, token }: CallbackSession) => {
+            if (token.user) session.user = token.user
             return session
         }
     },

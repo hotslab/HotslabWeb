@@ -1,5 +1,5 @@
 import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill, Country } from "@prisma/client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdAddBox } from "react-icons/md"
@@ -92,7 +92,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             eventBus.dispatch("openLoadingPage", false)
         })
     }
-    async function getUnlinkedProjects() {
+    const getUnlinkedProjects = useCallback(async () => {
         if (experience && experience.id && unlinkedProjects.length === 0) {
             await fetch(`http://localhost:3000/api/project?notExperienceId=${experience.id}`, {
                 method: "GET",
@@ -103,8 +103,8 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 setUnlinkedProjects((await response.json()).data)
             })
         }
-    }
-    async function getUnlinkedSkills() {
+    }, [experience, unlinkedProjects])
+    const getUnlinkedSkills = useCallback(async () => {
         if (experience && experience.id && unlinkedProjects.length === 0) {
             await fetch(`http://localhost:3000/api/skill?notExperienceId=${experience.id}`, {
                 method: "GET",
@@ -115,7 +115,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 setUnlinkedSkills((await response.json()).data)
             })
         }
-    }
+    }, [experience, unlinkedProjects])
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
@@ -143,7 +143,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             })
     }
 
-    useEffect(() => { getUnlinkedProjects(), getUnlinkedSkills() }, [])
+    useEffect(() => { getUnlinkedProjects(), getUnlinkedSkills() }, [getUnlinkedProjects, getUnlinkedSkills])
 
     return (
         <div>

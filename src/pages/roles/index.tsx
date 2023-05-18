@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout"
 import { RoleExtended } from "@prisma/client"
 import Roles from "@/components/Role/Roles"
+import { ComponentWithAuth } from "../../../types/authenticated"
 
 type Props = { roles: RoleExtended[] | [] }
 
-export default function RoleList({ roles }: Props) {
+const RoleList: ComponentWithAuth<Props> = ({ roles }: Props) => {
     return (
         <Layout>
             <div className="min-h-full bg-white">
@@ -18,13 +19,18 @@ export default function RoleList({ roles }: Props) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const response = await fetch("http://localhost:3000/api/role", {
         method: "GET",
         headers: {
             "content-type": "application/json",
+            "cookie": context.req.headers.cookie || ""
         },
     })
     const roles = (await response.json()).data
     return { props: { roles } }
 }
+
+RoleList.auth = true
+
+export default RoleList

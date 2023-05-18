@@ -2,7 +2,7 @@ import Layout from "@/components/Layout"
 import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended, Tag } from "@prisma/client"
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import DOMPurify from 'isomorphic-dompurify'
 
 type Props = { project: ProjectExtended }
@@ -15,12 +15,13 @@ export default function Project({ project }: Props) {
         const imageUrl = url ? `'http://localhost:3000/${url}'` : null
         setDisplayImage(imageUrl)
     }
-
-    useEffect(() => {
+    const setDefaultImage = useCallback(async () => {
         setCurrentDisplayImage(
             project && project.images && project.images.length > 0 ? project.images[0].url : null
         )
-    }, [])
+    }, [project])
+
+    useEffect(() => { setDefaultImage() }, [setDefaultImage])
 
     return (
         <Layout>
@@ -136,6 +137,7 @@ export async function getServerSideProps(context: any) {
         method: "GET",
         headers: {
             "content-type": "application/json",
+            "cookie": context.req.headers.cookie || ""
         },
     })
     const project = (await response.json()).data

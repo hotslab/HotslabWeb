@@ -3,11 +3,10 @@ import UserProfile from '@/components/UserProfile/UserProfile'
 import { useRouter } from 'next/router'
 import { ProfileExtended, Role } from "@prisma/client"
 import { useSession } from "next-auth/react"
-import { ComponentWithAuth } from "../../../types/authenticated"
 
 type Props = { profile: ProfileExtended, roles: Role[] }
 
-const Profile: ComponentWithAuth<Props> = ({ profile, roles }: Props) => {
+export default function Profile({ profile, roles }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -26,7 +25,6 @@ const Profile: ComponentWithAuth<Props> = ({ profile, roles }: Props) => {
                             </span>
                             {
                                 status === "authenticated"
-                                && session && session.user
                                 && (session.user.role === "Owner" || session.user.role === "Admin")
                                 &&
                                 <div className="flex justify-between items-center gap-5">
@@ -51,7 +49,7 @@ export async function getServerSideProps(context: any) {
     let profile: ProfileExtended | null = null
     let roles: Role[] | [] = []
 
-    await fetch(`http://localhost:3000/api/profile/${context.query.id}`, {
+    await fetch(`http://localhost:3000/api/developer`, {
         method: "GET",
         headers: {
             "content-type": "application/json",
@@ -64,7 +62,3 @@ export async function getServerSideProps(context: any) {
     }).then(async response => roles = (await response.json()).data)
     return { props: { profile, roles } }
 }
-
-Profile.auth = true
-
-export default Profile

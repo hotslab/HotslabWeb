@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next"
 import prisma from "@/lib/prisma"
-import { Session } from 'next-auth'
+import { getToken, JWT } from 'next-auth/jwt'
 import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
 import path from 'path'
@@ -20,7 +19,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: Session | null = await getServerSession(req, res, {})
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
     if (req.method === 'POST') create(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
@@ -31,10 +30,10 @@ export default async function handler(
 async function create(
     req: NextApiRequest,
     res: NextApiResponse<Data>,
-    session: Session | null
+    session: JWT | null
 ) {
     try {
-        if (session) {
+        if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { query } = req
             const id = Number(query.id)
             const validationResponse = await validator({ id: id }, { id: "required|numeric" })

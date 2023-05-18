@@ -58,11 +58,12 @@ export default function Projects({ projects }: Props) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const response = await fetch("http://localhost:3000/api/project?tags=portfolio,design", {
         method: "GET",
         headers: {
             "content-type": "application/json",
+            "cookie": context.req.headers.cookie || ""
         },
     })
     const projects = (await response.json()).data

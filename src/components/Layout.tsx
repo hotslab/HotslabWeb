@@ -1,10 +1,10 @@
 import { ReactNode, useState } from "react"
 import Footer from "@/components/Footer"
-import Router from "next/router"
-import { signOut, useSession } from "next-auth/react"
-import { MdMenu, MdAccountCircle } from "react-icons/md"
+import { useSession } from "next-auth/react"
+import { MdAccountCircle } from "react-icons/md"
 import { useRouter } from "next/router"
 import Image from "next/image"
+import eventBus from "@/lib/eventBus"
 
 type Props = {
   children: ReactNode
@@ -15,7 +15,7 @@ export default function Layout(props: Props) {
   const router = useRouter()
   const [showMenu, setShowMenu] = useState(false)
   const isActive: (pathname: string) => boolean = (pathname) =>
-    Router.pathname === pathname;
+    router.pathname === pathname;
 
   const { data: session, status } = useSession()
 
@@ -26,12 +26,10 @@ export default function Layout(props: Props) {
   }
   async function logOut() {
     setShowMenu(false)
-    await signOut({ redirect: false })
-    router.push({ pathname: "/" })
+    eventBus.dispatch("logOut")
   }
   function getFormattedName(): string {
     if (session && session.user) {
-      // const name = `${session.user.name} ${session.user.surname}`
       const name = 'Joseph Nyahuye'
       return name.length > 15 ?
         `${name.substring(0, 14)}...` : name
@@ -119,31 +117,31 @@ export default function Layout(props: Props) {
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
         <ul className="menu p-4 w-52 bg-base-100 text-base-content">
-          <li onClick={() => Router.push('/')}><a>Home</a></li>
-          <li onClick={() => Router.push('/projects')}><a>Portfolio</a></li>
+          <li onClick={() => router.push('/')}><a>Home</a></li>
+          <li onClick={() => router.push('/projects')}><a>Portfolio</a></li>
           {
             status === "authenticated" &&
-            <li onClick={() => Router.push('/profiles')}><a>Profiles</a></li>
+            <li onClick={() => router.push('/profiles')}><a>Profiles</a></li>
           }
           {
             status === "authenticated" &&
-            <li onClick={() => Router.push('/roles')}><a>Roles</a></li>
+            <li onClick={() => router.push('/roles')}><a>Roles</a></li>
           }
           {
             status === "authenticated" &&
-            <li onClick={() => Router.push('/tags')}><a>Tags</a></li>
+            <li onClick={() => router.push('/tags')}><a>Tags</a></li>
           }
           {
             status === "authenticated" &&
-            <li onClick={() => Router.push('/skills')}><a>Skills</a></li>
+            <li onClick={() => router.push('/skills')}><a>Skills</a></li>
           }
           {
             status !== "authenticated" &&
-            <li onClick={() => Router.push('/profiles/1')}><a>Profile</a></li>
+            <li onClick={() => router.push('/developer')}><a>Profile</a></li>
           }
           {
             status !== "authenticated" &&
-            <li onClick={() => Router.push('/auth/login')}><a>Login</a></li>
+            <li onClick={() => router.push('/auth/login')}><a>Login</a></li>
           }
         </ul>
       </div>

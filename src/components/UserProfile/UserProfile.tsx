@@ -14,7 +14,7 @@ import {
 } from "@prisma/client"
 import { format } from 'date-fns'
 import { MdEditSquare, MdAccountCircle } from "react-icons/md"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import UserEdit from "@/components/User/UserEdit"
 import ProfileEdit from "@/components/Profile/ProfileEdit"
 import Links from "@/components/Link/Links"
@@ -28,13 +28,13 @@ import DOMPurify from "isomorphic-dompurify"
 
 type Props = {
     profile: ProfileExtended
-    skills: SkillExtended[]
-    countries: Country[]
     roles: Role[]
 }
 
-export default function UserProfile({ profile, skills, countries, roles }: Props) {
+export default function UserProfile({ profile, roles }: Props) {
     const [editSection, setEditSection] = useState<string | null>(null)
+    const [skills, setSkills] = useState<SkillExtended[] | []>([])
+    const [countries, setCountries] = useState<Country[] | []>([])
 
     const { data: session, status } = useSession()
 
@@ -47,6 +47,22 @@ export default function UserProfile({ profile, skills, countries, roles }: Props
     function getDisplayImage(url: string | null): string | null {
         return url ? `'http://localhost:3000/${url}'` : null
     }
+    const getCountries = useCallback(async () => {
+        await fetch(`http://localhost:3000/api/country`, {
+            method: "GET",
+            headers: { "content-type": "application/json" },
+        }).then(async response => setCountries((await response.json()).data))
+    }, [])
+    const getSkills = useCallback(async () => {
+        await fetch(`http://localhost:3000/api/skill?profileId=${profile.id}`, {
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+            },
+        }).then(async response => setSkills((await response.json()).data))
+    }, [profile.id])
+
+    useEffect(() => { getCountries(), getSkills() }, [getCountries, getSkills])
 
     return (
         <div>
