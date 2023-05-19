@@ -28,7 +28,7 @@ export default function Projects({ projects, profile, close }: props) {
         if (selectedProject) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/project/${selectedProject.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/project/${selectedProject.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -51,7 +51,7 @@ export default function Projects({ projects, profile, close }: props) {
             {
                 !showEdit ?
                     <div>
-                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
                             <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                                 <span>Projects</span>
                                 <span>{projects.length}</span>
@@ -75,7 +75,7 @@ export default function Projects({ projects, profile, close }: props) {
                             </div>
                         </div>
                         <div className="overflow-x-auto bg-white">
-                            <table className="table bg-white w-full">
+                            <table className="table bg-white w-full text-white">
                                 {/* head */}
                                 <thead>
                                     <tr>

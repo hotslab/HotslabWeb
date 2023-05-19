@@ -28,7 +28,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "prisma/datasets.mjs"
+    "prisma/datasets.js",
+    "prisma/seed.js",
+    "prod-server.js",
+    "dev-server.js",
   ],
   "exclude": [
     "node_modules"

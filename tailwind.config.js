@@ -16,29 +16,12 @@ module.exports = {
   },
   daisyui: {
     styled: true,
-    themes: [
-      "black",
-      {
-        hotslabBlack: {
-
-          "primary": "#dc2626",
-          "secondary": "#0369a1",
-          "accent": "#16a34a",
-          "neutral": "#120C12",
-          "base-100": "#000000",
-          "info": "#34d399",
-          "success": "#86efac",
-          "warning": "#fde047",
-          "error": "#ef4444",
-        },
-      },
-    ],
+    themes: ["black"],
     base: true,
     utils: true,
     logs: true,
     rtl: false,
-    prefix: "",
-    darkTheme: "dark",
+    prefix: ""
   },
   plugins: [require("daisyui")],
 }

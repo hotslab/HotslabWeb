@@ -1,12 +1,12 @@
-import { PrismaClient, Skill, Project } from '@prisma/client'
-import * as argon2 from "argon2"
-import { countries, skills, roles, tags, experiences, educations } from './datasets.mjs'
+const { PrismaClient } = require('@prisma/client')
+const argon2 = require("argon2")
+const { countries, skills, roles, tags, experiences, educations } = require('./datasets.js')
 
 const prisma = new PrismaClient()
 
-async function populateSkills(skillList: string[] | []): Promise<number[] | []> {
-    const skills: Skill[] = await prisma.skill.findMany({ where: { OR: skillList.map((skill: string) => { return { name: skill } }) } })
-    return skills.length > 0 ? skills.map((skill: Skill) => skill.id) : []
+async function populateSkills(skillList) {
+    const skills = await prisma.skill.findMany({ where: { OR: skillList.map((skill) => { return { name: skill } }) } })
+    return skills.length > 0 ? skills.map((skill) => skill.id) : []
 }
 
 async function main() {
@@ -97,14 +97,14 @@ async function main() {
 
 
     // EXPERIENCES
-    for (const experience of experiences.map(e => { return { profileId: user?.profile?.id as any, ...e } }))
-        if (!await prisma.experience.findFirst({ where: { profileId: user?.profile?.id as any, title: experience.title, companyName: experience.companyName } }))
+    for (const experience of experiences.map((e) => { return { profileId: user?.profile?.id, ...e } }))
+        if (!await prisma.experience.findFirst({ where: { profileId: user?.profile?.id, title: experience.title, companyName: experience.companyName } }))
             await prisma.experience.create({ data: experience })
 
     // PROJECTS
     const projects = [
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Admin and Client interface integrating social media",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -123,16 +123,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Superb Aps"
+                                profileId: user?.profile?.id, companyName: "Superb Aps"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -179,11 +179,11 @@ async function main() {
                     "Koa",
                     "Cypress",
                     "Markdown"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Norman Browser and Electron Desktop Application",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -202,16 +202,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -263,11 +263,11 @@ async function main() {
                     "Express",
                     "Electron",
                     "Markdown"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "NimblePay Web Service",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -283,16 +283,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -352,11 +352,11 @@ async function main() {
                     "Gimp",
                     "InkScape",
                     "Markdown"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "NimblePay App",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -376,16 +376,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -454,11 +454,11 @@ async function main() {
                     "Android Studio",
                     "Puppeteer",
                     "Markdown"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Standard Bank Debicheck API Integration",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -475,16 +475,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -537,11 +537,11 @@ async function main() {
                     "Electron",
                     "XML",
                     "Markdown"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Brickfield Canvas System",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -557,16 +557,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -626,11 +626,11 @@ async function main() {
                     "Puppeteer",
                     "XML",
                     "Markdown",
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Ebranch Service",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -646,16 +646,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Evision/Ebit Technologies"
+                                profileId: user?.profile?.id, companyName: "Evision/Ebit Technologies"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -708,11 +708,11 @@ async function main() {
                     "Electron",
                     "XML",
                     "Markdown",
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Completed Web Sites built on WordPress - (Built whilst as a freelance developer)",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -733,16 +733,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
                 ]
             },
@@ -785,11 +785,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Personal Trainer Cape Town",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -812,16 +812,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -864,11 +864,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Properties Cape Town",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -891,16 +891,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -943,11 +943,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Capewave Freight Services",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -970,16 +970,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -1022,11 +1022,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Intrinisic Freight Agency",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1048,16 +1048,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -1100,11 +1100,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "CMG Global Freight & Logistics",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1127,16 +1127,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -1179,11 +1179,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Muslim Educational Centre of Oxford",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1202,16 +1202,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -1254,11 +1254,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Leisure Combined",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1281,16 +1281,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -1333,11 +1333,11 @@ async function main() {
                     "XML",
                     "Markdown",
                     "CPanel"
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Sage Plumbing Roll Up Banner",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1350,16 +1350,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id
                     }
                 ]
             },
@@ -1375,11 +1375,11 @@ async function main() {
                     "Gimp",
                     "Photoshop",
                     "InkScape",
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         },
         {
-            profileId: user?.profile?.id as any,
+            profileId: user?.profile?.id,
             projectName: "Properties Cape Town Business Card",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
@@ -1392,16 +1392,16 @@ async function main() {
                     {
                         experienceId: (await prisma.experience.findFirst({
                             where: {
-                                profileId: user?.profile?.id as any, companyName: "Hotslab"
+                                profileId: user?.profile?.id, companyName: "Hotslab"
                             }
-                        }))?.id as any
+                        }))?.id
                     }
                 ]
             },
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id as any
+                        tagId: (await prisma.tag.findUnique({ where: { name: "design" } }))?.id
                     }
                 ]
             },
@@ -1417,13 +1417,13 @@ async function main() {
                     "Gimp",
                     "Photoshop",
                     "InkScape",
-                ])).map((skillId: number) => { return { skillId: skillId } })
+                ])).map((skillId) => { return { skillId: skillId } })
             }
         }
     ]
 
     for (const project of projects) {
-        const exists: Project[] | [] = await prisma.project.findMany({
+        const exists = await prisma.project.findMany({
             where: {
                 projectName: project.projectName,
                 description: project.description
@@ -1434,8 +1434,8 @@ async function main() {
 
 
     // EDUCATION
-    for (const education of educations.map(e => { return { profileId: user?.profile?.id as any, ...e } }))
-        if (!await prisma.education.findFirst({ where: { profileId: user?.profile?.id as any, title: education.title, school: education.school } }))
+    for (const education of educations.map((e) => { return { profileId: user?.profile?.id, ...e } }))
+        if (!await prisma.education.findFirst({ where: { profileId: user?.profile?.id, title: education.title, school: education.school } }))
             await prisma.education.create({ data: education })
 
 

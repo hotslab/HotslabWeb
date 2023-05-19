@@ -28,7 +28,7 @@ export default function Experiences({ experiences, countries, profile, close }: 
         if (selectedExperience) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/experience/${selectedExperience.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/experience/${selectedExperience.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -51,7 +51,7 @@ export default function Experiences({ experiences, countries, profile, close }: 
             {
                 !showEdit ?
                     <div>
-                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
                             <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                                 <span>Experiences</span>
                                 <span>{experiences.length}</span>
@@ -75,7 +75,7 @@ export default function Experiences({ experiences, countries, profile, close }: 
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="table w-full">
+                            <table className="table w-full text-white">
                                 {/* head */}
                                 <thead>
                                     <tr>

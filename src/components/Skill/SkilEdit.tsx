@@ -16,7 +16,7 @@ export default function LinkEdit({ skill, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            skill ? `http://localhost:3000/api/skill/${skill.id}` : `http://localhost:3000/api/skill`,
+            skill ? `${process.env.NEXT_PUBLIC_HOST}/api/skill/${skill.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/skill`,
             {
                 body: JSON.stringify({ name: name }),
                 method: skill ? "PUT" : "POST",

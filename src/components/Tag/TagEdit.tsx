@@ -16,7 +16,7 @@ export default function TagEdit({ tag, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            tag ? `http://localhost:3000/api/tag/${tag.id}` : `http://localhost:3000/api/tag`,
+            tag ? `${process.env.NEXT_PUBLIC_HOST}/api/tag/${tag.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/tag`,
             {
                 body: JSON.stringify({ name: name }),
                 method: tag ? "PUT" : "POST",

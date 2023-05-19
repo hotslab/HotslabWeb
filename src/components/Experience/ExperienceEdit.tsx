@@ -34,7 +34,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }
     async function unlinkProjectExperience(projectExperienceId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/experience/project?id=${projectExperienceId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/experience/project?id=${projectExperienceId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -47,7 +47,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }
     async function linkProject(project: Project) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/experience/project`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/experience/project`, {
             body: JSON.stringify({
                 experienceId: experience?.id,
                 projectId: project.id
@@ -64,7 +64,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }
     async function unlinkExperienceSkill(experienceSkillId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/experience/skill?id=${experienceSkillId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/experience/skill?id=${experienceSkillId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -77,7 +77,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }
     async function linkSkill(skill: Skill) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/experience/skill`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/experience/skill`, {
             body: JSON.stringify({
                 experienceId: experience?.id,
                 skillId: skill.id
@@ -94,7 +94,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }
     const getUnlinkedProjects = useCallback(async () => {
         if (experience && experience.id && unlinkedProjects.length === 0) {
-            await fetch(`http://localhost:3000/api/project?notExperienceId=${experience.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project?notExperienceId=${experience.id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -106,7 +106,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     }, [experience, unlinkedProjects])
     const getUnlinkedSkills = useCallback(async () => {
         if (experience && experience.id && unlinkedProjects.length === 0) {
-            await fetch(`http://localhost:3000/api/skill?notExperienceId=${experience.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/skill?notExperienceId=${experience.id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -119,7 +119,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            experience ? `http://localhost:3000/api/experience/${experience.id}` : `http://localhost:3000/api/experience`,
+            experience ? `${process.env.NEXT_PUBLIC_HOST}/api/experience/${experience.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/experience`,
             {
                 body: JSON.stringify({
                     title: title,
@@ -150,7 +150,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
             {editSection === null &&
                 <div className="w-full">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>{experience ? `Update ${experience.title}` : 'Create Experience'}</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -178,7 +178,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 name="title"
                                 placeholder="title"
                                 autoComplete="title"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
@@ -188,7 +188,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 <span className="label-text text-gray-600">Employment Type</span>
                             </label>
                             <select
-                                className="select select-bordered"
+                                className="select select-bordered text-white"
                                 value={employmentType}
                                 onChange={e => setEmploymentType(e.target.value)}
                             >
@@ -208,7 +208,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 name="companyName"
                                 placeholder="companyName"
                                 autoComplete="companyName"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 value={companyName}
                                 onChange={(e) => setCompanyName(e.target.value)}
                             />
@@ -218,7 +218,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 <span className="label-text text-gray-600">Location</span>
                             </label>
                             <select
-                                className="select select-bordered"
+                                className="select select-bordered text-white"
                                 value={location}
                                 onChange={e => setLocation(e.target.value)}
                             >
@@ -235,7 +235,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 <span className="label-text text-gray-600">Location Type</span>
                             </label>
                             <select
-                                className="select select-bordered"
+                                className="select select-bordered text-white"
                                 value={locationType}
                                 onChange={e => setLocationType(e.target.value)}
                             >
@@ -253,7 +253,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                                 name="industry"
                                 placeholder="industry"
                                 autoComplete="industry"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 value={industry}
                                 onChange={(e) => setIndustry(e.target.value)}
                             />
@@ -273,7 +273,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                             </label>
                             <DatePicker
                                 dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 selected={startDate}
                                 onChange={(date: Date) => setStartDate(date)}
                             />
@@ -284,7 +284,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                             </label>
                             <DatePicker
                                 dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 selected={endDate}
                                 onChange={(date: Date) => setEndDate(date)}
                             />
@@ -396,7 +396,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 editSection === "skills" &&
                 <div className="">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Link Unlinked Skills</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -434,7 +434,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 editSection === "projects" &&
                 <div className="">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Link Unlinked Projects</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button

@@ -30,7 +30,7 @@ export default function Tags({ tags, close }: props) {
         if (selectedTag) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/tag/${selectedTag.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/tag/${selectedTag.id}`,
                 {
                     method: "DELETE",
                     headers: {

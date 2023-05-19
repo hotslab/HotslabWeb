@@ -13,28 +13,29 @@ import {
     SkillExtended
 } from "@prisma/client"
 import { format } from 'date-fns'
-import { MdEditSquare, MdAccountCircle } from "react-icons/md"
+import { MdEditSquare, MdAccountCircle, MdSettings } from "react-icons/md"
 import { useCallback, useEffect, useState } from "react"
-import UserEdit from "@/components/User/UserEdit"
-import ProfileEdit from "@/components/Profile/ProfileEdit"
-import Links from "@/components/Link/Links"
-import Interests from "@/components/Interest/Interests"
-import Achievements from "@/components/Achievement/Achievements"
-import Educations from "@/components/Education/Educations"
-import Experiences from "@/components/Experience/Experiences"
-import Projects from "@/components/Project/Projects"
 import { useSession } from "next-auth/react"
 import DOMPurify from "isomorphic-dompurify"
+import dynamic from 'next/dynamic'
+import Spinner from "@/components/Spinner"
 
-type Props = {
-    profile: ProfileExtended
-    roles: Role[]
-}
+const UserEdit = dynamic(() => import("@/components/User/UserEdit"), { loading: () => <Spinner /> })
+const ProfileEdit = dynamic(() => import("@/components/Profile/ProfileEdit"), { loading: () => <Spinner /> })
+const Links = dynamic(() => import("@/components/Link/Links"), { loading: () => <Spinner /> })
+const Interests = dynamic(() => import("@/components/Interest/Interests"), { loading: () => <Spinner /> })
+const Achievements = dynamic(() => import("@/components/Achievement/Achievements"), { loading: () => <Spinner /> })
+const Educations = dynamic(() => import("@/components/Education/Educations"), { loading: () => <Spinner /> })
+const Experiences = dynamic(() => import("@/components/Experience/Experiences"), { loading: () => <Spinner /> })
+const Projects = dynamic(() => import("@/components/Project/Projects"), { loading: () => <Spinner /> })
 
-export default function UserProfile({ profile, roles }: Props) {
+type Props = { profile: ProfileExtended }
+
+export default function UserProfile({ profile }: Props) {
     const [editSection, setEditSection] = useState<string | null>(null)
     const [skills, setSkills] = useState<SkillExtended[] | []>([])
     const [countries, setCountries] = useState<Country[] | []>([])
+    const [roles, setRoles] = useState<Role[] | []>([])
 
     const { data: session, status } = useSession()
 
@@ -45,16 +46,22 @@ export default function UserProfile({ profile, roles }: Props) {
         setEditSection(null)
     }
     function getDisplayImage(url: string | null): string | null {
-        return url ? `'http://localhost:3000/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
     }
+    const getRoles = useCallback(async () => {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/role`, {
+            method: "GET",
+            headers: { "content-type": "application/json" }
+        }).then(async response => setRoles((await response.json()).data))
+    }, [])
     const getCountries = useCallback(async () => {
-        await fetch(`http://localhost:3000/api/country`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/country`, {
             method: "GET",
             headers: { "content-type": "application/json" },
         }).then(async response => setCountries((await response.json()).data))
     }, [])
     const getSkills = useCallback(async () => {
-        await fetch(`http://localhost:3000/api/skill?profileId=${profile.id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/skill?profileId=${profile.id}`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -62,7 +69,7 @@ export default function UserProfile({ profile, roles }: Props) {
         }).then(async response => setSkills((await response.json()).data))
     }, [profile.id])
 
-    useEffect(() => { getCountries(), getSkills() }, [getCountries, getSkills])
+    useEffect(() => { getRoles(), getCountries(), getSkills() }, [getRoles, getCountries, getSkills])
 
     return (
         <div>
@@ -85,7 +92,7 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mt-6 mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Personal Information</span>
+                    <span className="text-xl">Personal Information</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
@@ -107,24 +114,24 @@ export default function UserProfile({ profile, roles }: Props) {
                     }
                 </dt>
                 <div className="">
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Role</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.user.role.name}</dd>
                     </div>
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Summary</dt>
                         <dd
                             className="mt-2 text-sm text-gray-400"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(profile.summary || 'No summary information') }}
                         />
                     </div>
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Email</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.user.email}</dd>
                     </div>
                     {
                         profile.countryCode && profile.phoneNumber &&
-                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Phone</dt>
                             <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
                                 {profile.countryCode}
@@ -134,40 +141,40 @@ export default function UserProfile({ profile, roles }: Props) {
                     }
                     {
                         profile.sex &&
-                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Sex</dt>
                             <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.sex}</dd>
                         </div>
                     }
                     {
                         profile.idNumber &&
-                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div className="px-0 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">ID Number</dt>
                             <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.idNumber}</dd>
                         </div>
                     }
                     {
                         profile.dob &&
-                        <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Date of Birth</dt>
                             <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
                                 {profile.dob ? format(new Date(profile.dob), 'yyyy-MM-dd') : '-'}
                             </dd>
                         </div>
                     }
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Street Address</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.address}</dd>
                     </div>
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">City</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.city}</dd>
                     </div>
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Country</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.country}</dd>
                     </div>
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Post Code</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.postcode}</dd>
                     </div>
@@ -175,7 +182,7 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mt-6 mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Links</span>
+                    <span className="text-xl">Links</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
@@ -183,7 +190,7 @@ export default function UserProfile({ profile, roles }: Props) {
 
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('links')}
                         />
                     }
@@ -191,10 +198,10 @@ export default function UserProfile({ profile, roles }: Props) {
                 <div className="">
                     {profile.links.map(
                         (link: Link, index: number, array: Link[]) => (
-                            <div key={index} className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <div key={index} className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt className="text-sm font-medium leading-6 text-secondary">{index + 1}. {link.name}</dt>
                                 <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
-                                    <a href={link.url} target="blank">{link.url}</a>
+                                    <a className="link-hover" href={link.url} target="blank">{link.url}</a>
                                 </dd>
                             </div>
                         ))
@@ -203,8 +210,8 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Technical Skills</span>
-                    <span>{skills.length}</span>
+                    <span className="text-xl">Technical Skills</span>
+                    <span className="text-xl">{skills.length}</span>
                 </dt>
                 <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
                     {skills.map(
@@ -218,14 +225,14 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Projects</span>
+                    <span className="text-xl">Projects</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
                         &&
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('projects')}
                         />
                     }
@@ -311,7 +318,7 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Work Experience</span>
+                    <span className="text-xl">Work Experience</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
@@ -319,7 +326,7 @@ export default function UserProfile({ profile, roles }: Props) {
 
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('experiences')}
                         />
                     }
@@ -380,14 +387,14 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Education</span>
+                    <span className="text-xl">Education</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
                         &&
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('educations')}
                         />
                     }
@@ -436,14 +443,14 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Achievements</span>
+                    <span className="text-xl">Achievements</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
                         &&
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('achievements')}
                         />
                     }
@@ -472,14 +479,14 @@ export default function UserProfile({ profile, roles }: Props) {
             </div>
             <div className="mb-10">
                 <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                    <span>Interests</span>
+                    <span className="text-xl">Interests</span>
                     {
                         status === "authenticated"
                         && (session.user.role === "Owner" || session.user.role === "Admin")
                         &&
                         <MdEditSquare
                             title="Edit"
-                            className="text-success text-xl cursor-pointer"
+                            className="text-success text-2xl cursor-pointer"
                             onClick={() => openEdit('interests')}
                         />
                     }

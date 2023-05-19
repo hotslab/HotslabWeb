@@ -1,9 +1,11 @@
 import Layout from "@/components/Layout"
-import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended, Tag } from "@prisma/client"
+import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended } from "@prisma/client"
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from "react"
 import DOMPurify from 'isomorphic-dompurify'
+import { MdImage } from "react-icons/md"
+import Head from "next/head"
 
 type Props = { project: ProjectExtended }
 
@@ -12,7 +14,7 @@ export default function Project({ project }: Props) {
     const router = useRouter()
 
     function setCurrentDisplayImage(url: string | null) {
-        const imageUrl = url ? `'http://localhost:3000/${url}'` : null
+        const imageUrl = url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
         setDisplayImage(imageUrl)
     }
     const setDefaultImage = useCallback(async () => {
@@ -25,9 +27,12 @@ export default function Project({ project }: Props) {
 
     return (
         <Layout>
-            <div className="min-h-full bg-white">
+            <Head>
+                <title>{project.projectName}</title>
+            </Head>
+            <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
-                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3" id="image-container">
+                    <div className="text-white bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3" id="image-container">
                         <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                             <span>{project.projectName}</span>
                             <button
@@ -50,16 +55,20 @@ export default function Project({ project }: Props) {
 
                     <div className="slideshow mb-10">
                         <div className="carousel w-full">
-                            <div
-                                className="carousel-item w-full h-[200px] sm:h-[400px]"
-                                style={{
-                                    backgroundImage: `url(${displayImage})`,
-                                    backgroundPosition: "center",
-                                    backgroundSize: "contain",
-                                    backgroundRepeat: "no-repeat"
-                                }}
-                            >
-                            </div>
+                            {
+                                displayImage !== null
+                                    ?
+                                    <div
+                                        className="carousel-item w-full h-[200px] sm:h-[400px]"
+                                        style={{
+                                            backgroundImage: `url(${displayImage})`,
+                                            backgroundPosition: "center",
+                                            backgroundSize: "contain",
+                                            backgroundRepeat: "no-repeat"
+                                        }}
+                                    />
+                                    : <MdImage className="text-success text-[200px] sm:text-[400px] w-[100%] h-[200px] sm:h-[400px]" />
+                            }
                         </div>
                         <div className="flex justify-center w-full py-2 gap-2">
                             {project.images && project.images?.length > 0 &&
@@ -133,7 +142,7 @@ export default function Project({ project }: Props) {
 
 
 export async function getServerSideProps(context: any) {
-    const response = await fetch(`http://localhost:3000/api/project/${context.query.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/${context.query.id}`, {
         method: "GET",
         headers: {
             "content-type": "application/json",

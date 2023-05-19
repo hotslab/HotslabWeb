@@ -2,13 +2,17 @@ import Layout from "@/components/Layout"
 import { RoleExtended } from "@prisma/client"
 import Roles from "@/components/Role/Roles"
 import { ComponentWithAuth } from "../../../types/authenticated"
+import Head from "next/head"
 
 type Props = { roles: RoleExtended[] | [] }
 
 const RoleList: ComponentWithAuth<Props> = ({ roles }: Props) => {
     return (
         <Layout>
-            <div className="min-h-full bg-white">
+            <Head>
+                <title>Roles</title>
+            </Head>
+            <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
                     <Roles
                         roles={roles}

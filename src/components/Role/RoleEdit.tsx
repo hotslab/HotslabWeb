@@ -17,7 +17,7 @@ export default function RoleEdit({ role, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            role ? `http://localhost:3000/api/role/${role.id}` : `http://localhost:3000/api/role`,
+            role ? `${process.env.NEXT_PUBLIC_HOST}/api/role/${role.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/role`,
             {
                 body: JSON.stringify({ name: name }),
                 method: role ? "PUT" : "POST",

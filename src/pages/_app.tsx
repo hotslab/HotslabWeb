@@ -21,9 +21,11 @@ export default function App({ Component, pageProps }: AppAuthProps) {
 
   const router = useRouter()
 
-  async function logOut() {
-    await signOut({ redirect: false })
-    router.push({ pathname: "/auth/login" })
+  async function logOut(redirect: boolean = false) {
+    if (redirect) {
+      await signOut({ redirect: false })
+      router.push({ pathname: "/auth/login" })
+    }
   }
   function closeErrorModal() {
     setErrorMessage(null)
@@ -40,17 +42,17 @@ export default function App({ Component, pageProps }: AppAuthProps) {
     fetchInterceptor()
     eventBus.on("openErrorModal", (e: string) => setErrorMessage(e))
     eventBus.on("openLoadingPage", (e: boolean) => setPageLoading(e))
-    eventBus.on("logOut", () => logOut())
+    eventBus.on("logOut", () => logOut(true))
     return () => {
       eventBus.remove("openErrorModal", () => setErrorMessage(null))
       eventBus.remove("openLoadingPage", () => setPageLoading(false))
       eventBus.remove("logOut", () => logOut())
     }
-  }, [])
+  }, []) // eslint-disable-line
 
   return (
     <SessionProvider session={pageProps.session}>
-      {Component.auth
+      {Component.auth === true
         ? <Auth><Component {...pageProps} /></Auth>
         : <Component {...pageProps} />
       }

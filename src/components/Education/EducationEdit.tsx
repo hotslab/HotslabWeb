@@ -13,15 +13,15 @@ export default function EducationEdit({ education, countries, profile, close }: 
     const [school, setSchool] = useState(education?.school || "")
     const [location, setLocation] = useState(education?.location || "")
     const [description, setDescription] = useState(education?.description || "")
-    const [startDate, setStartDate] = useState(education ? new Date(education.startDate) : "")
-    const [endDate, setEndDate] = useState(education ? new Date(education.endDate) : "")
+    const [startDate, setStartDate] = useState(education ? new Date(education.startDate) : new Date())
+    const [endDate, setEndDate] = useState(education ? new Date(education.endDate) : new Date())
 
     const router = useRouter()
 
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            education ? `http://localhost:3000/api/education/${education.id}` : `http://localhost:3000/api/education`,
+            education ? `${process.env.NEXT_PUBLIC_HOST}/api/education/${education.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/education`,
             {
                 body: JSON.stringify({
                     title: title,
@@ -44,7 +44,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{education ? `Update ${education.title}` : 'Create Education'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button
@@ -72,7 +72,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                         name="title"
                         placeholder="title"
                         autoComplete="title"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
@@ -86,7 +86,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                         name="school"
                         placeholder="school"
                         autoComplete="school"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={school}
                         onChange={(e) => setSchool(e.target.value)}
                     />
@@ -96,7 +96,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                         <span className="label-text text-gray-600">Location</span>
                     </label>
                     <select
-                        className="select select-bordered"
+                        className="select select-bordered text-white"
                         value={location}
                         onChange={e => setLocation(e.target.value)}
                     >
@@ -123,7 +123,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                     </label>
                     <DatePicker
                         dateFormat="yyyy-MM-dd"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         selected={startDate}
                         onChange={(date: Date) => setStartDate(date)}
                     />
@@ -134,7 +134,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
                     </label>
                     <DatePicker
                         dateFormat="yyyy-MM-dd"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         selected={endDate}
                         onChange={(date: Date) => setEndDate(date)}
                     />

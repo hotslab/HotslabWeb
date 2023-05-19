@@ -28,7 +28,7 @@ export default function Educations({ educations, countries, profile, close }: pr
         if (selectedEducation) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/education/${selectedEducation.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/education/${selectedEducation.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -51,7 +51,7 @@ export default function Educations({ educations, countries, profile, close }: pr
             {
                 !showEdit ?
                     <div>
-                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
                             <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                                 <span>Educations</span>
                                 <span>{educations.length}</span>
@@ -75,7 +75,7 @@ export default function Educations({ educations, countries, profile, close }: pr
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="table w-full">
+                            <table className="table w-full text-white">
                                 {/* head */}
                                 <thead>
                                     <tr>

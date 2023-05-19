@@ -3,11 +3,15 @@ import hotslabImage from "../../public/assets/hotslab.svg"
 import computerImage from "../../public/assets/computer.svg"
 import tabletImage from "../../public/assets/tablet.svg"
 import artBoardImage from "../../public/assets/artboard.svg"
+import Head from "next/head"
 
 export default function Home() {
 
   return (
     <Layout>
+      <Head>
+        <title>Hotslab</title>
+      </Head>
       <div className="bg-white">
         <div className="min-h-screen flex flex-col items-center justify-center" id="hotslab-logo">
           <div

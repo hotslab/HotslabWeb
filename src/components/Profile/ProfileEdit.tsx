@@ -25,12 +25,12 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     const router = useRouter()
 
     function getDisplayImage(url: string | null): string | null {
-        return url ? `'http://localhost:3000/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
     }
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            profile ? `http://localhost:3000/api/profile/${profile.id}` : `http://localhost:3000/api/profile`,
+            profile ? `${process.env.NEXT_PUBLIC_HOST}/api/profile/${profile.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/profile`,
             {
                 body: JSON.stringify({
                     idNumber: idNumber,
@@ -65,7 +65,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
             data.append('file', input.files[0])
             data.append('profileId', id)
 
-            await fetch(`http://localhost:3000/api/profile/image/${id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile/image/${id}`, {
                 method: 'POST',
                 body: data
             }).then(async response => {
@@ -86,7 +86,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{user ? `Update ${user.name} ${user.surname} Profile` : 'Create Profile'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button
@@ -130,7 +130,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         type="file"
                         name="profileImage"
                         accept=".png,.jpg,.jpeg,.svg"
-                        className="file-input w-full"
+                        className="file-input w-full text-white"
                         value={selectedImage}
                         onChange={(e) => setSelectedImage(e.target.value)}
                     />
@@ -144,7 +144,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         name="idNumber"
                         placeholder="idNumber"
                         autoComplete="idNumber"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={idNumber}
                         onChange={(e) => setIdNumber(e.target.value)}
                     />
@@ -155,7 +155,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                     </label>
                     <DatePicker
                         dateFormat="yyyy-MM-dd"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         selected={dob}
                         onChange={(date: Date) => setDob(date)}
                     />
@@ -165,7 +165,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         <span className="label-text text-gray-600">Sex</span>
                     </label>
                     <select
-                        className="select select-bordered"
+                        className="select select-bordered text-white"
                         value={sex}
                         onChange={e => setSex(e.target.value as Sex)}
                     >
@@ -178,7 +178,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         <span className="label-text text-gray-600">Country Code</span>
                     </label>
                     <select
-                        className="select select-bordered"
+                        className="select select-bordered text-white"
                         value={countryCode}
                         onChange={e => setCountryCode(e.target.value as Sex)}
                     >
@@ -200,7 +200,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         name="phoneNumber"
                         placeholder="phoneNumber"
                         autoComplete="phoneNumber"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                     />
@@ -214,7 +214,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         name="address"
                         placeholder="address"
                         autoComplete="address"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
@@ -228,7 +228,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         name="city"
                         placeholder="city"
                         autoComplete="city"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
                     />
@@ -238,7 +238,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         <span className="label-text text-gray-600">Country</span>
                     </label>
                     <select
-                        className="select select-bordered"
+                        className="select select-bordered text-white"
                         value={country}
                         onChange={e => setCountry(e.target.value)}
                     >
@@ -259,7 +259,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                         name="postcode"
                         placeholder="postcode"
                         autoComplete="postcode"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={postcode}
                         onChange={(e) => setPostcode(e.target.value)}
                     />

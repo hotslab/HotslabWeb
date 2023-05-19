@@ -7,6 +7,7 @@ import { Session } from "next-auth"
 import { MdOutlineCancel } from "react-icons/md"
 import eventBus from "@/lib/eventBus"
 import hotslabImage from "../../../public/assets/hotslab.svg"
+import Head from "next/head"
 
 export default function Login() {
     const router = useRouter()
@@ -31,18 +32,10 @@ export default function Login() {
 
     return (
         <Layout>
-            {errorMessage &&
-                <div className="alert alert-error shadow-lg">
-                    <div className="w-full flex items-center justify-between font-bold">
-                        <span>{errorMessage}</span>
-                        <MdOutlineCancel
-                            onClick={() => setErrorMessage("")}
-                            className="text-2xl cursor-pointer"
-                        />
-                    </div>
-                </div>
-            }
-            <div className="bg-white flex min-h-screen flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
+            <Head>
+                <title>Login</title>
+            </Head>
+            <div className="min-h-screen bg-white flex min-h-screen flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
                 <div className="mt-10 mb-5 sm:mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
                     <div
                         title="Hotslab Logo"
@@ -68,7 +61,7 @@ export default function Login() {
                         name="email"
                         placeholder="Email"
                         autoComplete="email"
-                        className="input input-bordered w-full max-w-xs"
+                        className="input text-white input-bordered w-full max-w-xs"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
@@ -82,7 +75,7 @@ export default function Login() {
                         name="password"
                         placeholder="Password"
                         autoComplete="password"
-                        className="input input-bordered w-full max-w-xs"
+                        className="input text-white input-bordered w-full max-w-xs"
                         value={password}
                         onChange={e => setPasssword(e.target.value)}
                     />

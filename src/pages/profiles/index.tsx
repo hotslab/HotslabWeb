@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout"
 import { ProfileExtended } from "@prisma/client"
-import { useSession } from "next-auth/react"
+import Head from "next/head"
 import { MdAccountCircle } from "react-icons/md"
 import { ComponentWithAuth } from "../../../types/authenticated"
 
@@ -11,15 +11,18 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
     const router = useRouter()
 
     function getDisplayImage(url: string | null): string | null {
-        return url ? `'http://localhost:3000/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
     }
 
     return (
         <Layout>
-            <div className="min-h-full bg-white">
+            <Head>
+                <title>Profiles</title>
+            </Head>
+            <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
                     <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Profiles</span>
                             <span>{profiles.length}</span>
                         </div>
@@ -45,11 +48,11 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
                                                     className="w-[100px] h-[100px] p-0 rounded-full"
                                                 >
                                                 </div>
-                                                : <MdAccountCircle className="text-[100px]" />
+                                                : <MdAccountCircle className="text-[100px] text-success" />
                                         }
                                     </div>
                                     <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
-                                        <div className="w-full flex flex-col justify-between items-start flex-wrap gap-3">
+                                        <div className="w-full flex flex-col justify-between items-start flex-wrap gap-3 text-white">
                                             <p className="card-title text-md sm:text-lg">{profile.user.name} {profile.user.surname}</p>
                                             <p className="card-title text-xs sm:text-sm">{profile.user.role.name}</p>
                                         </div>
@@ -78,7 +81,7 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
 
 
 export async function getServerSideProps(context: any) {
-    const response = await fetch("http://localhost:3000/api/profile", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile`, {
         method: "GET",
         headers: {
             "content-type": "application/json",

@@ -50,11 +50,9 @@ async function create(
                 const fileData = Array.isArray(files.file) ? files.file[0] : files.file
                 const validationResponse = await validator({
                     projectId: projectId,
-                    projectImageId: projectImageId,
                     caption: caption,
                 }, {
                     projectId: "required|numeric",
-                    projectImageId: "required|numeric",
                     caption: "required|string"
                 })
                 if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })

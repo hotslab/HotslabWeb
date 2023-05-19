@@ -1,8 +1,11 @@
 import { Achievement, ProfileExtended } from "@prisma/client";
 import { useRouter } from "next/router"
-import eventBus from "@/lib/eventBus";
+import eventBus from "@/lib/eventBus"
 import { useState } from "react"
-import TinyEditor from "@/components/TinyEditor"
+import dynamic from "next/dynamic"
+import Spinner from "@/components/Spinner"
+
+const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
 type props = { achievement: Achievement | null, profile: ProfileExtended, close: Function }
 
@@ -15,7 +18,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            achievement ? `http://localhost:3000/api/achievement/${achievement.id}` : `http://localhost:3000/api/achievement`,
+            achievement ? `${process.env.NEXT_PUBLIC_HOST}/api/achievement/${achievement.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/achievement`,
             {
                 body: JSON.stringify({
                     name: name,
@@ -34,7 +37,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{achievement ? `Update ${achievement.name}` : 'Create Achievement'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button
@@ -62,7 +65,7 @@ export default function LinkEdit({ achievement, profile, close }: props) {
                         name="name"
                         placeholder="name"
                         autoComplete="name"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />

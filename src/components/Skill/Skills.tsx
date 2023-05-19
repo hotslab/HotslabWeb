@@ -30,7 +30,7 @@ export default function Skills({ skills, close }: props) {
         if (selectedSkill) {
             eventBus.dispatch("openLoadingPage", false)
             await fetch(
-                `http://localhost:3000/api/skill/${selectedSkill.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/skill/${selectedSkill.id}`,
                 {
                     method: "DELETE",
                     headers: {

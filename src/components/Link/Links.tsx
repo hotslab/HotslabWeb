@@ -27,7 +27,7 @@ export default function Links({ links, profile, close }: props) {
         if (selectedLink) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/link/${selectedLink.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/link/${selectedLink.id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -50,7 +50,7 @@ export default function Links({ links, profile, close }: props) {
             {
                 !showEdit ?
                     <div>
-                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                        <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
                             <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                                 <span>Links</span>
                                 <span>{links.length}</span>
@@ -74,7 +74,7 @@ export default function Links({ links, profile, close }: props) {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="table w-full">
+                            <table className="table w-full text-white">
                                 {/* head */}
                                 <thead>
                                     <tr>

@@ -10,22 +10,6 @@ export default function Layout() {
     return (
         <footer className="footer p-10 bg-base-200 text-base-content">
             <div>
-                <span className="footer-title">Links</span>
-                <a className="link link-hover" onClick={() => router.push('/projects')}>Portfolio</a>
-                <a className="link link-hover" onClick={() => router.push('/developer')}>Profile</a>
-                {
-                    status === "authenticated"
-                        ? <a className="link link-hover" onClick={() => eventBus.dispatch("logOut")}>Logout</a>
-                        : <a className="link link-hover" onClick={() => router.push('/auth/login')}>Login</a>
-                }
-            </div>
-            <div>
-                <span className="footer-title">Services</span>
-                <a>Software Development</a>
-                <a>Mobile Applications</a>
-                <a>Graphic Designs</a>
-            </div>
-            <div>
                 <span className="footer-title">Contact</span>
                 <a
                     className="link link-hover flex justify-between items-center gap-1"
@@ -46,9 +30,25 @@ export default function Layout() {
                     className="link link-hover flex justify-between items-center gap-1"
                     onClick={() => router.push('/')}
                 >
-                    <MdCopyright className="text-success" />
-                    <span>2016 Hotslab.com</span>
+                    <span className="text-success font-bold">&#174;</span>
+                    <span> 2016 hotslab.com</span>
                 </a>
+            </div>
+            <div>
+                <span className="footer-title">Services</span>
+                <a>Software Development</a>
+                <a>Mobile Applications</a>
+                <a>Graphic Designs</a>
+            </div>
+            <div>
+                <span className="footer-title">Links</span>
+                <a className="link link-hover" onClick={() => router.push('/projects')}>Portfolio</a>
+                <a className="link link-hover" onClick={() => router.push('/developer')}>Profile</a>
+                {
+                    status === "authenticated"
+                        ? <a className="link link-hover" onClick={() => eventBus.dispatch("logOut")}>Logout</a>
+                        : <a className="link link-hover" onClick={() => router.push('/auth/login')}>Login</a>
+                }
             </div>
         </footer>
     )

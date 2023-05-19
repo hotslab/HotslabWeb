@@ -3,13 +3,17 @@ import Router from "next/router"
 import { Tag } from "@prisma/client"
 import Tags from "@/components/Tag/Tags"
 import { ComponentWithAuth } from "../../../types/authenticated"
+import Head from "next/head"
 
 type Props = { tags: Tag[] | [] }
 
 const TagList: ComponentWithAuth<Props> = ({ tags }: Props) => {
     return (
         <Layout>
-            <div className="min-h-full bg-white">
+            <Head>
+                <title>Tags</title>
+            </Head>
+            <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
                     <Tags
                         tags={tags}

@@ -19,7 +19,7 @@ export default function UserEdit({ user, roles, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            user ? `http://localhost:3000/api/user/${user.id}` : `http://localhost:3000/api/user`,
+            user ? `${process.env.NEXT_PUBLIC_HOST}/api/user/${user.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/user`,
             {
                 body: JSON.stringify({
                     // id: user?.id,
@@ -45,7 +45,7 @@ export default function UserEdit({ user, roles, close }: props) {
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{user ? `Update ${user.name} ${user.surname}` : 'Create User'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button
@@ -73,7 +73,7 @@ export default function UserEdit({ user, roles, close }: props) {
                         name="name"
                         placeholder="name"
                         autoComplete="name"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
@@ -87,7 +87,7 @@ export default function UserEdit({ user, roles, close }: props) {
                         name="surname"
                         placeholder="surname"
                         autoComplete="surname"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={surname}
                         onChange={e => setSurname(e.target.value)}
                     />
@@ -101,7 +101,7 @@ export default function UserEdit({ user, roles, close }: props) {
                         name="email"
                         placeholder="email"
                         autoComplete="email"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
@@ -139,7 +139,7 @@ export default function UserEdit({ user, roles, close }: props) {
                         name="password"
                         placeholder="password"
                         autoComplete="password"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full text-white"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
@@ -149,7 +149,7 @@ export default function UserEdit({ user, roles, close }: props) {
                         <span className="label-text text-gray-600">Role</span>
                     </label>
                     <select
-                        className="select select-bordered"
+                        className="select select-bordered text-white"
                         value={roleId}
                         onChange={e => setRoleId(Number(e.target.value))}
                     >

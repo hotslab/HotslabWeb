@@ -38,11 +38,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
         if (projectImage) setImageCaption(projectImage.caption)
     }
     function getDisplayImage(url: string): string | null {
-        return url ? `'http://localhost:3000/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
     }
     async function unlinkProjectSkill(projectSkillId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/skill/?id=${projectSkillId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/skill/?id=${projectSkillId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -55,7 +55,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     async function linkSkill(skill: Skill) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/skill`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/skill`, {
             body: JSON.stringify({
                 skillId: skill.id,
                 projectId: project?.id
@@ -72,7 +72,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     async function unlinkProjectTag(projectTagId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/tag/?id=${projectTagId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/tag/?id=${projectTagId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -85,7 +85,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     async function linkTag(tag: Tag) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/tag`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/tag`, {
             body: JSON.stringify({
                 tagId: tag.id,
                 projectId: project?.id
@@ -102,7 +102,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     async function unlinkProjectExperience(projectExperienceId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/experience/?id=${projectExperienceId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/experience/?id=${projectExperienceId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -115,7 +115,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     async function linkExperience(experience: Experience) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/experience`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/experience`, {
             body: JSON.stringify({
                 experienceId: experience.id,
                 projectId: project?.id
@@ -132,7 +132,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }
     const getUnlinkedExperiences = useCallback(async () => {
         if (project && project.id && unlinkedExperiences.length === 0) {
-            await fetch(`http://localhost:3000/api/experience?notProjectId=${project.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/experience?notProjectId=${project.id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -144,7 +144,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }, [project, unlinkedExperiences])
     const getUnlinkedTags = useCallback(async () => {
         if (project && project.id && unlinkedTags.length === 0) {
-            await fetch(`http://localhost:3000/api/tag?notProjectId=${project.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/tag?notProjectId=${project.id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -156,7 +156,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }, [project, unlinkedTags])
     const getUnlinkedSkills = useCallback(async () => {
         if (project && project.id && unlinkedSkills.length === 0) {
-            await fetch(`http://localhost:3000/api/skill?notProjectId=${project.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/skill?notProjectId=${project.id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -168,7 +168,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     }, [project, unlinkedSkills])
     async function deleteImage(projectImageId: number) {
         eventBus.dispatch("openLoadingPage", true)
-        await fetch(`http://localhost:3000/api/project/image/?id=${projectImageId}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/image/?id=${projectImageId}`, {
             method: "DELETE",
             headers: {
                 "content-type": "application/json",
@@ -188,7 +188,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             data.append('caption', imageCaption)
             data.append('projectId', String(project?.id || ""))
             data.append('projectImageId', String(selectedImage?.id || ""))
-            await fetch(`http://localhost:3000/api/project/image`, {
+            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/image`, {
                 method: 'POST',
                 body: data
             }).then(async response => {
@@ -209,7 +209,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
         await fetch(
-            project ? `http://localhost:3000/api/project/${project.id}` : `http://localhost:3000/api/project`,
+            project ? `${process.env.NEXT_PUBLIC_HOST}/api/project/${project.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/project`,
             {
                 body: JSON.stringify({
                     projectName: projectName,
@@ -237,7 +237,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
             {editSection === null &&
                 <div className="w-full">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>{project ? `Update ${project.projectName}` : 'Create Project'}</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -265,7 +265,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                 name="title"
                                 placeholder="title"
                                 autoComplete="title"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 value={projectName}
                                 onChange={(e) => setProjectName(e.target.value)}
                             />
@@ -276,7 +276,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             </label>
                             <DatePicker
                                 dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 selected={startDate}
                                 onChange={(date: Date) => setStartDate(date)}
                             />
@@ -287,7 +287,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             </label>
                             <DatePicker
                                 dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 selected={endDate}
                                 onChange={(date: Date) => setEndDate(date)}
                             />
@@ -504,7 +504,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 editSection === "skills" &&
                 <div className="">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Link Unlinked Skills</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -542,7 +542,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 editSection === "tags" &&
                 <div className="">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Link Unlinked Tags</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -580,7 +580,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 editSection === "experiences" &&
                 <div className="">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Link Unlinked Experiences</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -618,7 +618,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 editSection === "images" &&
                 <div className="my-8">
                     <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
                             <span>Image</span>
                             <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                 <button
@@ -648,10 +648,10 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                             backgroundRepeat: "no-repeat",
                                             backgroundPosition: "center"
                                         }}
-                                        className="w-full h-[200px] sm:h-[400px] p-0"
+                                        className="w-full h-[200px] sm:h-[300px] p-0"
                                     >
                                     </div>
-                                    : <MdImage className="text-success text-[200px] w-[200px] h-[100%]" />
+                                    : <MdImage className="text-success text-[200px] sm:text-[300px] w-[100%]" />
                             }
                         </div>
                         <div className="form-control w-full">
@@ -661,7 +661,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                             <input
                                 type="file"
                                 accept=".png,.jpg,.jpeg,.svg"
-                                className="file-input w-full mb-10"
+                                className="file-input w-full mb-10 text-white"
                             />
                         </div>
                         <div className="form-control w-full">
@@ -673,7 +673,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                                 name="imageCaption"
                                 placeholder="Image caption"
                                 autoComplete="imageCaption"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full text-white"
                                 value={imageCaption}
                                 onChange={(e) => setImageCaption(e.target.value)}
                             />

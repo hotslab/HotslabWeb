@@ -2,13 +2,17 @@ import Layout from "@/components/Layout"
 import { SkillExtended } from "@prisma/client"
 import Skills from "@/components/Skill/Skills"
 import { ComponentWithAuth } from "../../../types/authenticated"
+import Head from "next/head"
 
 type Props = { skills: SkillExtended[] | [] }
 
 const SkillList: ComponentWithAuth<Props> = ({ skills }: Props) => {
     return (
         <Layout>
-            <div className="min-h-full bg-white">
+            <Head>
+                <title>Skills</title>
+            </Head>
+            <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
                     <Skills
                         skills={skills}

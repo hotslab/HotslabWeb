@@ -30,7 +30,7 @@ export default function Roles({ roles, close }: props) {
         if (selectedRole) {
             eventBus.dispatch("openLoadingPage", true)
             await fetch(
-                `http://localhost:3000/api/role/${selectedRole.id}`,
+                `${process.env.NEXT_PUBLIC_HOST}/api/role/${selectedRole.id}`,
                 {
                     method: "DELETE",
                     headers: {

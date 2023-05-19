@@ -1,4 +1,4 @@
-export const countries = [
+const countries = [
     {
         "name": "Afghanistan",
         "code": "AF",
@@ -4213,7 +4213,7 @@ export const countries = [
     }
 ]
 
-export const skills = [
+const skills = [
     "JavaScript",
     "Typescript",
     "PHP",
@@ -4289,19 +4289,19 @@ export const skills = [
     "CPanel"
 ]
 
-export const roles = [
+const roles = [
     { name: 'Owner', active: true },
     { name: 'Client', active: true },
     { name: 'Admin', active: true },
 ]
 
-export const tags = [
+const tags = [
     "project",
     "portfolio",
     "design",
 ]
 
-export const experiences = [
+const experiences = [
     {
         title: "Full Stack Engineer",
         employmentType: "Full Time",
@@ -4411,7 +4411,7 @@ export const experiences = [
     },
 ]
 
-export const educations = [
+const educations = [
     {
         title: 'Bachelor of Social Science',
         school: 'University of Kwa-Zulu Natal',
@@ -4437,3 +4437,5 @@ export const educations = [
         endDate: new Date('2007-12-31').toISOString()
     }
 ]
+
+module.exports = { countries, skills, roles, tags, experiences, educations }

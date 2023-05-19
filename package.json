@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node dev-server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "node prod-server.js",
     "lint": "next lint",
-    "seed": "npx ts-node --esm prisma/seed.ts",
+    "seed": "node prisma/seed.js",
     "assets": "npx ts-node --esm assets.ts"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "daisyui": "^2.51.6",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.0.3",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "formidable": "^3.2.5",
@@ -41,7 +42,7 @@
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
-    "prisma": "^4.14.0"
-  },
-  "type": "module"
+    "prisma": "^4.14.0",
+    "ts-node": "^10.9.1"
+  }
 }
