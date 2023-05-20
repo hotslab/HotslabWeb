@@ -55,7 +55,6 @@ export default function Profile({ profile }: Props) {
 
 export async function getServerSideProps(context: any) {
     let profile: ProfileExtended | null = null
-    console.log("DATA", process.env.NEXT_PUBLIC_HOST)
     await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/developer`, {
         method: "GET",
         headers: {

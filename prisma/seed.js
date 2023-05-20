@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const argon2 = require("argon2")
 const { countries, skills, roles, tags, experiences, educations } = require('./datasets.js')
+require('dotenv/config')
 
 const prisma = new PrismaClient()
 
@@ -17,7 +18,7 @@ async function main() {
 
     // USER
     await prisma.user.upsert({
-        where: { email: 'joseph.nyahuye@gmail.com' },
+        where: { email: process.env.OWNER_EMAIL },
         update: {},
         create: {
             email: 'joseph.nyahuye@gmail.com',
@@ -26,7 +27,7 @@ async function main() {
             active: true,
             showProfile: true,
             role: { connect: { id: (await prisma.role.findUnique({ where: { name: 'Owner', }, }))?.id } },
-            password: await argon2.hash("joseph"),
+            password: await argon2.hash(process.env.OWNER_PASSWORD),
             profile: {
                 create: {
                     dob: new Date('1989-03-07').toISOString(),
@@ -136,12 +137,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -213,12 +208,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -294,12 +283,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -387,12 +370,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -488,12 +465,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -568,12 +539,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -659,12 +624,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -746,12 +705,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -823,12 +776,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -904,12 +851,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -983,12 +924,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -1059,12 +994,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -1140,12 +1069,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -1213,12 +1136,6 @@ async function main() {
                     {
                         tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
-                ]
-            },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
                 ]
             },
             skills: {
@@ -1294,12 +1211,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "JavaScript",
@@ -1363,12 +1274,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "Google Cloud",
@@ -1405,12 +1310,6 @@ async function main() {
                     }
                 ]
             },
-            images: {
-                create: [
-                    { url: "/uploads/cargo.jpg", caption: "Cargo" },
-                    { url: "/uploads/food.jpg", caption: "Food" },
-                ]
-            },
             skills: {
                 create: (await populateSkills([
                     "Google Cloud",
@@ -1442,12 +1341,16 @@ async function main() {
     console.log(`Seeding finished.`)
 }
 
-main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+if (process.env.OWNER_EMAIL && process.env.OWNER_PASSWORD) {
+    main()
+        .then(async () => {
+            await prisma.$disconnect()
+        })
+        .catch(async (e) => {
+            console.error(e)
+            await prisma.$disconnect()
+            process.exit(1)
+        })
+} else {
+    console.log("User details for owner not provided")
+}

@@ -24,14 +24,18 @@ const SkillList: ComponentWithAuth<Props> = ({ skills }: Props) => {
 }
 
 export async function getServerSideProps(context: any) {
+    let skills: SkillExtended[] | [] = []
     const response = await fetch("http://localhost:3000/api/skill", {
         method: "GET",
         headers: {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
+    }).then(async response => {
+        if (response.ok) {
+            skills = (await response.json()).data
+        } else console.log((await response.json()).data)
     })
-    const skills = (await response.json()).data
     return { props: { skills } }
 }
 

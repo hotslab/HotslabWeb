@@ -81,14 +81,18 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
 
 
 export async function getServerSideProps(context: any) {
+    let profiles: ProfileExtended[] | [] = []
     const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile`, {
         method: "GET",
         headers: {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
+    }).then(async response => {
+        if (response.ok) {
+            profiles = (await response.json()).data
+        } else console.log((await response.json()).data)
     })
-    const profiles = (await response.json()).data
     return { props: { profiles } }
 }
 

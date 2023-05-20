@@ -15,6 +15,20 @@ enum Sex {
   female
 }
 
+enum EmployemntType {
+  FullTime
+  PartTime
+  Contract
+  Temporary
+  SelfEmployed
+}
+
+enum LocationType {
+  Hybrid
+  Remote
+  Onsite
+}
+
 model Role {
   id        Int      @id @default(autoincrement())
   name      String   @unique
@@ -115,10 +129,10 @@ model Experience {
   profile           Profile             @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId         Int
   title             String
-  employmentType    String
+  employmentType    EmployemntType
   companyName       String
   location          String
-  locationType      String
+  locationType      LocationType
   isCurrentPosition Boolean
   startDate         DateTime            @db.Date
   endDate           DateTime            @db.Date

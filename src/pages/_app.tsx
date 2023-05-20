@@ -2,18 +2,14 @@ import '@/styles/globals.css'
 import { SessionProvider } from "next-auth/react"
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import LoadingModal from "@/components/LoadingModal"
 import eventBus from '@/lib/eventBus'
-import ErrorModal from '@/components/ErrorModal'
-import Auth from '@/components/Auth'
 import fetchInterceptor from '@/lib/fetchInterceptor'
 import { signOut } from "next-auth/react"
 import { AppAuthProps } from '../../types/authenticated'
+import Auth from '@/components/Auth'
+import LoadingModal from "@/components/LoadingModal"
+import ErrorModal from '@/components/ErrorModal'
 import ScrollButton from "@/components/ScrollButton"
-
-// export function reportWebVitals(metric: any) {
-//   console.log(metric)
-// }
 
 
 export default function App({ Component, pageProps }: AppAuthProps) {

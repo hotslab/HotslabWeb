@@ -4304,7 +4304,7 @@ const tags = [
 const experiences = [
     {
         title: "Full Stack Engineer",
-        employmentType: "Full Time",
+        employmentType: "FullTime",
         companyName: "Superb Aps",
         location: "Zimbabwe",
         locationType: "Remote",
@@ -4326,7 +4326,7 @@ const experiences = [
     },
     {
         title: "Full Stack Software Developer",
-        employmentType: "Full Time",
+        employmentType: "FullTime",
         companyName: "Evision/Ebit Technologies",
         location: "South Africa and Zimbabwe",
         locationType: "Hybrid",
@@ -4348,7 +4348,7 @@ const experiences = [
     },
     {
         title: "Freelance Web Developer",
-        employmentType: "Part Time",
+        employmentType: "PartTime",
         companyName: "Hotslab",
         location: "South Africa",
         locationType: "Onsite",
@@ -4365,7 +4365,7 @@ const experiences = [
     },
     {
         title: "Cashier",
-        employmentType: "Part Time",
+        employmentType: "PartTime",
         companyName: "The Cape Wheel",
         location: "South Africa",
         locationType: "Onsite",
@@ -4381,7 +4381,7 @@ const experiences = [
     },
     {
         title: "Store Room Manager",
-        employmentType: "Full Time",
+        employmentType: "FullTime",
         companyName: "Fastway Couriers (Pty) Ltd",
         location: "South Africa",
         locationType: "Onsite",
@@ -4396,7 +4396,7 @@ const experiences = [
     },
     {
         title: "Call Centre Sales Agent",
-        employmentType: "Full Time",
+        employmentType: "FullTime",
         companyName: "Netsurit IT Support (Pty) Ltd",
         location: "South Africa",
         locationType: "Onsite",

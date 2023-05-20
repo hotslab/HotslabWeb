@@ -25,14 +25,18 @@ const TagList: ComponentWithAuth<Props> = ({ tags }: Props) => {
 }
 
 export async function getServerSideProps(context: any) {
+    let tags: Tag[] | [] = []
     const response = await fetch("http://localhost:3000/api/tag", {
         method: "GET",
         headers: {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
+    }).then(async response => {
+        if (response.ok) {
+            tags = (await response.json()).data
+        } else console.log((await response.json()).data)
     })
-    const tags = (await response.json()).data
     return { props: { tags } }
 }
 

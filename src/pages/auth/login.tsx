@@ -1,18 +1,17 @@
 import Layout from "@/components/Layout"
 import Image from "next/image"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from "next/router"
 import { useSession, signIn, SignInResponse, getSession } from "next-auth/react"
 import { Session } from "next-auth"
-import { MdOutlineCancel } from "react-icons/md"
 import eventBus from "@/lib/eventBus"
 import hotslabImage from "../../../public/assets/hotslab.svg"
 import Head from "next/head"
 
 export default function Login() {
     const router = useRouter()
-    const [email, setEmail] = useState("joseph.nyahuye@gmail.com")
-    const [password, setPasssword] = useState("joseph")
+    const [email, setEmail] = useState("")
+    const [password, setPasssword] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const { data: session, status } = useSession()
 
@@ -29,8 +28,11 @@ export default function Login() {
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
+    useEffect(() => {
+        if (status === "authenticated") router.push({ pathname: "/" })
+    }, [status, router])
 
-    return (
+    if (status !== "authenticated") return (
         <Layout>
             <Head>
                 <title>Login</title>

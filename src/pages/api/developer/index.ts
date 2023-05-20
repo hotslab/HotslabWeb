@@ -9,7 +9,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
-    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXT_AUTH_SECRET, raw: false })
+    const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
     if (req.method === 'GET') index(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])

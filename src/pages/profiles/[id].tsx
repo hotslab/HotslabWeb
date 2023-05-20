@@ -64,7 +64,11 @@ export async function getServerSideProps(context: any) {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
-    }).then(async response => profile = (await response.json()).data)
+    }).then(async response => {
+        if (response.ok) {
+            profile = (await response.json()).data
+        } else console.log((await response.json()).data)
+    })
     return { props: { profile } }
 }
 

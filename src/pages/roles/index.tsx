@@ -24,14 +24,18 @@ const RoleList: ComponentWithAuth<Props> = ({ roles }: Props) => {
 }
 
 export async function getServerSideProps(context: any) {
+    let roles: RoleExtended[] | [] = []
     const response = await fetch("http://localhost:3000/api/role", {
         method: "GET",
         headers: {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
+    }).then(async response => {
+        if (response.ok) {
+            roles = (await response.json()).data
+        } else console.log((await response.json()).data)
     })
-    const roles = (await response.json()).data
     return { props: { roles } }
 }
 

@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import { MdImage } from "react-icons/md"
 import { ProjectExtended, ProjectImage } from "@prisma/client"
 import Head from "next/head"
@@ -7,6 +7,7 @@ import Head from "next/head"
 type Props = { projects: ProjectExtended[] }
 
 export default function Projects({ projects }: Props) {
+    const router = useRouter()
 
     function getFirstImage(images: ProjectImage[] | undefined) {
         if (images && images.length > 0) {
@@ -47,7 +48,7 @@ export default function Projects({ projects }: Props) {
                                     <div className="card-actions justify-end w-full">
                                         <button
                                             className="btn btn-success text-white"
-                                            onClick={() => Router.push(`/projects/${project.id}`)}
+                                            onClick={() => router.push({ pathname: `/projects/${project.id}` })}
                                         >
                                             open
                                         </button>
@@ -63,13 +64,17 @@ export default function Projects({ projects }: Props) {
 }
 
 export async function getServerSideProps(context: any) {
+    let projects: ProjectExtended[] | [] = []
     const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project?tags=portfolio,design`, {
         method: "GET",
         headers: {
             "content-type": "application/json",
             "cookie": context.req.headers.cookie || ""
         },
+    }).then(async response => {
+        if (response.ok) {
+            projects = (await response.json()).data
+        } else console.log((await response.json()).data)
     })
-    const projects = (await response.json()).data
     return { props: { projects } }
 }
