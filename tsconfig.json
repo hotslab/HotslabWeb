@@ -32,6 +32,7 @@
     "prisma/seed.js",
     "prod-server.js",
     "dev-server.js",
+    "assets.js",
   ],
   "exclude": [
     "node_modules"

@@ -8,7 +8,7 @@
     "start": "node prod-server.js",
     "lint": "next lint",
     "seed": "node prisma/seed.js",
-    "assets": "npx ts-node --esm assets.ts"
+    "assets": "node assets.js"
   },
   "dependencies": {
     "@prisma/client": "^4.14.0",
