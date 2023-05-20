@@ -116,24 +116,24 @@ export default function UserProfile({ profile }: Props) {
                 <div className="">
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Role</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.user.role.name}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.user.role.name}</dd>
                     </div>
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Summary</dt>
                         <dd
-                            className="mt-2 text-sm text-gray-400"
+                            className="mt-2 text-sm text-gray-700"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(profile.summary || 'No summary information') }}
                         />
                     </div>
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Email</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.user.email}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.user.email}</dd>
                     </div>
                     {
                         profile.countryCode && profile.phoneNumber &&
                         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Phone</dt>
-                            <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
+                            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                                 {profile.countryCode}
                                 {profile.phoneNumber}
                             </dd>
@@ -143,40 +143,40 @@ export default function UserProfile({ profile }: Props) {
                         profile.sex &&
                         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Sex</dt>
-                            <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.sex}</dd>
+                            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.sex}</dd>
                         </div>
                     }
                     {
                         profile.idNumber &&
                         <div className="px-0 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">ID Number</dt>
-                            <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.idNumber}</dd>
+                            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.idNumber}</dd>
                         </div>
                     }
                     {
                         profile.dob &&
                         <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                             <dt className="text-sm font-medium leading-6 text-secondary">Date of Birth</dt>
-                            <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
+                            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                                 {profile.dob ? format(new Date(profile.dob), 'yyyy-MM-dd') : '-'}
                             </dd>
                         </div>
                     }
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Street Address</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.address}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.address}</dd>
                     </div>
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">City</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.city}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.city}</dd>
                     </div>
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Country</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.country}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.country}</dd>
                     </div>
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Post Code</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">{profile.postcode}</dd>
+                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.postcode}</dd>
                     </div>
                 </div>
             </div>
@@ -200,7 +200,7 @@ export default function UserProfile({ profile }: Props) {
                         (link: Link, index: number, array: Link[]) => (
                             <div key={index} className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                                 <dt className="text-sm font-medium leading-6 text-secondary">{index + 1}. {link.name}</dt>
-                                <dd className="mt-1 text-sm leading-6 text-gray-500 sm:col-span-2 sm:mt-0">
+                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                                     <a className="link-hover" href={link.url} target="blank">{link.url}</a>
                                 </dd>
                             </div>
@@ -213,7 +213,7 @@ export default function UserProfile({ profile }: Props) {
                     <span className="text-xl">Technical Skills</span>
                     <span className="text-xl">{skills.length}</span>
                 </dt>
-                <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
+                <dd className="mt-2 text-sm text-gray-700 flex justify-start items-center flex-wrap gap-1">
                     {skills.map(
                         (skill: SkillExtended, index: number, array: SkillExtended[]) => (
                             <span key={index}>
@@ -491,7 +491,7 @@ export default function UserProfile({ profile }: Props) {
                         />
                     }
                 </dt>
-                <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
+                <dd className="mt-2 text-sm text-gray-700 flex justify-start items-center flex-wrap gap-1">
                     {profile.interests.map(
                         (interest: Interest, index: number, array: Interest[]) => (
                             <span key={index}>

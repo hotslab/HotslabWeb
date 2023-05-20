@@ -30,6 +30,11 @@ async function index(
         let includeData: { [key: string]: any } = {
             projects: { select: { id: true, project: true } }
         }
+        if (query.notProjectId) selectData.where.projects = {
+            every: {
+                project: { is: { NOT: { id: Number(query.notProjectId) } } }
+            }
+        }
         const tags: Tag[] = await prisma.tag.findMany({ ...selectData, include: includeData })
         res.status(200).json({ data: tags })
     } catch (error) {

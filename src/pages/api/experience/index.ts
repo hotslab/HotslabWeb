@@ -29,8 +29,8 @@ async function index(
         let selectData: { [key: string]: any } = { where: {} }
         let includeData: { [key: string]: any } = {
             profile: true,
-            skills: { select: { skill: true } },
-            projects: { select: { project: true } }
+            skills: { select: { id: true, skill: true } },
+            projects: { select: { id: true, project: true } }
         }
         if (query.notProjectId) selectData.where.projects = {
             every: {

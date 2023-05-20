@@ -30,12 +30,17 @@ async function index(
         let includeData: { [key: string]: any } = {}
         if (query.profileId) selectData.where.projects = {
             every: {
-                project: { is: { id: Number(query.profileId) } }
+                project: { is: { profileId: Number(query.profileId) } }
             }
         }
         if (query.notExperienceId) selectData.where.experiences = {
             every: {
                 experience: { is: { NOT: { id: Number(query.notExperienceId) } } }
+            }
+        }
+        if (query.notProjectId) selectData.where.projects = {
+            every: {
+                project: { is: { NOT: { id: Number(query.notProjectId) } } }
             }
         }
         includeData = {
@@ -46,6 +51,7 @@ async function index(
         res.status(200).json({ data: skills })
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
