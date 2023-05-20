@@ -5,7 +5,10 @@ import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdAddBox } from "react-icons/md"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
-import TinyEditor from "@/components/TinyEditor"
+import dynamic from "next/dynamic"
+import Spinner from "@/components/Spinner"
+
+const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
 type props = { experience: ExperienceExtended | null, countries: Country[], profile: ProfileExtended | null, close: Function }
 

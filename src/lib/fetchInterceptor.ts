@@ -17,7 +17,7 @@ export default function fetchInterceptor() {
             Add code below
             **********************************/
 
-            console.log("RESOURCE", resource, config, process.env.NODE_ENV, process.env.NEXT_PUBLIC_HOST)
+            // console.log("RESOURCE", resource, config, process.env.NODE_ENV, process.env.NEXT_PUBLIC_HOST)
 
             /*********************************
             response interceptor

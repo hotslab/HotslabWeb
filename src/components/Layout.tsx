@@ -1,11 +1,11 @@
 import { ReactNode, useState } from "react"
-import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
 import { MdAccountCircle } from "react-icons/md"
 import { useRouter } from "next/router"
 import Image from "next/image"
 import eventBus from "@/lib/eventBus"
 import Head from 'next/head'
+import Footer from "@/components/Footer"
 
 type Props = {
   children: ReactNode
@@ -50,7 +50,7 @@ export default function Layout(props: Props) {
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col items-center justify-start">
           {/* Navbar menu content here */}
-          <div className="navbar bg-base-100">
+          <div id="hotslab-navbar" className="navbar bg-base-100">
             <div className="flex-none">
               <label htmlFor="my-drawer" className="btn btn-square btn-ghost drawer-button">
                 <Image

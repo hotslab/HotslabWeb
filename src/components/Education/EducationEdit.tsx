@@ -4,7 +4,10 @@ import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import eventBus from "@/lib/eventBus"
-import TinyEditor from "@/components/TinyEditor"
+import dynamic from "next/dynamic"
+import Spinner from "@/components/Spinner"
+
+const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
 type props = { education: Education | null, countries: Country[], profile: ProfileExtended, close: Function }
 

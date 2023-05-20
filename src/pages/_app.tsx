@@ -9,6 +9,7 @@ import Auth from '@/components/Auth'
 import fetchInterceptor from '@/lib/fetchInterceptor'
 import { signOut } from "next-auth/react"
 import { AppAuthProps } from '../../types/authenticated'
+import ScrollButton from "@/components/ScrollButton"
 
 // export function reportWebVitals(metric: any) {
 //   console.log(metric)
@@ -63,6 +64,10 @@ export default function App({ Component, pageProps }: AppAuthProps) {
       {
         errorMessage !== null &&
         <ErrorModal errorMessage={errorMessage} close={closeErrorModal} />
+      }
+      {
+        !pageLoading &&
+        <ScrollButton />
       }
     </SessionProvider>
   )
