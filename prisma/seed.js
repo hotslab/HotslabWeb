@@ -18,16 +18,16 @@ async function main() {
 
     // USER
     await prisma.user.upsert({
-        where: { email: process.env.OWNER_EMAIL },
+        where: { email: process.env.NEXT_PUBLIC_OWNER_EMAIL },
         update: {},
         create: {
-            email: process.env.OWNER_EMAIL,
+            email: process.env.NEXT_PUBLIC_OWNER_EMAIL,
             name: 'Joseph',
             surname: 'Nyahuye',
             active: true,
             showProfile: true,
             role: { connect: { id: (await prisma.role.findUnique({ where: { name: 'Owner', }, }))?.id } },
-            password: await argon2.hash(process.env.OWNER_PASSWORD),
+            password: await argon2.hash(process.env.NEXT_PUBLIC_OWNER_PASSWORD),
             profile: {
                 create: {
                     dob: new Date('1989-03-07').toISOString(),
@@ -81,7 +81,7 @@ async function main() {
     })
 
     const user = await prisma.user.findUnique({
-        where: { email: process.env.OWNER_EMAIL },
+        where: { email: process.env.NEXT_PUBLIC_OWNER_EMAIL },
         include: { profile: true, role: true }
     })
 
@@ -1341,7 +1341,7 @@ async function main() {
     console.log(`Seeding finished.`)
 }
 
-if (process.env.OWNER_EMAIL && process.env.OWNER_PASSWORD) {
+if (process.env.NEXT_PUBLIC_OWNER_EMAIL && process.env.NEXT_PUBLIC_OWNER_PASSWORD) {
     main()
         .then(async () => {
             await prisma.$disconnect()

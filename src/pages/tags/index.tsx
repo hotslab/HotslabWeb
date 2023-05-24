@@ -26,7 +26,7 @@ const TagList: ComponentWithAuth<Props> = ({ tags }: Props) => {
 
 export async function getServerSideProps(context: any) {
     let tags: Tag[] | [] = []
-    const response = await fetch("http://localhost:3000/api/tag", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/tag`, {
         method: "GET",
         headers: {
             "content-type": "application/json",

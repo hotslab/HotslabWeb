@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
 import { Profile } from '@prisma/client'
+import "dotenv/config"
 
 type Data = { data: any }
 
@@ -25,7 +26,7 @@ async function index(
     try {
         const { query } = req
         const profile: Profile | null = await prisma.profile.findFirst({
-            where: { user: { email: "joseph.nyahuye@gmail.com" } }
+            where: { user: { email: process.env.NEXT_PUBLIC_OWNER_EMAIL } }
             ,
             include: {
                 user: {

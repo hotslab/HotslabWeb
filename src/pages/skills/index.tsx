@@ -25,7 +25,7 @@ const SkillList: ComponentWithAuth<Props> = ({ skills }: Props) => {
 
 export async function getServerSideProps(context: any) {
     let skills: SkillExtended[] | [] = []
-    const response = await fetch("http://localhost:3000/api/skill", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/skill`, {
         method: "GET",
         headers: {
             "content-type": "application/json",

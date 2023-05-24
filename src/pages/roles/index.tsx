@@ -25,7 +25,7 @@ const RoleList: ComponentWithAuth<Props> = ({ roles }: Props) => {
 
 export async function getServerSideProps(context: any) {
     let roles: RoleExtended[] | [] = []
-    const response = await fetch("http://localhost:3000/api/role", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/role`, {
         method: "GET",
         headers: {
             "content-type": "application/json",

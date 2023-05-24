@@ -61,21 +61,21 @@ async function create(
                     if (!fs.existsSync(profileDirectory)) fs.mkdirSync(profileDirectory, { recursive: true })
                     const imagePath = path.resolve(`./public/uploads/project/${projectId}/${fileData.originalFilename}`)
                     fs.renameSync(fileData.filepath, imagePath)
-                    fs.unlink(fileData.filepath, (deleteError) => {
+                    if (fs.existsSync(fileData.filepath)) fs.unlink(fileData.filepath, (deleteError) => {
                         if (deleteError) console.log("Temporary file delete error", deleteError)
                         console.log('Temporary file deleted!')
                     })
                     const projectImage: ProjectImage = projectImageId ? await prisma.projectImage.update({
                         where: { id: Number(projectImageId) },
                         data: {
-                            url: `/uploads/project/${projectId}/${fileData.originalFilename}`,
+                            url: `uploads/project/${projectId}/${fileData.originalFilename}`,
                             caption: caption
                         }
                     })
                         : await prisma.projectImage.create({
                             data: {
                                 projectId: Number(projectId),
-                                url: `/uploads/project/${projectId}/${fileData.originalFilename}`,
+                                url: `uploads/project/${projectId}/${fileData.originalFilename}`,
                                 caption: caption
                             }
                         })
@@ -99,8 +99,8 @@ async function erase(
             const { query } = req
             const deletedProjectImage: ProjectImage = await prisma.projectImage.delete({ where: { id: Number(query.id) } })
             if (deletedProjectImage && deletedProjectImage.url) {
-                const oldImagePath = path.resolve(`./public${deletedProjectImage.url}`)
-                fs.unlink(oldImagePath, (deleteError) => {
+                const oldImagePath = path.resolve(`./public/${deletedProjectImage.url}`)
+                if (fs.existsSync(oldImagePath)) fs.unlink(oldImagePath, (deleteError) => {
                     if (deleteError) console.log("Old file delete error", deleteError)
                     console.log('Old file deleted!')
                 })
