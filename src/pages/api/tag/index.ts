@@ -38,6 +38,7 @@ async function index(
         const tags: Tag[] = await prisma.tag.findMany({ ...selectData, include: includeData })
         res.status(200).json({ data: tags })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -62,6 +63,7 @@ async function create(
             }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

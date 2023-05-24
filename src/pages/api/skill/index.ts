@@ -51,6 +51,7 @@ async function index(
         res.status(200).json({ data: skills })
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -75,6 +76,7 @@ async function create(
             }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

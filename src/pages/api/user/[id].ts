@@ -37,6 +37,7 @@ async function index(
         })
         res.status(200).json({ data: user })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -86,6 +87,7 @@ async function update(
             }
         } else res.status(400).json({ data: "Unauthorized" })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -102,6 +104,7 @@ async function erase(
             res.status(200).json({ data: deletedUser })
         } else throw new Error("Unauthorized")
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

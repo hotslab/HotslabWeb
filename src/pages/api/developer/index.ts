@@ -84,6 +84,7 @@ async function index(
         })
         res.status(200).json({ data: profile })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }

@@ -57,6 +57,7 @@ async function index(
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json({ data: profiles })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
@@ -102,6 +103,7 @@ async function create(
             }
         } else throw new Error("Unauthorized")
     } catch (error) {
+        console.log(error)
         res.status(400).json({ data: "Unknown Server Error" })
     }
 }
