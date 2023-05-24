@@ -81,7 +81,7 @@ async function main() {
     })
 
     const user = await prisma.user.findUnique({
-        where: { email: "joseph.nyahuye@gmail.com" },
+        where: { email: process.env.OWNER_EMAIL },
         include: { profile: true, role: true }
     })
 
