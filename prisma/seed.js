@@ -21,7 +21,7 @@ async function main() {
         where: { email: process.env.OWNER_EMAIL },
         update: {},
         create: {
-            email: 'joseph.nyahuye@gmail.com',
+            email: process.env.OWNER_EMAIL,
             name: 'Joseph',
             surname: 'Nyahuye',
             active: true,
