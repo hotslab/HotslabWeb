@@ -13,7 +13,7 @@ export default function Projects({ projects }: Props) {
         if (images && images.length > 0) {
             return <div
                 style={{
-                    backgroundImage: `url('${process.env.NEXT_PUBLIC_HOST}/${images[0].url}')`,
+                    backgroundImage: `url('${process.env.NEXT_PUBLIC_IMAGE_HOST}/${images[0].url}')`,
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center"
