@@ -10,7 +10,7 @@ import Auth from '@/components/Auth'
 import LoadingModal from "@/components/LoadingModal"
 import ErrorModal from '@/components/ErrorModal'
 import ScrollButton from "@/components/ScrollButton"
-
+import Script from 'next/script'
 
 export default function App({ Component, pageProps }: AppAuthProps) {
   const [pageLoading, setPageLoading] = useState<boolean>(false)
@@ -29,13 +29,6 @@ export default function App({ Component, pageProps }: AppAuthProps) {
   }
 
   useEffect(() => {
-    const handleStart = () => setPageLoading(true)
-    const handleComplete = () => setPageLoading(false)
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleComplete)
-    router.events.on('routeChangeError', handleComplete)
-  }, [router])
-  useEffect(() => {
     fetchInterceptor()
     eventBus.on("openErrorModal", (e: string) => setErrorMessage(e))
     eventBus.on("openLoadingPage", (e: boolean) => setPageLoading(e))
@@ -46,26 +39,42 @@ export default function App({ Component, pageProps }: AppAuthProps) {
       eventBus.remove("logOut", () => logOut())
     }
   }, []) // eslint-disable-line
+  useEffect(() => {
+    const handleStart = () => setPageLoading(true)
+    const handleComplete = () => setPageLoading(false)
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleComplete)
+    router.events.on('routeChangeError', handleComplete)
+  }, [router])
 
   return (
-    <SessionProvider session={pageProps.session}>
-      {Component.auth === true
-        ? <Auth><Component {...pageProps} /></Auth>
-        : <Component {...pageProps} />
-      }
-      {
-        pageLoading &&
-        <LoadingModal />
-      }
-      {
-        errorMessage !== null &&
-        <ErrorModal errorMessage={errorMessage} close={closeErrorModal} />
-      }
-      {
-        !pageLoading &&
-        <ScrollButton />
-      }
-    </SessionProvider>
+    <>
+      <Script id="hotslab-script" strategy="beforeInteractive" onError={(e: Error) => {
+        console.error('Script failed to load', e);
+      }}>
+        {`
+        if (${process.env.NODE_ENV === "production"}) window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () { }
+      `}
+      </Script>
+      <SessionProvider session={pageProps.session}>
+        {Component.auth === true
+          ? <Auth><Component {...pageProps} /></Auth>
+          : <Component {...pageProps} />
+        }
+        {
+          pageLoading &&
+          <LoadingModal />
+        }
+        {
+          errorMessage !== null &&
+          <ErrorModal errorMessage={errorMessage} close={closeErrorModal} />
+        }
+        {
+          !pageLoading &&
+          <ScrollButton />
+        }
+      </SessionProvider>
+    </>
   )
 }
 
