@@ -13,9 +13,13 @@ export default function Project({ project }: Props) {
     const [displayImage, setDisplayImage] = useState<string | null>(null)
     const router = useRouter()
 
-    function setCurrentDisplayImage(url: string | null) {
+    function setCurrentDisplayImage(url: string | null, scroll: boolean = false) {
         const imageUrl = url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
         setDisplayImage(imageUrl)
+        if (scroll && typeof window !== "undefined") {
+            const targetElement = document.getElementById("image-container")
+            targetElement?.scrollIntoView({ behavior: "smooth" })
+        }
     }
     const setDefaultImage = useCallback(async () => {
         setCurrentDisplayImage(
@@ -78,9 +82,8 @@ export default function Project({ project }: Props) {
                                         project.images?.map((image: ProjectImage, index: number) => (
                                             <a
                                                 key={image.id} id={`item${index + 1}`}
-                                                href="#image-container"
                                                 className="btn btn-xs"
-                                                onClick={() => setCurrentDisplayImage(image.url)}
+                                                onClick={() => setCurrentDisplayImage(image.url, true)}
                                             >
                                                 {index + 1}
                                             </a>

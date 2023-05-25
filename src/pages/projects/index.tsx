@@ -14,13 +14,13 @@ export default function Projects({ projects }: Props) {
             return <div
                 style={{
                     backgroundImage: `url('${process.env.NEXT_PUBLIC_HOST}/${images[0].url}')`,
-                    backgroundSize: "cover",
+                    backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center"
                 }}
-                className="w-full h-[300px] p-0"
+                className="w-full h-[300px] p-0 transition ease-in-out delay-150 hover:scale-110"
             />
-        } else return <MdImage className="text-success text-[300px] w-[100%] h-[300px]" />
+        } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 hover:scale-110" />
     }
 
     return (
@@ -42,12 +42,14 @@ export default function Projects({ projects }: Props) {
                                 key={project.id}
                                 className="bg-base-100 w-[300px] h-[300px] shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col justify-center items-center"
                             >
-                                {getFirstImage(project.images)}
+                                <div className="w-full h-[300px] overflow-hidden flex justify-center items-center">
+                                    {getFirstImage(project.images)}
+                                </div>
                                 <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
                                     <p className="font-bold text-md sm:text-xl">{project.projectName}</p>
                                     <div className="card-actions justify-end w-full">
                                         <button
-                                            className="btn btn-success text-white"
+                                            className="btn btn-success btn-sm text-white"
                                             onClick={() => router.push({ pathname: `/projects/${project.id}` })}
                                         >
                                             open

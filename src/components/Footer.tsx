@@ -4,6 +4,8 @@ import { MdEmail, MdLocationPin, MdAccountCircle, MdViewList } from "react-icons
 import computerImage from "../../public/assets/computer.svg"
 import tabletImage from "../../public/assets/tablet.svg"
 import artBoardImage from "../../public/assets/artboard.svg"
+import Image from "next/image"
+
 
 export default function Layout() {
     const router = useRouter()
@@ -14,15 +16,15 @@ export default function Layout() {
             <div>
                 <span className="footer-title">Services</span>
                 <a className="flex justify-start items-center gap-2">
-                    <img className="h-[13px]" src={computerImage.src} alt="" />
+                    <Image src={computerImage.src} height={13} width={13} alt="Software Development" />
                     <span>Software Development</span>
                 </a>
                 <a className="flex justify-start items-center gap-2">
-                    <img className="h-[13px]" src={tabletImage.src} alt="" />
+                    <Image src={tabletImage.src} height={13} width={13} alt="Mobile Applications" />
                     <span>Mobile Applications</span>
                 </a>
                 <a className="flex justify-start items-center gap-2">
-                    <img className="h-[13px]" src={artBoardImage.src} alt="" />
+                    <Image src={artBoardImage.src} height={13} width={13} alt="Graphic Designs" />
                     <span>Graphic Designs</span>
                 </a>
             </div>
