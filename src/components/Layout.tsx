@@ -38,7 +38,7 @@ export default function Layout(props: Props) {
     return 'Profile'
   }
   function getDisplayImage(url: string | null | undefined): string | null {
-    return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
+    return url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
   }
 
   return (

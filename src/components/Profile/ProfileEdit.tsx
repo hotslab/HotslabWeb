@@ -28,7 +28,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     const router = useRouter()
 
     function getDisplayImage(url: string | null): string | null {
-        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
     }
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)

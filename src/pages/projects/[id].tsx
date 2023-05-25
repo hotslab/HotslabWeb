@@ -14,7 +14,7 @@ export default function Project({ project }: Props) {
     const router = useRouter()
 
     function setCurrentDisplayImage(url: string | null, scroll: boolean = false) {
-        const imageUrl = url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
+        const imageUrl = url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
         setDisplayImage(imageUrl)
         if (scroll && typeof window !== "undefined") {
             const targetElement = document.getElementById("image-container")

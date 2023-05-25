@@ -41,7 +41,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
         if (projectImage) setImageCaption(projectImage.caption)
     }
     function getDisplayImage(url: string): string | null {
-        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
     }
     async function unlinkProjectSkill(projectSkillId: number) {
         eventBus.dispatch("openLoadingPage", true)

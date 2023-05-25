@@ -46,7 +46,7 @@ export default function UserProfile({ profile }: Props) {
         setEditSection(null)
     }
     function getDisplayImage(url: string | null): string | null {
-        return url ? `'${process.env.NEXT_PUBLIC_HOST}/${url}'` : null
+        return url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
     }
     const getRoles = useCallback(async () => {
         await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/role`, {
