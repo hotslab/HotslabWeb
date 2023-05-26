@@ -11,8 +11,8 @@ export default async function handler(
     res: NextApiResponse<Data>
 ) {
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
-    if (req.method === 'POST') create(req, res, session)
-    else if (req.method === 'DELETE') erase(req, res, session)
+    if (req.method === 'POST') await create(req, res, session)
+    else if (req.method === 'DELETE') await erase(req, res, session)
     else {
         res.setHeader('Allow', ['GET', 'POST'])
         res.status(405).json({ data: `Method ${req.method} Not Allowed` })
