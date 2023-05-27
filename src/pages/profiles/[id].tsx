@@ -27,7 +27,7 @@ const Profile: ComponentWithAuth = () => {
         return () => {
             eventBus.dispatch("openLoadingPage", false)
         }
-    }, [router.isReady])
+    }, [router.isReady, router.query.id])
 
     return (
         <Layout>
