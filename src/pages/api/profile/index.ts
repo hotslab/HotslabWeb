@@ -71,12 +71,12 @@ async function create(
         if (session && ["Owner", "Admin"].includes(session.user.role)) {
             const { body } = req
             const validationResponse = await validator(body, {
-                idNumber: "required|string",
-                dob: "required|date",
-                sex: "required|string",
-                countryCode: "required|string",
-                phoneNumber: "required|numeric",
-                address: "required|string",
+                idNumber: "string",
+                dob: "date",
+                sex: "string",
+                countryCode: "string",
+                phoneNumber: "numeric",
+                address: "string",
                 city: "required|string",
                 country: "required|string",
                 postcode: "required|string",

@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppAuthProps) {
   async function logOut(redirect: boolean = false) {
     if (redirect) {
       await signOut({ redirect: false })
-      router.push({ pathname: "/auth/login" })
+      router.push("/auth/login")
     }
   }
   function closeErrorModal() {

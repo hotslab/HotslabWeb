@@ -23,13 +23,13 @@ export default function Login() {
                     const session: Session | null = await getSession()
                     response.error
                         ? eventBus.dispatch("openErrorModal", response.error)
-                        : await router.push({ pathname: `/profiles/${session?.user.profileId}` })
+                        : await router.push(`/profiles/${session?.user.profileId}`)
                 } else setErrorMessage('No Response From Server')
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
     useEffect(() => {
-        if (status === "authenticated") router.push({ pathname: "/" })
+        if (status === "authenticated") router.push("/")
     }, [status, router])
 
     if (status !== "authenticated") return (

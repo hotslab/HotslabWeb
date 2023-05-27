@@ -59,7 +59,7 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
                                         <div className="card-actions justify-end w-full">
                                             <button
                                                 className="btn btn-success btn-sm text-white"
-                                                onClick={() => router.push({ pathname: `/profiles/${profile.id}` })}
+                                                onClick={() => router.push(`/profiles/${profile.id}`)}
                                             >
                                                 open
                                             </button>

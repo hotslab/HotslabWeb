@@ -15,15 +15,12 @@ export default function Layout(props: Props) {
 
   const router = useRouter()
   const [showMenu, setShowMenu] = useState(false)
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
-
   const { data: session, status } = useSession()
 
   async function goTo(route: string) {
     setShowMenu(false)
     if (route == 'profile')
-      router.push({ pathname: `/profiles/${session?.user.profileId}` })
+      router.push(`/profiles/${session?.user.profileId}`)
   }
   async function logOut() {
     setShowMenu(false)
@@ -64,7 +61,7 @@ export default function Layout(props: Props) {
             <div className="flex-1 mx-0">
               <a
                 className="btn btn-ghost normal-case px-1 flex justify-between item-center gap-1"
-                onClick={() => router.push({ pathname: '/' })}
+                onClick={() => router.push('/')}
               >
                 <span className="font-bold text-white text-[15px] sm:text-[25px]">HOTSLAB</span>
               </a>

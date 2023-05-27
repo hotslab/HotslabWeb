@@ -97,7 +97,7 @@ model Profile {
   imageUrl     String?
   idNumber     String?
   dob          DateTime?     @db.Date
-  sex          Sex
+  sex          Sex?
   countryCode  String?
   phoneNumber  Int?
   address      String?
