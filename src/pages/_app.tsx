@@ -9,8 +9,10 @@ import { AppAuthProps } from '../../types/authenticated'
 import Auth from '@/components/Auth'
 import LoadingModal from "@/components/LoadingModal"
 import ErrorModal from '@/components/ErrorModal'
-import ScrollButton from "@/components/ScrollButton"
 import Script from 'next/script'
+import dynamic from 'next/dynamic'
+
+const ScrollButton = dynamic(() => import("@/components/ScrollButton"), { ssr: false })
 
 export default function App({ Component, pageProps }: AppAuthProps) {
   const [pageLoading, setPageLoading] = useState<boolean>(false)

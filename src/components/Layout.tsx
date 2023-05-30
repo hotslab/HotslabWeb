@@ -45,7 +45,7 @@ export default function Layout(props: Props) {
       </Head>
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col items-center justify-start">
+        <div id="hotslab-content" className="drawer-content flex flex-col items-center justify-start">
           {/* Navbar menu content here */}
           <div id="hotslab-navbar" className="navbar bg-base-100">
             <div className="flex-none">

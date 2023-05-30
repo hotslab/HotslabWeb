@@ -36,7 +36,7 @@ export default function Login() {
             <Head>
                 <title>Login</title>
             </Head>
-            <div className="min-h-screen bg-white flex min-h-screen flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
+            <div className="min-h-screen bg-white flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
                 <div className="mt-10 mb-5 sm:mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
                     <div
                         title="Hotslab Logo"
