@@ -36,7 +36,7 @@ async function index(
         res.status(200).json({ data: achievement })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -64,10 +64,10 @@ async function update(
                 })
                 res.status(200).json({ data: updatedAchievement })
             }
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -82,9 +82,9 @@ async function erase(
             const id = parseInt(query.id as string, 10)
             const deletedAchievement: Achievement = await prisma.achievement.delete({ where: { id: id } })
             res.status(200).json({ data: deletedAchievement })
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }

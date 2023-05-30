@@ -58,7 +58,7 @@ async function index(
         res.status(200).json({ data: profiles })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -104,6 +104,6 @@ async function create(
         } else throw new Error("Unauthorized")
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }

@@ -12,7 +12,6 @@ export default function Login() {
     const router = useRouter()
     const [email, setEmail] = useState("")
     const [password, setPasssword] = useState("")
-    const [errorMessage, setErrorMessage] = useState("")
     const { data: session, status } = useSession()
 
     async function login() {
@@ -24,13 +23,13 @@ export default function Login() {
                     response.error
                         ? eventBus.dispatch("openErrorModal", response.error)
                         : await router.push(`/profiles/${session?.user.profileId}`)
-                } else setErrorMessage('No Response From Server')
+                } else eventBus.dispatch("openErrorModal", 'No Response From Server')
                 eventBus.dispatch("openLoadingPage", false)
             })
     }
     useEffect(() => {
-        if (status === "authenticated") router.push("/")
-    }, [status, router])
+        if (status === "authenticated" && session) router.push(`/profiles/${session.user.profileId}`)
+    }, [status, router, session])
 
     if (status !== "authenticated") return (
         <Layout>

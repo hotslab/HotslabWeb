@@ -40,11 +40,14 @@ export default function App({ Component, pageProps }: AppAuthProps) {
     }
   }, []) // eslint-disable-line
   useEffect(() => {
-    const handleStart = () => setPageLoading(true)
-    const handleComplete = () => setPageLoading(false)
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleComplete)
-    router.events.on('routeChangeError', handleComplete)
+    router.events.on('routeChangeStart', () => setPageLoading(true))
+    router.events.on('routeChangeComplete', () => setPageLoading(false))
+    router.events.on('routeChangeError', () => setPageLoading(false))
+    return () => {
+      router.events.off('routeChangeStart', () => setPageLoading(false))
+      router.events.off('routeChangeComplete', () => setPageLoading(false))
+      router.events.off('routeChangeError', () => setPageLoading(false))
+    }
   }, [router])
 
   return (

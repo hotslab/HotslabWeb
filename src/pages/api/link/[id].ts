@@ -35,7 +35,7 @@ async function index(
         res.status(200).json({ data: link })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -59,10 +59,10 @@ async function update(
                 })
                 res.status(200).json({ data: updatedSkill })
             }
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -76,9 +76,9 @@ async function erase(
             const { query } = req
             const deletedLink = await prisma.link.delete({ where: { id: Number(query.id) } })
             res.status(200).json({ data: deletedLink })
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }

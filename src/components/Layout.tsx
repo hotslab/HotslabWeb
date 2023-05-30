@@ -19,16 +19,16 @@ export default function Layout(props: Props) {
 
   async function goTo(route: string) {
     setShowMenu(false)
-    if (route == 'profile')
-      router.push(`/profiles/${session?.user.profileId}`)
+    if (router.asPath !== route) router.push(route)
   }
   async function logOut() {
     setShowMenu(false)
+    eventBus.dispatch("openLoadingPage", true)
     eventBus.dispatch("logOut")
   }
   function getFormattedName(): string {
     if (session && session.user) {
-      const name = 'Joseph Nyahuye'
+      const name = `${session.user.name} ${session.user.surname}`
       return name.length > 15 ?
         `${name.substring(0, 14)}...` : name
     }
@@ -61,7 +61,7 @@ export default function Layout(props: Props) {
             <div className="flex-1 mx-0">
               <a
                 className="btn btn-ghost normal-case px-1 flex justify-between item-center gap-1"
-                onClick={() => router.push('/')}
+                onClick={() => goTo('/')}
               >
                 <span className="font-bold text-white text-[15px] sm:text-[25px]">HOTSLAB</span>
               </a>
@@ -93,7 +93,7 @@ export default function Layout(props: Props) {
                   <ul className="menu bg-base-100 w-56">
                     {
                       status === "authenticated" &&
-                      <li onClick={() => goTo('profile')} className="text-white">
+                      <li onClick={() => goTo(`/profiles/${session?.user.profileId}`)} className="text-white">
                         <a className="text-ellipsis overflow-hidden ...">
                           <span title={session.user ? `${session.user.name} ${session.user.surname}` : ''}>
                             {getFormattedName()}
@@ -118,31 +118,31 @@ export default function Layout(props: Props) {
         <div className="drawer-side">
           <label htmlFor="my-drawer" className="drawer-overlay"></label>
           <ul className="menu p-4 w-52 bg-base-100 text-base-content">
-            <li onClick={() => router.push('/')}><a>Home</a></li>
-            <li onClick={() => router.push('/projects')}><a>Portfolio</a></li>
+            <li onClick={() => goTo('/')}><a>Home</a></li>
+            <li onClick={() => goTo('/projects')}><a>Portfolio</a></li>
             {
               status === "authenticated" &&
-              <li onClick={() => router.push('/profiles')}><a>Profiles</a></li>
+              <li onClick={() => goTo('/profiles')}><a>Profiles</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => router.push('/roles')}><a>Roles</a></li>
+              <li onClick={() => goTo('/roles')}><a>Roles</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => router.push('/tags')}><a>Tags</a></li>
+              <li onClick={() => goTo('/tags')}><a>Tags</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => router.push('/skills')}><a>Skills</a></li>
+              <li onClick={() => goTo('/skills')}><a>Skills</a></li>
             }
             {
               status !== "authenticated" &&
-              <li onClick={() => router.push('/developer')}><a>Profile</a></li>
+              <li onClick={() => goTo('/developer')}><a>Profile</a></li>
             }
             {
               status !== "authenticated" &&
-              <li onClick={() => router.push('/auth/login')}><a>Login</a></li>
+              <li onClick={() => goTo('/auth/login')}><a>Login</a></li>
             }
           </ul>
         </div>

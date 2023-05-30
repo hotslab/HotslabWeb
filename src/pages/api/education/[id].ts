@@ -36,7 +36,7 @@ async function index(
         res.status(200).json({ data: education })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -71,10 +71,10 @@ async function update(
                 })
                 res.status(200).json({ data: updatedEducation })
             }
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
 
@@ -89,9 +89,9 @@ async function erase(
             const id = parseInt(query.id as string, 10)
             const deletedEducation: Education = await prisma.education.delete({ where: { id: id } })
             res.status(200).json({ data: deletedEducation })
-        } else res.status(400).json({ data: "Unauthorized" })
+        } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {
         console.log(error)
-        res.status(400).json({ data: "Unknown Server Error" })
+        res.status(500).json({ data: "Internal Server Error" })
     }
 }
