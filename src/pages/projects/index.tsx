@@ -18,9 +18,9 @@ export default function Projects({ projects }: Props) {
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center"
                 }}
-                className="w-full h-[300px] p-0 transition ease-in-out delay-150 hover:scale-110"
+                className="w-full h-[300px] scale-110 p-0 transition ease-in-out delay-150 hover:scale-150"
             />
-        } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 hover:scale-110" />
+        } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 scale-110 hover:scale-150" />
     }
 
     return (
@@ -45,8 +45,8 @@ export default function Projects({ projects }: Props) {
                                 <div className="w-full h-[300px] overflow-hidden flex justify-center items-center">
                                     {getFirstImage(project.images)}
                                 </div>
-                                <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
-                                    <p className="font-bold text-md sm:text-xl">{project.projectName}</p>
+                                <div className="h-[60%] sm:h-[45%] w-full px-6 py-4 flex flex-col justify-between items-start gap-5">
+                                    <p className="font-bold text-sm sm:text-md">{project.projectName}</p>
                                     <div className="card-actions justify-end w-full">
                                         <button
                                             className="btn btn-success btn-sm text-white"
