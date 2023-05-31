@@ -1,15 +1,26 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { MdEmail, MdLocationPin, MdAccountCircle, MdViewList } from "react-icons/md"
+import { MdEmail, MdLocationPin, MdAccountCircle, MdViewList, MdLogout, MdLogin } from "react-icons/md"
 import computerImage from "../../public/assets/computer.svg"
 import tabletImage from "../../public/assets/tablet.svg"
 import artBoardImage from "../../public/assets/artboard.svg"
+import gitHubImage from "../../public/assets/github.svg"
+import gitLabImage from "../../public/assets/gitlab.svg"
 import Image from "next/image"
+import eventBus from "@/lib/eventBus"
 
 
 export default function Layout() {
     const router = useRouter()
     const { data: session, status } = useSession()
+
+    async function goTo(route: string) {
+        if (router.asPath !== route) router.push(route)
+    }
+    async function logOut() {
+        eventBus.dispatch("openLoadingPage", true)
+        eventBus.dispatch("logOut")
+    }
 
     return (
         <footer className="footer p-10 bg-base-200 text-base-content">
@@ -29,10 +40,10 @@ export default function Layout() {
                 </a>
             </div>
             <div>
-                <span className="footer-title">Links</span>
+                <span className="footer-title">Site</span>
                 <a
                     className="flex justify-start items-center gap-2 link link-hover"
-                    onClick={() => router.push('/projects')}
+                    onClick={() => goTo('/projects')}
                 >
                     <span>
                         <MdViewList className="text-white" />
@@ -41,7 +52,7 @@ export default function Layout() {
                 </a>
                 <a
                     className="flex justify-start items-center gap-2 link link-hover"
-                    onClick={() => router.push('/developer')}
+                    onClick={() => goTo(status === "authenticated" ? `profiles/${session.user.id}` : '/developer')}
                 >
                     <span>
                         <MdAccountCircle className="text-white" />
@@ -49,7 +60,23 @@ export default function Layout() {
                     <span>Profile</span>
                 </a>
                 <a
-                    href="http://linkedin.com/in/joseph-nyahuye-4a9b94150" target="_blank"
+                    className="flex justify-start items-center gap-2 link link-hover"
+                    onClick={() => status === "authenticated" ? logOut() : goTo('/auth/login')}
+                >
+                    <span>
+                        {
+                            status === "authenticated"
+                                ? <MdLogout className="text-white" />
+                                : <MdLogin className="text-white" />
+                        }
+                    </span>
+                    <span>{status === "authenticated" ? "Logout" : "Login"}</span>
+                </a>
+            </div>
+            <div>
+                <span className="footer-title">Links</span>
+                <a
+                    href="https://linkedin.com/in/joseph-nyahuye-4a9b94150" target="_blank"
                     className="hover:underline flex justify-start items-center gap-2"
                 >
                     <span>
@@ -61,9 +88,30 @@ export default function Layout() {
                     </span>
                     <span>LinkedIn</span>
                 </a>
+                <a
+                    href="https://github.com/hotslab" target="_blank"
+                    className="hover:underline flex justify-start items-center gap-2"
+                >
+                    <Image src={gitHubImage.src} height={13} width={13} alt="Gitlab Link" />
+                    <span>Github</span>
+                </a>
+                <a
+                    href="https://gitlab.com/Hotslab" target="_blank"
+                    className="hover:underline flex justify-start items-center gap-2"
+                >
+                    <Image src={gitLabImage.src} height={13} width={13} alt="Gitlab Link" />
+                    <span>Gitlab</span>
+                </a>
             </div>
             <div>
                 <span className="footer-title">Contact</span>
+                <a
+                    className="link link-hover flex justify-between items-center gap-2"
+                    href="mailto:admin@hotslab.com"
+                >
+                    <MdEmail className="text-white" />
+                    <span> admin@hotslab.com</span>
+                </a>
                 <a
                     className="link link-hover flex justify-between items-center gap-2"
                     href="https://goo.gl/maps/ZSeka1Ktj3FeC24fA?coh=178572&entry=tt"
@@ -74,14 +122,7 @@ export default function Layout() {
                 </a>
                 <a
                     className="link link-hover flex justify-between items-center gap-2"
-                    href="mailto:admin@hotslab.com"
-                >
-                    <MdEmail className="text-white" />
-                    <span> admin@hotslab.com</span>
-                </a>
-                <a
-                    className="link link-hover flex justify-between items-center gap-2"
-                    onClick={() => router.push('/')}
+                    onClick={() => goTo('/')}
                 >
                     <span className="text-white font-bold">&#174;</span>
                     <span> 2016 hotslab.com</span>
