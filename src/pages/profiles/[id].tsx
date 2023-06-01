@@ -30,7 +30,7 @@ const Profile: ComponentWithAuth = () => {
         }
     }
 
-    useEffect(() => { if (router.isReady) getProfileData(true) }, [router.isReady])
+    useEffect(() => { if (router.isReady) getProfileData(true) }, [router.isReady]) // eslint-disable-line
     useEffect(() => {
         eventBus.on("refreshData", () => getProfileData(true))
         return () => eventBus.remove("refreshData", getProfileData)
