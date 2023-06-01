@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
 import dynamic from "next/dynamic"
 import Spinner from "@/components/Spinner"
+import Compressor from "compressorjs"
 
 const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
@@ -51,7 +52,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -68,7 +73,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -81,7 +90,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -98,7 +111,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -111,7 +128,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -128,7 +149,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -177,7 +202,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 "content-type": "application/json",
             },
         }).then(async response => {
-            if (response.ok) { close(), router.replace(router.asPath) }
+            if (response.ok) {
+                if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                router.replace(router.asPath)
+                close()
+            }
             else eventBus.dispatch("openErrorModal", (await response.json()).data)
             eventBus.dispatch("openLoadingPage", false)
         })
@@ -186,23 +215,34 @@ export default function ProjectEdit({ project, profile, close }: props) {
         eventBus.dispatch("openLoadingPage", true)
         let input = document.querySelector('input[type="file"]') as HTMLInputElement
         if (input && input.files && input.files.length) {
-            let data = new FormData()
-            data.append('file', input.files[0])
-            data.append('caption', imageCaption)
-            data.append('projectId', String(project?.id || ""))
-            data.append('projectImageId', String(selectedImage?.id || ""))
-            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/image`, {
-                method: 'POST',
-                body: data
-            }).then(async response => {
-                if (response.ok) {
-                    setSelectedImage(null)
-                    setImageCaption("")
-                    router.replace(router.asPath)
-                    close()
-                }
-                else eventBus.dispatch("openErrorModal", (await response.json()).data)
-                eventBus.dispatch("openLoadingPage", false)
+            new Compressor(input.files[0], {
+                quality: 0.7,
+                mimeType: "image/jpeg",
+                async success(result) {
+                    const data = new FormData()
+                    data.append('file', result, result.name)
+                    data.append('caption', imageCaption)
+                    data.append('projectId', String(project?.id || ""))
+                    data.append('projectImageId', String(selectedImage?.id || ""))
+                    await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/image`, {
+                        method: 'POST',
+                        body: data
+                    }).then(async response => {
+                        if (response.ok) {
+                            setSelectedImage(null)
+                            setImageCaption("")
+                            if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                            router.replace(router.asPath)
+                            close()
+                        }
+                        else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                        eventBus.dispatch("openLoadingPage", false)
+                    })
+                },
+                error(err) {
+                    eventBus.dispatch("openErrorModal", err.message)
+                    eventBus.dispatch("openLoadingPage", false)
+                },
             })
         } else {
             eventBus.dispatch("openErrorModal", "File input is empty")
@@ -225,7 +265,11 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 method: project ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                if (response.ok) { close(), router.replace(router.asPath) }
+                if (response.ok) {
+                    if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                    router.replace(router.asPath)
+                    close()
+                }
                 else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })

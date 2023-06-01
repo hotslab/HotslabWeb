@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
 import dynamic from "next/dynamic"
 import Spinner from "@/components/Spinner"
+import Compressor from 'compressorjs'
 
 const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
@@ -55,7 +56,11 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
                 if (response.ok) {
                     const profileData = (await response.json()).data
                     if (selectedImage) uploadImage(profileData.id)
-                    else { close(), router.replace(router.asPath) }
+                    else {
+                        if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                        router.replace(router.asPath)
+                        close()
+                    }
                 } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
@@ -64,21 +69,30 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
         eventBus.dispatch("openLoadingPage", true)
         let input = document.querySelector('input[type="file"]') as HTMLInputElement
         if (input && input.files && input.files.length > 0) {
-            let data = new FormData()
-            data.append('file', input.files[0])
-            data.append('profileId', id)
-
-            await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile/image/${id}`, {
-                method: 'POST',
-                body: data
-            }).then(async response => {
-                if (response.ok) {
-                    setSelectedImage("")
-                    router.replace(router.asPath)
-                    close()
-                }
-                else eventBus.dispatch("openErrorModal", (await response.json()).data)
-                eventBus.dispatch("openLoadingPage", false)
+            new Compressor(input.files[0], {
+                quality: 0.7,
+                mimeType: "image/jpeg",
+                async success(result) {
+                    const data = new FormData()
+                    data.append('profileId', id)
+                    data.append('file', result, result.name)
+                    await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile/image/${id}`, {
+                        method: 'POST',
+                        body: data
+                    }).then(async response => {
+                        if (response.ok) {
+                            setSelectedImage("")
+                            if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                            router.replace(router.asPath)
+                            close()
+                        } else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                        eventBus.dispatch("openLoadingPage", false)
+                    })
+                },
+                error(err) {
+                    eventBus.dispatch("openErrorModal", err.message)
+                    eventBus.dispatch("openLoadingPage", false)
+                },
             })
         } else {
             eventBus.dispatch("openErrorModal", "File input is empty")

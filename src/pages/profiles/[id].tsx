@@ -17,9 +17,9 @@ const Profile: ComponentWithAuth = () => {
     const router = useRouter()
     const { data: session, status } = useSession()
 
-    useEffect(() => {
-        eventBus.dispatch("openLoadingPage", true)
-        if (router.isReady)
+    async function getProfileData(getData: boolean = false) {
+        if (getData) {
+            eventBus.dispatch("openLoadingPage", true)
             fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile/${router.query.id}`, {
                 method: "GET",
             }).then(async response => {
@@ -27,10 +27,14 @@ const Profile: ComponentWithAuth = () => {
                 else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
-        return () => {
-            eventBus.dispatch("openLoadingPage", false)
         }
-    }, [router.isReady, router.query.id])
+    }
+
+    useEffect(() => { if (router.isReady) getProfileData(true) }, [router.isReady])
+    useEffect(() => {
+        eventBus.on("refreshData", () => getProfileData(true))
+        return () => eventBus.remove("refreshData", getProfileData)
+    }, []) // eslint-disable-line
 
     return (
         <Layout>

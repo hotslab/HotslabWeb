@@ -36,8 +36,11 @@ export default function UserEdit({ user, roles, close }: props) {
                     "content-type": "application/json",
                 },
             }).then(async response => {
-                if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                if (response.ok) {
+                    if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                    router.replace(router.asPath)
+                    close()
+                } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }

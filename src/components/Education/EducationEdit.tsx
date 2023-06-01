@@ -38,8 +38,11 @@ export default function EducationEdit({ education, countries, profile, close }: 
                 method: education ? "PUT" : "POST",
                 headers: { "content-type": "application/json" },
             }).then(async response => {
-                if (response.ok) { close(), router.replace(router.asPath) }
-                else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                if (response.ok) {
+                    if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                    router.replace(router.asPath)
+                    close()
+                } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
     }

@@ -35,8 +35,10 @@ export default function Projects({ projects, profile, close }: props) {
                         "content-type": "application/json",
                     },
                 }).then(async response => {
-                    if (response.ok) router.replace(router.asPath)
-                    else eventBus.dispatch("openErrorModal", (await response.json()).data)
+                    if (response.ok) {
+                        if (router.pathname === "/profiles/[id]") eventBus.dispatch("refreshData")
+                        router.replace(router.asPath)
+                    } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                     openOrCloseDelete()
                     eventBus.dispatch("openLoadingPage", false)
                 })
