@@ -55,7 +55,7 @@ export default function Project() {
                                     <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
                                         <span>{project.projectName}</span>
                                         <button
-                                            className="btn btn-md btn-error text-white"
+                                            className="btn btn-sm btn-error text-white"
                                             onClick={() => router.push("/projects")}
                                         >
                                             Back

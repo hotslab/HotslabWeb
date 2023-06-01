@@ -66,7 +66,7 @@ const Profile: ComponentWithAuth = () => {
                                             &&
                                             <div className="flex justify-between items-center gap-5">
                                                 <button
-                                                    className="btn btn-error text-white"
+                                                    className="btn btn-error text-white btn-sm"
                                                     onClick={() => router.push("/profiles")}
                                                 >
                                                     Back
