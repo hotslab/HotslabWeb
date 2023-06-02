@@ -41,3 +41,4 @@ next-env.d.ts
 # folder
 /public/uploads/
 /public/assets/libs/
+/public/.well-known/
