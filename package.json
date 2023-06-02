@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node dev-server.js",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "node prod-server.js",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
     "seed": "node prisma/seed.js",
     "assets": "node assets.js"

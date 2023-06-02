@@ -26,7 +26,7 @@ export default function Home() {
             className="mt-10 h-[120px] w-[120px]"
           >
           </div>
-          <span id="logo-text" className="text-white pt-5 font-bold text-white text-sm mt-5 mb-10">HOTSLAB</span>
+          <span id="logo-text" className="text-white font-bold text-white text-xs my-10">HOTSLAB</span>
           <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
             <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
               <div

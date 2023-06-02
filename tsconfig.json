@@ -30,8 +30,7 @@
     "**/*.tsx",
     "prisma/datasets.js",
     "prisma/seed.js",
-    "prod-server.js",
-    "dev-server.js",
+    "server.js",
     "assets.js",
   ],
   "exclude": [

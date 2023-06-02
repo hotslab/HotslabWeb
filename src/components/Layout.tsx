@@ -58,12 +58,12 @@ export default function Layout(props: Props) {
                 />
               </label>
             </div>
-            <div className="flex-1 mx-0">
+            <div className="flex-1 ml-[3px] mr-0">
               <a
-                className="btn btn-ghost normal-case px-1 flex justify-between item-center gap-1"
+                className="normal-case px-1 flex justify-between item-center gap-1"
                 onClick={() => goTo('/')}
               >
-                <span className="font-bold text-white text-[15px] sm:text-[25px]">HOTSLAB</span>
+                <span className="font-bold text-white hover:text-gray-300 text-[15px] sm:text-[25px]">HOTSLAB</span>
               </a>
             </div>
             <div className="flex-none relative">
