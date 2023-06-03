@@ -1,6 +1,9 @@
 import { ReactNode } from "react"
 
-type props = { children: ReactNode, customClass?: string }
+type props = {
+    children: ReactNode,
+    customClass?: string,
+}
 
 export default function Modal({ children, customClass }: props) {
     return (

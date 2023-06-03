@@ -6,16 +6,17 @@ import eventBus from '@/lib/eventBus'
 import fetchInterceptor from '@/lib/fetchInterceptor'
 import { signOut } from "next-auth/react"
 import { AppAuthProps } from '../../types/authenticated'
-import Auth from '@/components/Auth'
-import LoadingModal from "@/components/LoadingModal"
-import ErrorModal from '@/components/ErrorModal'
 import Script from 'next/script'
+import Auth from '@/components/Auth'
+import LoadingPage from "@/components/LoadingPage"
 import dynamic from 'next/dynamic'
 
+const ErrorModal = dynamic(() => import('@/components/ErrorModal'))
 const ScrollButton = dynamic(() => import("@/components/ScrollButton"), { ssr: false })
 
 export default function App({ Component, pageProps }: AppAuthProps) {
   const [pageLoading, setPageLoading] = useState<boolean>(false)
+  const [isPageLoad, setIsPageLoad] = useState<boolean>(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const router = useRouter()
@@ -29,26 +30,30 @@ export default function App({ Component, pageProps }: AppAuthProps) {
   function closeErrorModal() {
     setErrorMessage(null)
   }
+  function showLoadingPage(loadingValue: boolean, isPageLoadValue: boolean = true) {
+    setPageLoading(loadingValue)
+    setIsPageLoad(isPageLoadValue)
+  }
 
   useEffect(() => {
     fetchInterceptor()
     eventBus.on("openErrorModal", (e: string) => setErrorMessage(e))
-    eventBus.on("openLoadingPage", (e: boolean) => setPageLoading(e))
+    eventBus.on("openLoadingPage", (e: boolean) => showLoadingPage(e, false))
     eventBus.on("logOut", () => logOut(true))
     return () => {
       eventBus.remove("openErrorModal", () => setErrorMessage(null))
-      eventBus.remove("openLoadingPage", () => setPageLoading(false))
+      eventBus.remove("openLoadingPage", () => showLoadingPage(false))
       eventBus.remove("logOut", () => logOut())
     }
   }, []) // eslint-disable-line
   useEffect(() => {
-    router.events.on('routeChangeStart', () => setPageLoading(true))
-    router.events.on('routeChangeComplete', () => setPageLoading(false))
-    router.events.on('routeChangeError', () => setPageLoading(false))
+    router.events.on('routeChangeStart', () => showLoadingPage(true))
+    router.events.on('routeChangeComplete', () => showLoadingPage(false))
+    router.events.on('routeChangeError', () => showLoadingPage(false))
     return () => {
-      router.events.off('routeChangeStart', () => setPageLoading(false))
-      router.events.off('routeChangeComplete', () => setPageLoading(false))
-      router.events.off('routeChangeError', () => setPageLoading(false))
+      router.events.off('routeChangeStart', () => showLoadingPage(false))
+      router.events.off('routeChangeComplete', () => showLoadingPage(false))
+      router.events.off('routeChangeError', () => showLoadingPage(false))
     }
   }, [router])
 
@@ -68,7 +73,7 @@ export default function App({ Component, pageProps }: AppAuthProps) {
         }
         {
           pageLoading &&
-          <LoadingModal />
+          <LoadingPage isPageLoad={isPageLoad} />
         }
         {
           errorMessage !== null &&

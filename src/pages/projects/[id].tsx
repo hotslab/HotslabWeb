@@ -10,7 +10,7 @@ import eventBus from "@/lib/eventBus"
 import dynamic from 'next/dynamic'
 import Spinner from "@/components/Spinner"
 
-const NotFound = dynamic(() => import("@/components/NotFound"), { loading: () => <Spinner /> })
+const Skeleton = dynamic(() => import("@/components/Skeleton"), { loading: () => <Spinner /> })
 const Modal = dynamic(() => import("@/components/Modal"), { loading: () => <Spinner /> })
 const Image = dynamic(() => import("next/image"), { loading: () => <Spinner /> })
 
@@ -160,20 +160,21 @@ export default function Project() {
                             </dl>
                         </div>
                     </div>
-                    : <NotFound />
+                    : <Skeleton isSiteLevel={false} />
             }
             {
                 showSlideShow &&
                 <Modal customClass="relative pt-3">
                     <MdCancel
-                        className="cursor-pointer z-15 text-[20px] text-error absolute top-0 right-0"
+                        title="Close slideshow"
+                        className="cursor-pointer z-15 text-[30px] text-error hover:text-red-600 absolute top-0 right-0"
                         onClick={() => setShowSlideshow(false)}
                     />
                     {
                         displayImage !== null
                             ?
                             <>
-                                <div className="carousel w-full mt-5">
+                                <div className="carousel w-full mt-7">
                                     <div className="carousel-item relative w-full">
                                         <Image src={displayImage}
                                             className="w-full"

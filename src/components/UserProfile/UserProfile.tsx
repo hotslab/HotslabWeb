@@ -20,6 +20,7 @@ import DOMPurify from "isomorphic-dompurify"
 import dynamic from 'next/dynamic'
 import Spinner from "@/components/Spinner"
 
+const Modal = dynamic(() => import("@/components/Modal"), { loading: () => <Spinner /> })
 const UserEdit = dynamic(() => import("@/components/User/UserEdit"), { loading: () => <Spinner /> })
 const ProfileEdit = dynamic(() => import("@/components/Profile/ProfileEdit"), { loading: () => <Spinner /> })
 const Links = dynamic(() => import("@/components/Link/Links"), { loading: () => <Spinner /> })
@@ -183,10 +184,13 @@ export default function UserProfile({ profile }: Props) {
                         <dt className="text-sm font-medium leading-6 text-secondary">Country</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.country || "-"}</dd>
                     </div>
-                    <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <dt className="text-sm font-medium leading-6 text-secondary">Post Code</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.postcode || "-"}</dd>
-                    </div>
+                    {
+                        status === "authenticated" &&
+                        <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                            <dt className="text-sm font-medium leading-6 text-secondary">Post Code</dt>
+                            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{profile.postcode || "-"}</dd>
+                        </div>
+                    }
                 </div>
             </div>
             <div className="mt-6 mb-10">
@@ -512,84 +516,75 @@ export default function UserProfile({ profile }: Props) {
             </div>
             {
                 editSection !== null &&
-                <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <div className="fixed inset-0 bg-black bg-opacity-80 transition-opacity"></div>
-                    <div className="fixed inset-0 z-10 overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                            <div className="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 w-[98%] sm:w-[80%] p-3 sm:p-8">
-                                {/* Content */}
-                                {
-                                    editSection === "user" &&
-                                    <UserEdit
-                                        user={profile.user}
-                                        roles={roles}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "profile" &&
-                                    <ProfileEdit
-                                        profile={profile}
-                                        user={profile.user}
-                                        countries={countries}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "links" &&
-                                    <Links
-                                        links={profile.links}
-                                        profile={profile}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "interests" &&
-                                    <Interests
-                                        interests={profile.interests}
-                                        profile={profile}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "achievements" &&
-                                    <Achievements
-                                        achievements={profile.achievements}
-                                        profile={profile}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "educations" &&
-                                    < Educations
-                                        educations={profile.educations}
-                                        profile={profile}
-                                        countries={countries}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "experiences" &&
-                                    <Experiences
-                                        experiences={profile.experiences}
-                                        profile={profile}
-                                        countries={countries}
-                                        close={close}
-                                    />
-                                }
-                                {
-                                    editSection === "projects" &&
-                                    <Projects
-                                        projects={profile.projects}
-                                        profile={profile}
-                                        close={close}
-                                    />
-                                }
-                                {/* End of Content */}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Modal>
+                    {
+                        editSection === "user" &&
+                        <UserEdit
+                            user={profile.user}
+                            roles={roles}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "profile" &&
+                        <ProfileEdit
+                            profile={profile}
+                            user={profile.user}
+                            countries={countries}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "links" &&
+                        <Links
+                            links={profile.links}
+                            profile={profile}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "interests" &&
+                        <Interests
+                            interests={profile.interests}
+                            profile={profile}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "achievements" &&
+                        <Achievements
+                            achievements={profile.achievements}
+                            profile={profile}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "educations" &&
+                        < Educations
+                            educations={profile.educations}
+                            profile={profile}
+                            countries={countries}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "experiences" &&
+                        <Experiences
+                            experiences={profile.experiences}
+                            profile={profile}
+                            countries={countries}
+                            close={close}
+                        />
+                    }
+                    {
+                        editSection === "projects" &&
+                        <Projects
+                            projects={profile.projects}
+                            profile={profile}
+                            close={close}
+                        />
+                    }
+                </Modal>
             }
         </div>
     )

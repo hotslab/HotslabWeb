@@ -9,7 +9,7 @@ import eventBus from "@/lib/eventBus"
 import dynamic from 'next/dynamic'
 import Spinner from "@/components/Spinner"
 
-const NotFound = dynamic(() => import("@/components/NotFound"), { loading: () => <Spinner /> })
+const Skeleton = dynamic(() => import("@/components/Skeleton"), { loading: () => <Spinner /> })
 const UserProfile = dynamic(() => import("@/components/UserProfile/UserProfile"), { loading: () => <Spinner /> })
 
 const Profile: ComponentWithAuth = () => {
@@ -79,7 +79,7 @@ const Profile: ComponentWithAuth = () => {
                             </div>
                         </div>
                     </>
-                    : <NotFound />
+                    : <Skeleton isSiteLevel={false} />
             }
         </Layout>
     )

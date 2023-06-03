@@ -1,33 +1,26 @@
-type props = { errorMessage: string, close: Function }
 import DOMPurify from "isomorphic-dompurify"
+import Modal from "@/components/Modal"
 
-export default function ErrorModal({ errorMessage, close }: props) {
+type Props = { errorMessage: string, close: Function }
+
+export default function ErrorModal({ errorMessage, close }: Props) {
     return (
-        <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="fixed inset-0 bg-black bg-opacity-80 transition-opacity"></div>
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-                <div className="flex min-h-full justify-center p-4 text-center items-center sm:p-0">
-                    <div className="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 w-[98%] sm:w-[80%] p-3 sm:p-8">
-                        {/* Content */}
-                        <div className="flex flex-col justify-between items-start flex-wrap gap-5">
-                            <h2 className="text-error font-md text-xl">Error</h2>
-                            <div
-                                className="text-gray-600 text-md"
-                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorMessage) }}
-                            />
-                            <div className='w-full flex justify-end items-center'>
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => close()}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                        {/* End of Content */}
-                    </div>
+        <Modal>
+            <div className="flex flex-col justify-between items-start flex-wrap gap-5">
+                <h2 className="text-error font-md text-xl">Error</h2>
+                <div
+                    className="text-gray-600 text-md"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorMessage) }}
+                />
+                <div className='w-full flex justify-end items-center'>
+                    <button
+                        className="btn btn-sm btn-error text-white"
+                        onClick={() => close()}
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
-        </div>
+        </Modal>
     )
 }
