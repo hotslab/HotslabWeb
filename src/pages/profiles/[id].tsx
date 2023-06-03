@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import { ProfileExtended } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import { ComponentWithAuth } from "../../../types/authenticated"
-import Head from "next/head"
 import { useEffect, useState } from "react"
+import Head from "next/head"
 import eventBus from "@/lib/eventBus"
 import dynamic from 'next/dynamic'
 import Spinner from "@/components/Spinner"
-import NotFound from "@/components/NotFound"
 
+const NotFound = dynamic(() => import("@/components/NotFound"), { loading: () => <Spinner /> })
 const UserProfile = dynamic(() => import("@/components/UserProfile/UserProfile"), { loading: () => <Spinner /> })
 
 const Profile: ComponentWithAuth = () => {

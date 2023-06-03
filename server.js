@@ -2,7 +2,7 @@ require('dotenv/config')
 const { createServer } = require('http')
 const { parse } = require("url")
 const next = require('next')
-const fs = require('fs');
+const fs = require('fs')
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = parseInt(process.env.NEXT_PUBLIC_PORT) || 3000

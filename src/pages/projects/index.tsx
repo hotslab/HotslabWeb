@@ -18,9 +18,9 @@ export default function Projects({ projects }: Props) {
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center"
                 }}
-                className="w-full h-[300px] scale-110 p-0 transition ease-in-out delay-150 hover:scale-150"
+                className="w-full h-[300px] scale-110 p-0 transition ease-in-out delay-10 hover:scale-150"
             >
-                <div className="w-full h-[300px] bg-[linear-gradient(to_top,black_10%,_transparent_90%)]" />
+                <div className="w-full h-[300px] bg-[linear-gradient(to_top,black_10%,_transparent_90%)] hover:bg-none" />
             </div>
         } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 scale-110 hover:scale-150" />
     }

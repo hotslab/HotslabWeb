@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react"
 import Head from "next/head"
 import dynamic from 'next/dynamic'
 import Spinner from "@/components/Spinner"
-import NotFound from "@/components/NotFound"
 
+const NotFound = dynamic(() => import("@/components/NotFound"), { loading: () => <Spinner /> })
 const UserProfile = dynamic(() => import("@/components/UserProfile/UserProfile"), { loading: () => <Spinner /> })
 
 type Props = { profile: ProfileExtended }
