@@ -4,6 +4,7 @@ import { getToken, JWT } from 'next-auth/jwt'
 import { User } from '@prisma/client'
 import * as argon2 from "argon2"
 import validator from '@/lib/validator'
+import { UserExtended } from '@prisma/client'
 
 type Data = { data: any }
 
@@ -58,7 +59,7 @@ async function update(
                 surname: "required|string",
                 showProfile: "required|boolean",
                 roleId: "required|numeric",
-                password: "alpha_num|min:8"
+                password: "alpha_num|min:8",
             })
             if (validationResponse.failed) res.status(400).json({ data: validationResponse.errors })
             else {
@@ -70,20 +71,21 @@ async function update(
                         ]
                     }
                 })
-                if (userExists.length > 0) {
-                    res.status(400).json({ data: "This email already belongs to another user" })
-                } else {
-                    let data: { [key: string]: any } = {
-                        email: body.email,
-                        name: body.name,
-                        surname: body.surname,
-                        showProfile: body.showProfile,
-                        roleId: body.roleId
-                    }
-                    if (body.password) data.password = await argon2.hash(body.password)
-                    const updatedUser = await prisma.user.update({ where: { id: Number(query.id) }, data: data })
-                    res.status(200).json({ data: updatedUser })
+                if (userExists.length > 0) return res.status(400).json({ data: "This email already belongs to another user" })
+                if (Boolean(body.isOwnerRemoval)) {
+                    const users: User[] = await prisma.user.findMany({ where: { active: true, role: { name: 'Owner' } } })
+                    if (users.length < 2) return res.status(401).json({ data: "Cannot change user role as they are the primary active owner." })
                 }
+                let data: { [key: string]: any } = {
+                    email: body.email,
+                    name: body.name,
+                    surname: body.surname,
+                    showProfile: body.showProfile,
+                    roleId: body.roleId
+                }
+                if (body.password) data.password = await argon2.hash(body.password)
+                const updatedUser = await prisma.user.update({ where: { id: Number(query.id) }, data: data })
+                res.status(200).json({ data: updatedUser })
             }
         } else res.status(401).json({ data: "Unauthorized" })
     } catch (error) {

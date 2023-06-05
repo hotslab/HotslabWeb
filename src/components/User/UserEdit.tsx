@@ -18,19 +18,27 @@ export default function UserEdit({ user, roles, close }: props) {
 
     async function saveOrUpdate() {
         eventBus.dispatch("openLoadingPage", true)
+        let data = {
+            email: email,
+            password: password,
+            name: name,
+            surname: surname,
+            active: active,
+            showProfile: showProfile,
+            roleId: roleId,
+            isOwnerRemoval: false
+        }
+        if (user) {
+            const currentRole = roles.find((e: Role) => e.id == user.roleId)
+            const newRole = roles.find((e: Role) => e.id == roleId)
+            if (currentRole && newRole) {
+                if (currentRole.name === "Owner" && currentRole.name !== newRole.name) data.isOwnerRemoval = true
+            } else eventBus.dispatch("openErrorModal", "Role is missing or not selected")
+        }
         await fetch(
             user ? `${process.env.NEXT_PUBLIC_HOST}/api/user/${user.id}` : `${process.env.NEXT_PUBLIC_HOST}/api/user`,
             {
-                body: JSON.stringify({
-                    // id: user?.id,
-                    email: email,
-                    password: password,
-                    name: name,
-                    surname: surname,
-                    active: active,
-                    showProfile: showProfile,
-                    roleId: roleId
-                }),
+                body: JSON.stringify(data),
                 method: user ? "PUT" : "POST",
                 headers: {
                     "content-type": "application/json",
