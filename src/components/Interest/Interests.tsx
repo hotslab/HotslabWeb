@@ -114,7 +114,7 @@ export default function Interests({ interests, profile, close }: props) {
                 <Modal>
                     <h2 className="text-gray-900 text-xl">
                         <span>Delete </span>
-                        <span className="text-info">{selectedInterest?.name}</span>
+                        <span className="text-error">{selectedInterest?.name}</span>
                         ?
                     </h2>
                     <div className="w-full flex justify-end items-center gap-5 py-5">

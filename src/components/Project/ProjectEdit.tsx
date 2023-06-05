@@ -5,10 +5,11 @@ import "react-datepicker/dist/react-datepicker.css"
 import { MdDelete, MdEditSquare, MdAddBox, MdImage } from "react-icons/md"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
+import Compressor from "compressorjs"
 import dynamic from "next/dynamic"
 import Spinner from "@/components/Spinner"
-import Compressor from "compressorjs"
 
+const Modal = dynamic(() => import("@/components//Modal"))
 const TinyEditor = dynamic(() => import("@/components/TinyEditor"), { loading: () => <Spinner /> })
 
 type props = { project: ProjectExtended | null, profile: ProfileExtended, close: Function }
@@ -25,9 +26,21 @@ export default function ProjectEdit({ project, profile, close }: props) {
     const [unlinkedTags, setUnlinkedTags] = useState<Tag[] | []>([])
     const [selectedImage, setSelectedImage] = useState<ProjectImage | null>(null)
     const [imageCaption, setImageCaption] = useState<string>("")
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
+    const [selectedUnlinkId, setSelectedUnlinkId] = useState<number | null>(null)
+    const [selectedUnlinkType, setSelectedUnlinkType] = useState<string | null>(null)
+    const [selectedUnlinkName, setSelectedUnlinkName] = useState<string | null>(null)
 
     const router = useRouter()
 
+    function toggleUnlinkItem(
+        id: number | null = null, type: string | null = null, name: string | null = null, toggle: boolean = false
+    ) {
+        setSelectedUnlinkId(id)
+        setSelectedUnlinkName(name)
+        setSelectedUnlinkType(type)
+        setShowConfirmModal(toggle)
+    }
     function openEdit(section: string) {
         setEditSection(section)
     }
@@ -280,454 +293,487 @@ export default function ProjectEdit({ project, profile, close }: props) {
     )
 
     return (
-        <div>
-            {editSection === null &&
-                <div className="w-full">
-                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
-                            <span>{project ? `Update ${project.projectName}` : 'Create Project'}</span>
-                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => close()}
-                                >
-                                    Back
-                                </button>
-                                <button
-                                    className="btn btn-sm btn-success text-white"
-                                    onClick={() => saveOrUpdate()}
-                                >
-                                    {project ? 'Update' : 'Save'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="">
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Project</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="title"
-                                placeholder="title"
-                                autoComplete="title"
-                                className="input input-bordered w-full text-white"
-                                value={projectName}
-                                onChange={(e) => setProjectName(e.target.value)}
-                            />
-                        </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Start Date</span>
-                            </label>
-                            <DatePicker
-                                dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full text-white"
-                                selected={startDate}
-                                onChange={(date: Date) => setStartDate(date)}
-                            />
-                        </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">End Date</span>
-                            </label>
-                            <DatePicker
-                                dateFormat="yyyy-MM-dd"
-                                className="input input-bordered w-full text-white"
-                                selected={endDate}
-                                onChange={(date: Date) => setEndDate(date)}
-                            />
-                        </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Description</span>
-                            </label>
-                            <TinyEditor
-                                content={description}
-                                onChange={(e: string) => setDescription(e)}
-                            />
-                        </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Is Ongoing?</span>
-                            </label>
-                            <input
-                                type="checkbox"
-                                className="toggle"
-                                checked={isOngoing}
-                                onChange={(e) => setIsOngoing(isOngoing ? false : true)}
-                            />
-                        </div>
-                    </div>
-                    {
-                        project &&
-                        <div className="mt-10 mb-10">
-                            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                                <span>Tags</span>
-                                <button
-                                    title="Add new skill"
-                                    className="btn btn-xs text-white btn-success"
-                                    onClick={() => openEdit('tags')}
-                                >
-                                    Add
-                                </button>
-                            </dt>
-                            <dd className="mt-2">
-                                <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
-                                    <input type="checkbox" />
-                                    <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
-                                        <span>Linked Tags List</span>
-                                    </div>
-                                    <div className="mt-2 collapse-content text-sm">
-                                        {
-                                            project && project.tags && project.tags.length > 0
-                                                ? project.tags.map(
-                                                    (projectTag: ProjectTagExtended, index: number, array: ProjectTagExtended[]) => (
-                                                        <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                                            <div className="w-full sm:w-[90%]">
-                                                                {index + 1}. {projectTag.tag.name}
-                                                            </div>
-                                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                                                <MdDelete
-                                                                    title={`Delete ${projectTag.tag.name}`}
-                                                                    className="text-error text-2xl cursor-pointer"
-                                                                    onClick={() => unlinkProjectTag(projectTag.id)}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                : <div className="text-white w-full text-left">No tags listed</div>
-                                        }
-                                    </div>
-                                </div>
-                            </dd>
-                        </div>
-                    }
-                    {
-                        project &&
-                        <div className="mt-10 mb-10">
-                            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                                <span>Experiences</span>
-                                <button
-                                    title="Add new skill"
-                                    className="btn btn-xs text-white btn-success"
-                                    onClick={() => openEdit('experiences')}
-                                >
-                                    Add
-                                </button>
-                            </dt>
-                            <dd className="mt-2">
-                                <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
-                                    <input type="checkbox" />
-                                    <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
-                                        <span>Linked Experiences List</span>
-                                    </div>
-                                    <div className="mt-2 collapse-content text-sm">
-                                        {
-                                            project && project.experiences && project.experiences.length > 0
-                                                ? project.experiences.map(
-                                                    (projectExperience: ProjectExperienceExtended, index: number, array: ProjectExperienceExtended[]) => (
-                                                        <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                                            <div className="w-full sm:w-[90%]">
-                                                                {index + 1}. {projectExperience.experience.title}
-                                                            </div>
-                                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                                                <MdDelete
-                                                                    title={`Delete ${projectExperience.experience.title}`}
-                                                                    className="text-error text-2xl cursor-pointer"
-                                                                    onClick={() => unlinkProjectExperience(projectExperience.id)}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                : <div className="text-white w-full text-left">No experiences listed</div>
-                                        }
-                                    </div>
-                                </div>
-                            </dd>
-                        </div>
-                    }
-                    {
-                        project &&
-                        <div className="mt-10 mb-10">
-                            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                                <span>Skills</span>
-                                <button
-                                    title="Add new skill"
-                                    className="btn btn-xs text-white btn-success"
-                                    onClick={() => openEdit('skills')}
-                                >
-                                    Add
-                                </button>
-                            </dt>
-                            <dd className="mt-2">
-                                <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
-                                    <input type="checkbox" />
-                                    <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
-                                        <span>Linked Skills List</span>
-                                    </div>
-                                    <div className="mt-2 collapse-content text-sm">
-                                        {
-                                            project && project.skills && project.skills.length > 0
-                                                ? project.skills.map(
-                                                    (projectSkill: ProjectSkillExtended, index: number, array: ProjectSkillExtended[]) => (
-                                                        <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                                            <div className="w-full sm:w-[90%]">
-                                                                {index + 1}. {projectSkill.skill.name}
-                                                            </div>
-                                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                                                <MdDelete
-                                                                    title={`Delete ${projectSkill.skill.name}`}
-                                                                    className="text-error text-2xl cursor-pointer"
-                                                                    onClick={() => unlinkProjectSkill(projectSkill.id)}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                : <div className="text-white w-full text-left">No skills listed</div>
-                                        }
-                                    </div>
-                                </div>
-                            </dd>
-                        </div>
-                    }
-                    {
-                        project &&
-                        <div className="mt-10 mb-10">
-                            <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
-                                <span>Images</span>
-                                <button
-                                    title="Add new image"
-                                    className="btn btn-xs text-white btn-success"
-                                    onClick={() => openEdit('images')}
-                                >
-                                    Add
-                                </button>
-                            </dt>
-                            <dd className="mt-2 text-sm text-gray-500 flex justify-center items-center flex-wrap gap-5">
-                                {
-                                    project && project.images && project.images.length > 0
-                                        ? project.images.map(
-                                            (projectImage: ProjectImage, index: number, array: ProjectImage[]) => (
-                                                <div key={index} className="flex flex-col justify-between items-center w-[300px] bg-base-100 shadow-xl">
-                                                    <div className="w-full py-6 px-4 flex gap-5 justify-between items-center flex-wrap">
-                                                        <p className="text-lg font-bold text-white">
-                                                            {projectImage.caption}
-                                                        </p>
-                                                        <div className="flex gap-5 justify-end items-center flex-wrap">
-                                                            <MdDelete
-                                                                title="Delete"
-                                                                className="text-error font-bold text-xl cursor-pointer"
-                                                                onClick={() => deleteImage(projectImage.id)}
-                                                            />
-                                                            <MdEditSquare
-                                                                title="Edit"
-                                                                className="text-success font-bold text-xl cursor-pointer"
-                                                                onClick={() => openEditImage(projectImage)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        style={{
-                                                            backgroundImage: `url(${getDisplayImage(projectImage.url)})`,
-                                                            backgroundSize: "cover",
-                                                            backgroundRepeat: "no-repeat",
-                                                            backgroundPosition: "center"
-                                                        }}
-                                                        className="w-full h-[100px] sm:h-[200px] p-0"
-                                                    >
-                                                    </div>
-                                                </div>
-                                            ))
-                                        : <div className="text-gray-600 w-full text-left">No images listed</div>
-                                }
-                            </dd>
-                        </div>
-                    }
-                </div>
-            }
-            {
-                editSection === "skills" &&
-                <div className="">
-                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
-                            <span>Link Unlinked Skills</span>
-                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => closeEditSection()}
-                                >
-                                    Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
-                        {
-
-                            unlinkedSkills.map(
-                                (skill: Skill, index: number, array: Skill[]) => (
-                                    <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                        <div className="text-gray-900 w-full sm:w-[90%]">
-                                            {index + 1}. {skill.name}
-                                        </div>
-                                        <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                            <MdAddBox
-                                                title={`Link ${skill.name}`}
-                                                className="text-success text-2xl"
-                                                onClick={() => linkSkill(skill)}
-                                            />
-                                        </div>
-                                    </div>
-                                ))
-                        }
-                    </dd>
-                </div>
-            }
-            {
-                editSection === "tags" &&
-                <div className="">
-                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
-                            <span>Link Unlinked Tags</span>
-                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => closeEditSection()}
-                                >
-                                    Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
-                        {
-
-                            unlinkedTags.map(
-                                (tag: Tag, index: number, array: Tag[]) => (
-                                    <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                        <div className="text-gray-900 w-full sm:w-[90%]">
-                                            {index + 1}. {tag.name}
-                                        </div>
-                                        <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                            <MdAddBox
-                                                title={`Link ${tag.name}`}
-                                                className="text-success text-2xl"
-                                                onClick={() => linkTag(tag)}
-                                            />
-                                        </div>
-                                    </div>
-                                ))
-                        }
-                    </dd>
-                </div>
-            }
-            {
-                editSection === "experiences" &&
-                <div className="">
-                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
-                            <span>Link Unlinked Experiences</span>
-                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => closeEditSection()}
-                                >
-                                    Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
-                        {
-
-                            unlinkedExperiences.map(
-                                (experience: Experience, index: number, array: Experience[]) => (
-                                    <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
-                                        <div className="text-gray-900 w-full sm:w-[90%]">
-                                            {index + 1}. {experience.title}
-                                        </div>
-                                        <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
-                                            <MdAddBox
-                                                title={`Link ${experience.title}`}
-                                                className="text-success text-2xl"
-                                                onClick={() => linkExperience(experience)}
-                                            />
-                                        </div>
-                                    </div>
-                                ))
-                        }
-                    </dd>
-                </div>
-            }
-            {
-                editSection === "images" &&
-                <div className="my-8">
-                    <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
-                            <span>Image</span>
-                            <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
-                                <button
-                                    className="btn btn-sm btn-error text-white"
-                                    onClick={() => closeEditSection()}
-                                >
-                                    Back
-                                </button>
-                                <button
-                                    className="btn btn-sm btn-success text-white"
-                                    onClick={() => saveOrUpdateImage()}
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="px-4 py-6 w-full flex items-center justify-center">
-                            {
-                                selectedImage !== null
-                                    ?
-                                    <div
-                                        style={{
-                                            backgroundImage: `url(${getDisplayImage(selectedImage.url)})`,
-                                            backgroundSize: "contain",
-                                            backgroundRepeat: "no-repeat",
-                                            backgroundPosition: "center"
-                                        }}
-                                        className="w-full h-[200px] sm:h-[300px] p-0"
+        <>
+            <div>
+                {editSection === null &&
+                    <div className="w-full">
+                        <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                                <span>{project ? `Update ${project.projectName}` : 'Create Project'}</span>
+                                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => close()}
                                     >
+                                        Back
+                                    </button>
+                                    <button
+                                        className="btn btn-sm btn-success text-white"
+                                        onClick={() => saveOrUpdate()}
+                                    >
+                                        {project ? 'Update' : 'Save'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="">
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Project</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    placeholder="title"
+                                    autoComplete="title"
+                                    className="input input-bordered w-full text-white"
+                                    value={projectName}
+                                    onChange={(e) => setProjectName(e.target.value)}
+                                />
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Start Date</span>
+                                </label>
+                                <DatePicker
+                                    dateFormat="yyyy-MM-dd"
+                                    className="input input-bordered w-full text-white"
+                                    selected={startDate}
+                                    onChange={(date: Date) => setStartDate(date)}
+                                />
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">End Date</span>
+                                </label>
+                                <DatePicker
+                                    dateFormat="yyyy-MM-dd"
+                                    className="input input-bordered w-full text-white"
+                                    selected={endDate}
+                                    onChange={(date: Date) => setEndDate(date)}
+                                />
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Description</span>
+                                </label>
+                                <TinyEditor
+                                    content={description}
+                                    onChange={(e: string) => setDescription(e)}
+                                />
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Is Ongoing?</span>
+                                </label>
+                                <input
+                                    type="checkbox"
+                                    className="toggle"
+                                    checked={isOngoing}
+                                    onChange={(e) => setIsOngoing(isOngoing ? false : true)}
+                                />
+                            </div>
+                        </div>
+                        {
+                            project &&
+                            <div className="mt-10 mb-10">
+                                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                                    <span>Tags</span>
+                                    <button
+                                        title="Add new skill"
+                                        className="btn btn-xs text-white btn-success"
+                                        onClick={() => openEdit('tags')}
+                                    >
+                                        Add
+                                    </button>
+                                </dt>
+                                <dd className="mt-2">
+                                    <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
+                                        <input type="checkbox" />
+                                        <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
+                                            <span>Linked Tags List</span>
+                                        </div>
+                                        <div className="mt-2 collapse-content text-sm">
+                                            {
+                                                project && project.tags && project.tags.length > 0
+                                                    ? project.tags.map(
+                                                        (projectTag: ProjectTagExtended, index: number, array: ProjectTagExtended[]) => (
+                                                            <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                                                <div className="w-full sm:w-[90%]">
+                                                                    {index + 1}. {projectTag.tag.name}
+                                                                </div>
+                                                                <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                                    <MdDelete
+                                                                        title={`Delete ${projectTag.tag.name}`}
+                                                                        className="text-error text-2xl cursor-pointer"
+                                                                        onClick={() => toggleUnlinkItem(projectTag.id, 'projectTag', projectTag.tag.name, true)}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    : <div className="text-white w-full text-left">No tags listed</div>
+                                            }
+                                        </div>
                                     </div>
-                                    : <MdImage className="text-success text-[200px] sm:text-[300px] w-[100%]" />
+                                </dd>
+                            </div>
+                        }
+                        {
+                            project &&
+                            <div className="mt-10 mb-10">
+                                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                                    <span>Experiences</span>
+                                    <button
+                                        title="Add new skill"
+                                        className="btn btn-xs text-white btn-success"
+                                        onClick={() => openEdit('experiences')}
+                                    >
+                                        Add
+                                    </button>
+                                </dt>
+                                <dd className="mt-2">
+                                    <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
+                                        <input type="checkbox" />
+                                        <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
+                                            <span>Linked Experiences List</span>
+                                        </div>
+                                        <div className="mt-2 collapse-content text-sm">
+                                            {
+                                                project && project.experiences && project.experiences.length > 0
+                                                    ? project.experiences.map(
+                                                        (projectExperience: ProjectExperienceExtended, index: number, array: ProjectExperienceExtended[]) => (
+                                                            <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                                                <div className="w-full sm:w-[90%]">
+                                                                    {index + 1}. {projectExperience.experience.title}
+                                                                </div>
+                                                                <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                                    <MdDelete
+                                                                        title={`Delete ${projectExperience.experience.title}`}
+                                                                        className="text-error text-2xl cursor-pointer"
+                                                                        onClick={() => toggleUnlinkItem(projectExperience.id, 'projectExperience', projectExperience.experience.title, true)}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    : <div className="text-white w-full text-left">No experiences listed</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </dd>
+                            </div>
+                        }
+                        {
+                            project &&
+                            <div className="mt-10 mb-10">
+                                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                                    <span>Skills</span>
+                                    <button
+                                        title="Add new skill"
+                                        className="btn btn-xs text-white btn-success"
+                                        onClick={() => openEdit('skills')}
+                                    >
+                                        Add
+                                    </button>
+                                </dt>
+                                <dd className="mt-2">
+                                    <div className="w-full collapse collapse-arrow border border-base-300 bg-base-100 rounded-box text-white">
+                                        <input type="checkbox" />
+                                        <div className="w-full collapse-title text-md font-medium flex justify-between items-center flex-wrap">
+                                            <span>Linked Skills List</span>
+                                        </div>
+                                        <div className="mt-2 collapse-content text-sm">
+                                            {
+                                                project && project.skills && project.skills.length > 0
+                                                    ? project.skills.map(
+                                                        (projectSkill: ProjectSkillExtended, index: number, array: ProjectSkillExtended[]) => (
+                                                            <div key={index} className="py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                                                <div className="w-full sm:w-[90%]">
+                                                                    {index + 1}. {projectSkill.skill.name}
+                                                                </div>
+                                                                <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                                    <MdDelete
+                                                                        title={`Delete ${projectSkill.skill.name}`}
+                                                                        className="text-error text-2xl cursor-pointer"
+                                                                        onClick={() => toggleUnlinkItem(projectSkill.id, 'projectSkill', projectSkill.skill.name, true)}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    : <div className="text-white w-full text-left">No skills listed</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </dd>
+                            </div>
+                        }
+                        {
+                            project &&
+                            <div className="mt-10 mb-10">
+                                <dt className="font-medium text-gray-900 mb-5 flex justify-between items-center flex-wrap gap-3">
+                                    <span>Images</span>
+                                    <button
+                                        title="Add new image"
+                                        className="btn btn-xs text-white btn-success"
+                                        onClick={() => openEdit('images')}
+                                    >
+                                        Add
+                                    </button>
+                                </dt>
+                                <dd className="mt-2 text-sm text-gray-500 flex justify-center items-center flex-wrap gap-5">
+                                    {
+                                        project && project.images && project.images.length > 0
+                                            ? project.images.map(
+                                                (projectImage: ProjectImage, index: number, array: ProjectImage[]) => (
+                                                    <div key={index} className="flex flex-col justify-between items-center w-[300px] bg-base-100 shadow-xl">
+                                                        <div className="w-full py-6 px-4 flex gap-5 justify-between items-center flex-wrap">
+                                                            <p className="text-lg font-bold text-white">
+                                                                {projectImage.caption}
+                                                            </p>
+                                                            <div className="flex gap-5 justify-end items-center flex-wrap">
+                                                                <MdDelete
+                                                                    title="Delete"
+                                                                    className="text-error font-bold text-xl cursor-pointer"
+                                                                    onClick={() => deleteImage(projectImage.id)}
+                                                                />
+                                                                <MdEditSquare
+                                                                    title="Edit"
+                                                                    className="text-success font-bold text-xl cursor-pointer"
+                                                                    onClick={() => openEditImage(projectImage)}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            style={{
+                                                                backgroundImage: `url(${getDisplayImage(projectImage.url)})`,
+                                                                backgroundSize: "cover",
+                                                                backgroundRepeat: "no-repeat",
+                                                                backgroundPosition: "center"
+                                                            }}
+                                                            className="w-full h-[100px] sm:h-[200px] p-0"
+                                                        >
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            : <div className="text-gray-600 w-full text-left">No images listed</div>
+                                    }
+                                </dd>
+                            </div>
+                        }
+                    </div>
+                }
+                {
+                    editSection === "skills" &&
+                    <div className="">
+                        <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                                <span>Link Unlinked Skills</span>
+                                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => closeEditSection()}
+                                    >
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
+                            {
+
+                                unlinkedSkills.map(
+                                    (skill: Skill, index: number, array: Skill[]) => (
+                                        <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                            <div className="text-gray-900 w-full sm:w-[90%]">
+                                                {index + 1}. {skill.name}
+                                            </div>
+                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                <MdAddBox
+                                                    title={`Link ${skill.name}`}
+                                                    className="text-success text-2xl"
+                                                    onClick={() => linkSkill(skill)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
                             }
+                        </dd>
+                    </div>
+                }
+                {
+                    editSection === "tags" &&
+                    <div className="">
+                        <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                                <span>Link Unlinked Tags</span>
+                                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => closeEditSection()}
+                                    >
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Image</span>
-                            </label>
-                            <input
-                                type="file"
-                                accept=".png,.jpg,.jpeg,.svg"
-                                className="file-input w-full mb-10 text-white"
-                            />
+                        <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
+                            {
+
+                                unlinkedTags.map(
+                                    (tag: Tag, index: number, array: Tag[]) => (
+                                        <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                            <div className="text-gray-900 w-full sm:w-[90%]">
+                                                {index + 1}. {tag.name}
+                                            </div>
+                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                <MdAddBox
+                                                    title={`Link ${tag.name}`}
+                                                    className="text-success text-2xl"
+                                                    onClick={() => linkTag(tag)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                            }
+                        </dd>
+                    </div>
+                }
+                {
+                    editSection === "experiences" &&
+                    <div className="">
+                        <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                                <span>Link Unlinked Experiences</span>
+                                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => closeEditSection()}
+                                    >
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="form-control w-full">
-                            <label className="label">
-                                <span className="label-text text-gray-600">Caption</span>
-                            </label>
-                            <input
-                                type="text"
-                                name="imageCaption"
-                                placeholder="Image caption"
-                                autoComplete="imageCaption"
-                                className="input input-bordered w-full text-white"
-                                value={imageCaption}
-                                onChange={(e) => setImageCaption(e.target.value)}
-                            />
+                        <dd className="mt-2 text-sm text-gray-500 flex justify-start items-center flex-wrap gap-1">
+                            {
+
+                                unlinkedExperiences.map(
+                                    (experience: Experience, index: number, array: Experience[]) => (
+                                        <div key={index} className="w-full py-2 flex justify-between items-start gap-5 sm:gap-0 flex-wrap">
+                                            <div className="text-gray-900 w-full sm:w-[90%]">
+                                                {index + 1}. {experience.title}
+                                            </div>
+                                            <div className="w-full sm:w-[10%] flex justify-start sm:justify-end items-start">
+                                                <MdAddBox
+                                                    title={`Link ${experience.title}`}
+                                                    className="text-success text-2xl"
+                                                    onClick={() => linkExperience(experience)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                            }
+                        </dd>
+                    </div>
+                }
+                {
+                    editSection === "images" &&
+                    <div className="my-8">
+                        <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                                <span>Image</span>
+                                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
+                                    <button
+                                        className="btn btn-sm btn-error text-white"
+                                        onClick={() => closeEditSection()}
+                                    >
+                                        Back
+                                    </button>
+                                    <button
+                                        className="btn btn-sm btn-success text-white"
+                                        onClick={() => saveOrUpdateImage()}
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="px-4 py-6 w-full flex items-center justify-center">
+                                {
+                                    selectedImage !== null
+                                        ?
+                                        <div
+                                            style={{
+                                                backgroundImage: `url(${getDisplayImage(selectedImage.url)})`,
+                                                backgroundSize: "contain",
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "center"
+                                            }}
+                                            className="w-full h-[200px] sm:h-[300px] p-0"
+                                        >
+                                        </div>
+                                        : <MdImage className="text-success text-[200px] sm:text-[300px] w-[100%]" />
+                                }
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Image</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".png,.jpg,.jpeg,.svg"
+                                    className="file-input w-full mb-10 text-white"
+                                />
+                            </div>
+                            <div className="form-control w-full">
+                                <label className="label">
+                                    <span className="label-text text-gray-600">Caption</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="imageCaption"
+                                    placeholder="Image caption"
+                                    autoComplete="imageCaption"
+                                    className="input input-bordered w-full text-white"
+                                    value={imageCaption}
+                                    onChange={(e) => setImageCaption(e.target.value)}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
+            </div>
+            {
+                showConfirmModal &&
+                <Modal>
+                    <h2 className="text-gray-900 text-xl">
+                        <span>Delete </span>
+                        <span className="text-error">{selectedUnlinkName}</span>
+                        ?
+                    </h2>
+                    <div className="w-full flex justify-end items-center gap-5 py-5">
+                        <button
+                            className="btn btn-sm btn-error text-white"
+                            onClick={() => toggleUnlinkItem()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => {
+                                if (selectedUnlinkType === 'projectSkill')
+                                    unlinkProjectSkill(selectedUnlinkId as number)
+                                else if (selectedUnlinkType === 'projectTag')
+                                    unlinkProjectTag(selectedUnlinkId as number)
+                                else if (selectedUnlinkType === 'projectExperience')
+                                    unlinkProjectExperience(selectedUnlinkId as number)
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </Modal>
             }
-        </div>
+        </>
     )
 }

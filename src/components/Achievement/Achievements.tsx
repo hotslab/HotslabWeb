@@ -116,7 +116,7 @@ export default function Achievements({ achievements, profile, close }: props) {
                 <Modal>
                     <h2 className="text-gray-900 text-xl">
                         <span>Delete </span>
-                        <span className="text-info">{selectedAchievement?.name}</span>
+                        <span className="text-error">{selectedAchievement?.name}</span>
                         ?
                     </h2>
                     <div className="w-full flex justify-end items-center gap-5 py-5">

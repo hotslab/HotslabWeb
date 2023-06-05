@@ -38,11 +38,11 @@ export default function Projects({ projects }: Props) {
                             <span>{projects.length}</span>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center flex-wrap gap-2">
+                    <div className="flex justify-start items-center flex-wrap gap-2">
                         {projects.map((project: ProjectExtended) => (
                             <div
                                 key={project.id}
-                                className="bg-base-100 w-[300px] h-[300px] shadow-xl mb-10 mx-5 sm:mx-auto flex flex-col justify-center items-center"
+                                className="bg-base-100 w-[300px] h-[300px] shadow-xl mb-10 mx-5 sm:mx-0 flex flex-col justify-center items-center"
                             >
                                 <div className="w-full h-[300px] overflow-hidden flex justify-center items-center">
                                     {getFirstImage(project.images)}

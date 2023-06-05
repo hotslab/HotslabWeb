@@ -120,7 +120,7 @@ export default function Roles({ roles, close }: props) {
                 <Modal>
                     <h2 className="text-gray-900 text-xl">
                         <span>Delete </span>
-                        <span className="text-info">{selectedRole?.name}</span>
+                        <span className="text-error">{selectedRole?.name}</span>
                         ?
                     </h2>
                     <div className="w-full flex justify-end items-center gap-5 py-5">

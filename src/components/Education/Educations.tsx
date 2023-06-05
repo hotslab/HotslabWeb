@@ -129,7 +129,7 @@ export default function Educations({ educations, countries, profile, close }: pr
                 <Modal>
                     <h2 className="text-gray-900 text-xl">
                         <span>Delete </span>
-                        <span className="text-info">{selectedEducation?.title}</span>
+                        <span className="text-error">{selectedEducation?.title}</span>
                         ?
                     </h2>
                     <div className="w-full flex justify-end items-center gap-5 py-5">

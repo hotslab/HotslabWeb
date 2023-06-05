@@ -127,7 +127,7 @@ export default function Projects({ projects, profile, close }: props) {
                 <Modal>
                     <h2 className="text-gray-900 text-xl">
                         <span>Delete </span>
-                        <span className="text-info">{selectedProject?.projectName}</span>
+                        <span className="text-error">{selectedProject?.projectName}</span>
                         ?
                     </h2>
                     <div className="w-full flex justify-end items-center gap-5 py-5">
