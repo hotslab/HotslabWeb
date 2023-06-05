@@ -125,7 +125,7 @@ export default function UserProfile({ profile }: Props) {
                     <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium leading-6 text-secondary">Summary</dt>
                         <dd
-                            className="mt-2 text-sm text-gray-700"
+                            className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(profile.summary || 'No summary information') }}
                         />
                     </div>
