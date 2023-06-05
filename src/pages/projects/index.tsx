@@ -38,7 +38,7 @@ export default function Projects({ projects }: Props) {
                             <span>{projects.length}</span>
                         </div>
                     </div>
-                    <div className="flex justify-start items-center flex-wrap gap-2">
+                    <div className="flex justify-center items-center flex-wrap gap-4">
                         {projects.map((project: ProjectExtended) => (
                             <div
                                 key={project.id}

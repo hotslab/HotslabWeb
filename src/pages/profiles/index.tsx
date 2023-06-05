@@ -28,33 +28,31 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
                         </div>
                     </div>
                     {profiles.length > 0 ?
-                        <div className="flex justify-between items-center flex-wrap gap-3">
+                        <div className="flex justify-center items-center flex-wrap gap-4">
                             {profiles.map((profile: ProfileExtended) => (
                                 <div key={profile.id}
-                                    className="bg-base-100 shadow-xl flex flex-col justify-center items-center h-[300px] w-[300px]"
+                                    className="bg-base-100 shadow-xl flex flex-col justify-center items-center h-[300px] w-[300px] pt-5"
                                 >
-                                    <div className="w-full pt-6 flex justify-center items-center">
-                                        {
-                                            profile.imageUrl
-                                                ?
-                                                <div
-                                                    title={`${profile.user.name} ${profile.user.surname}`}
-                                                    style={{
-                                                        backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
-                                                        backgroundSize: "cover",
-                                                        backgroundRepeat: "no-repeat",
-                                                        backgroundPosition: "center"
-                                                    }}
-                                                    className="w-[100px] h-[100px] p-0 rounded-full"
-                                                >
-                                                </div>
-                                                : <MdAccountCircle className="text-[100px] text-success" />
-                                        }
-                                    </div>
-                                    <div className="w-full h-full p-6 flex flex-col justify-between items-start gap-5">
-                                        <div className="w-full flex flex-col justify-between items-start flex-wrap gap-3 text-white">
-                                            <p className="card-title text-md sm:text-lg">{profile.user.name} {profile.user.surname}</p>
-                                            <p className="card-title text-xs sm:text-sm">{profile.user.role.name}</p>
+                                    {
+                                        profile.imageUrl
+                                            ?
+                                            <div
+                                                title={`${profile.user.name} ${profile.user.surname}`}
+                                                style={{
+                                                    backgroundImage: `url(${getDisplayImage(profile.imageUrl)})`,
+                                                    backgroundSize: "cover",
+                                                    backgroundRepeat: "no-repeat",
+                                                    backgroundPosition: "center"
+                                                }}
+                                                className="w-[120px] h-[120px] p-0 rounded-full"
+                                            >
+                                            </div>
+                                            : <MdAccountCircle className="text-[120px] text-success" />
+                                    }
+                                    <div className="h-[60%] sm:h-[45%] w-full p-6 flex flex-col justify-between items-start gap-5">
+                                        <div className="w-full flex flex-col justify-start items-start flex-wrap gap-3 text-white">
+                                            <p className="w-full text-md">{profile.user.name} {profile.user.surname}</p>
+                                            <p className="text-xs">{profile.user.role.name}</p>
                                         </div>
                                         <div className="card-actions justify-end w-full">
                                             <button
