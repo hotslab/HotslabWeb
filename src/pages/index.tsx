@@ -7,10 +7,15 @@ import Head from "next/head"
 
 export default function Home() {
 
+  const keyWords = "JavaScript,Typescript, PHP, HTML, SQL, CSS, Java, Python, Bash, Git, Gitlab, Github, Node, AdonisJS, Docker, Kubernetes, Jquery, AngularJS, React, Angular, Vue, Laravel, Yii, Symfony, GraphQL, Quasar, NextJS, Redux, npm, composer, Cordova, Apollo, WebRTC, SocketIO, ElasticSearch, Capacitor, SOAP, HTTP, REST API, JSONAPI, AWS, Linux, MySQL, MariaDB, Postgre, MSSQL, MongoDB, Redis, Nginx, Apache, Wordpress, WooCommerce, TailwindCSS, Bootstrap, JIRA, Notion, Slack, Google Cloud, Express, Koa, Cypress, Electron, Gimp, Photoshop, InkScape, GooglePlay, IOS, Xcode, Android Studio, Puppeteer, XML, Markdown, CPanel"
+
   return (
     <Layout>
       <Head>
         <title>Hotslab</title>
+        <meta name="description" content="Hotslab provides affordable and quality services in web and mobile app development, custom graphic designs and webmaster services." />
+        <meta name="keywords" content={keyWords} />
+        <meta name="author" content="Joseph Nyahuye" />
       </Head>
       <div className="bg-white">
         <div className="min-h-screen flex flex-col items-center justify-center" id="hotslab-logo">
@@ -26,7 +31,7 @@ export default function Home() {
             className="mt-10 h-[120px] w-[120px]"
           >
           </div>
-          <span id="logo-text" className="text-white font-bold text-white text-xs my-10">HOTSLAB</span>
+          <h1 id="logo-text" className="text-white font-bold text-white text-xs my-10">HOTSLAB</h1>
           <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
             <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
               <div
@@ -41,7 +46,7 @@ export default function Home() {
               >
               </div>
               <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <span className="font-bold text-md text-white">Software Development</span>
+                <h2 className="font-bold text-md text-white">Software Development</h2>
               </div>
             </div>
             <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
@@ -57,7 +62,7 @@ export default function Home() {
               >
               </div>
               <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <span className="font-bold text-md text-white">Mobile Applications</span>
+                <h2 className="font-bold text-md text-white">Mobile Applications</h2>
               </div>
             </div>
             <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
@@ -73,7 +78,7 @@ export default function Home() {
               >
               </div>
               <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <span className="font-bold text-md text-white">Graphic Designs</span>
+                <h2 className="font-bold text-md text-white">Graphic Designs</h2>
               </div>
             </div>
           </div>

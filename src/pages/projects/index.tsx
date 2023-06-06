@@ -1,13 +1,40 @@
-import Layout from "@/components/Layout"
+import { useEffect, useState } from "react"
+import { ProjectExtended, ProjectImage, Tag } from "@prisma/client"
 import { useRouter } from "next/router"
 import { MdImage } from "react-icons/md"
-import { ProjectExtended, ProjectImage } from "@prisma/client"
+import Layout from "@/components/Layout"
 import Head from "next/head"
+import eventBus from "@/lib/eventBus"
 
-type Props = { projects: ProjectExtended[] }
 
-export default function Projects({ projects }: Props) {
+export default function Projects() {
+    const [projects, setProjects] = useState<ProjectExtended[]>([])
+    const [tags, setTags] = useState<Tag[]>([])
+
     const router = useRouter()
+
+    async function getTags() {
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/tag`, {
+            method: "GET",
+        }).then(async response => {
+            if (response.ok) setTags((await response.json()).data)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
+        })
+    }
+    async function getProjects(tag: string) {
+        const selectedTags = tag === 'all'
+            ? tags.reduce((prev: string, curr: Tag, index: number, array: Tag[]) =>
+                prev += `${curr.name}${array.length - 1 > index ? ',' : ''}`, "")
+            : tag
+        eventBus.dispatch("openLoadingPage", true)
+        await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project?tags=${selectedTags}`, {
+            method: "GET",
+        }).then(async response => {
+            if (response.ok) setProjects((await response.json()).data)
+            else eventBus.dispatch("openErrorModal", (await response.json()).data)
+            eventBus.dispatch("openLoadingPage", false)
+        })
+    }
 
     function getFirstImage(images: ProjectImage[] | undefined) {
         if (images && images.length > 0) {
@@ -25,6 +52,13 @@ export default function Projects({ projects }: Props) {
         } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 scale-110 hover:scale-150" />
     }
 
+    useEffect(() => {
+        if (router.isReady) {
+            getTags()
+            getProjects("all")
+        }
+    }, [router.isReady]) // eslint-disable-line
+
     return (
         <Layout>
             <Head>
@@ -32,9 +66,23 @@ export default function Projects({ projects }: Props) {
             </Head>
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4 text-white">
-                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3">
+                    <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-4">
                         <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
-                            <span>Portfolio</span>
+                            <div className="flex justify-between items-center flex-wrap gap-5 flex-wrap">
+                                <span>Portfolio</span>
+                                <select
+                                    className="select select-bordered text-white"
+                                    onChange={e => getProjects(e.target.value)}
+                                >
+                                    <option value="all">All</option>
+                                    {tags.map(
+                                        (tag: Tag, index: number, array: Tag[]) => (
+                                            <option key={index} value={tag.name}>
+                                                {tag.name}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
                             <span>{projects.length}</span>
                         </div>
                     </div>
@@ -65,20 +113,4 @@ export default function Projects({ projects }: Props) {
             </div>
         </Layout>
     )
-}
-
-export async function getServerSideProps(context: any) {
-    let projects: ProjectExtended[] | [] = []
-    const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project?tags=portfolio,design`, {
-        method: "GET",
-        headers: {
-            "content-type": "application/json",
-            "cookie": context.req.headers.cookie || ""
-        },
-    }).then(async response => {
-        if (response.ok) {
-            projects = (await response.json()).data
-        } else console.log((await response.json()).data)
-    })
-    return { props: { projects } }
 }

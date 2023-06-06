@@ -60,6 +60,7 @@ export default function Layout(props: Props) {
             </div>
             <div className="flex-1 ml-[3px] mr-0">
               <a
+                title="Home"
                 className="normal-case px-1 flex justify-between item-center gap-1"
                 onClick={() => goTo('/')}
               >
@@ -94,14 +95,15 @@ export default function Layout(props: Props) {
                     {
                       status === "authenticated" &&
                       <li onClick={() => goTo(`/profiles/${session?.user.profileId}`)} className="text-white">
-                        <a className="text-ellipsis overflow-hidden ...">
-                          <span title={session.user ? `${session.user.name} ${session.user.surname}` : ''}>
-                            {getFormattedName()}
-                          </span>
+                        <a
+                          title={session.user ? `${session.user.name} ${session.user.surname}` : 'Profile'}
+                          className="text-ellipsis overflow-hidden ..."
+                        >
+                          {getFormattedName()}
                         </a>
                       </li>
                     }
-                    <li onClick={() => logOut()} className="text-white"><a>Log Out</a></li>
+                    <li onClick={() => logOut()} className="text-white"><a title="Log Out">Log Out</a></li>
                   </ul>
                 </div>
               }
@@ -118,31 +120,31 @@ export default function Layout(props: Props) {
         <div className="drawer-side">
           <label htmlFor="my-drawer" className="drawer-overlay"></label>
           <ul className="menu p-4 w-52 bg-base-100 text-base-content">
-            <li onClick={() => goTo('/')}><a>Home</a></li>
-            <li onClick={() => goTo('/projects')}><a>Portfolio</a></li>
+            <li onClick={() => goTo('/')}><a title="Home">Home</a></li>
+            <li onClick={() => goTo('/projects')}><a title="Portfolio">Portfolio</a></li>
             {
               status === "authenticated" &&
-              <li onClick={() => goTo('/profiles')}><a>Profiles</a></li>
+              <li onClick={() => goTo('/profiles')}><a title="Profiles">Profiles</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => goTo('/roles')}><a>Roles</a></li>
+              <li onClick={() => goTo('/roles')}><a title="Roles">Roles</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => goTo('/tags')}><a>Tags</a></li>
+              <li onClick={() => goTo('/tags')}><a title="Tags">Tags</a></li>
             }
             {
               status === "authenticated" &&
-              <li onClick={() => goTo('/skills')}><a>Skills</a></li>
+              <li onClick={() => goTo('/skills')}><a title="Skills">Skills</a></li>
             }
             {
               status !== "authenticated" &&
-              <li onClick={() => goTo('/developer')}><a>Profile</a></li>
+              <li onClick={() => goTo('/developer')}><a title="Profile">Profile</a></li>
             }
             {
               status !== "authenticated" &&
-              <li onClick={() => goTo('/auth/login')}><a>Login</a></li>
+              <li onClick={() => goTo('/auth/login')}><a title="Login">Login</a></li>
             }
           </ul>
         </div>
