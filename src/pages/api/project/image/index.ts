@@ -6,6 +6,7 @@ import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
 import path from 'path'
 import validator from '@/lib/validator'
+import nextCors from '@/lib/cors'
 
 type Data = { data: any }
 
@@ -19,6 +20,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    await nextCors(req, res)
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
     if (req.method === 'POST') await create(req, res, session)
     else if (req.method === 'DELETE') await erase(req, res, session)

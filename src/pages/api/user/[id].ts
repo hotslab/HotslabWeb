@@ -5,6 +5,7 @@ import { User } from '@prisma/client'
 import * as argon2 from "argon2"
 import validator from '@/lib/validator'
 import { UserExtended } from '@prisma/client'
+import nextCors from '@/lib/cors'
 
 type Data = { data: any }
 
@@ -12,6 +13,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    await nextCors(req, res)
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
     if (req.method === 'GET') await index(req, res, session)
     else if (req.method === 'PUT') await update(req, res, session)

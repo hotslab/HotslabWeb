@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
 import validator from '@/lib/validator'
+import nextCors from '@/lib/cors'
 
 type Data = { data: any }
 
@@ -9,6 +10,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    await nextCors(req, res)
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
     if (req.method === 'GET') await index(req, res, session)
     else if (req.method === 'PUT') await update(req, res, session)
