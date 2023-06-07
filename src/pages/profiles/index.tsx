@@ -10,6 +10,9 @@ type Props = { profiles: ProfileExtended[] }
 const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
     const router = useRouter()
 
+    function getShortText(unformattedText: string): string {
+        return unformattedText.length > 50 ? `${unformattedText.substring(0, 50)}...` : unformattedText
+    }
     function getDisplayImage(url: string | null): string | null {
         return url ? `'${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}'` : null
     }
@@ -18,6 +21,10 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
         <Layout>
             <Head>
                 <title>Profiles</title>
+                <meta property='og:title' content="Profiles" />
+                <meta name="description" property='og:description' content="List of Hotslab's developers and users" />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta name="keywords" content={`user,developer,software programmer,full stack developer,web developer`} />
             </Head>
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">
@@ -51,7 +58,9 @@ const Profiles: ComponentWithAuth<Props> = ({ profiles }: Props) => {
                                     }
                                     <div className="h-[60%] sm:h-[45%] w-full p-6 flex flex-col justify-between items-start gap-5">
                                         <div className="w-full flex flex-col justify-start items-start flex-wrap gap-3 text-white">
-                                            <p className="w-full text-md">{profile.user.name} {profile.user.surname}</p>
+                                            <p title={`${profile.user.name} ${profile.user.surname}`} className="w-full text-md">
+                                                {getShortText(`${profile.user.name} ${profile.user.surname}`)}
+                                            </p>
                                             <p className="text-xs">{profile.user.role.name}</p>
                                         </div>
                                         <div className="card-actions justify-end w-full">

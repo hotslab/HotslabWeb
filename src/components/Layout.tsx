@@ -6,6 +6,7 @@ import Image from "next/image"
 import eventBus from "@/lib/eventBus"
 import Head from 'next/head'
 import Footer from "@/components/Footer"
+import hotslabImage from "../../public/assets/hotslab.svg"
 
 type Props = {
   children: ReactNode
@@ -42,6 +43,8 @@ export default function Layout(props: Props) {
     <>
       <Head>
         <link rel="icon" href="favicon.svg"></link>
+        <meta property='og:image' content={`${process.env.NEXT_PUBLIC_HOST}/assets/hotslab.svg`} />
+        <meta property='og:url' content={`${process.env.NEXT_PUBLIC_HOST}${router.asPath}`} />
       </Head>
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />

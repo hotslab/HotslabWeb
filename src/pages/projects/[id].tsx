@@ -51,6 +51,18 @@ export default function Project() {
         <Layout>
             <Head>
                 <title>{project ? project.projectName : 'Project'}</title>
+                <meta property='og:title' content={project ? project.projectName : 'Project'} />
+                <meta name="description" property='og:description' content={DOMPurify.sanitize(project ? project.description : 'Hotslab software project.')} />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta
+                    name="keywords"
+                    content={project && Array.isArray(project.skills) && project.skills.length > 0
+                        ? project.skills.reduce(
+                            (prev: string, curr: ProjectSkillExtended, index: number, array: ProjectSkillExtended[]) =>
+                                prev += `${curr.skill.name}${index + 1 < array.length ? "," : ""}`, "")
+                        : ""
+                    }
+                />
             </Head>
             {
                 project !== null ?

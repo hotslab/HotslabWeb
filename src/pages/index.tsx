@@ -13,9 +13,10 @@ export default function Home() {
     <Layout>
       <Head>
         <title>Hotslab</title>
-        <meta name="description" content="Hotslab provides affordable and quality services in web and mobile app development, custom graphic designs and webmaster services." />
-        <meta name="keywords" content={keyWords} />
+        <meta property='og:title' content="Hotslab" />
+        <meta name="description" property='og:description' content="Hotslab provides affordable and quality services in web and mobile app development, custom graphic designs and webmaster services." />
         <meta name="author" content="Joseph Nyahuye" />
+        <meta name="keywords" content={keyWords} />
       </Head>
       <div className="bg-white">
         <div className="min-h-screen flex flex-col items-center justify-center" id="hotslab-logo">

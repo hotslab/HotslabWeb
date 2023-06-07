@@ -11,6 +11,10 @@ const RoleList: ComponentWithAuth<Props> = ({ roles }: Props) => {
         <Layout>
             <Head>
                 <title>Roles</title>
+                <meta property='og:title' content="Roles" />
+                <meta name="description" property='og:description' content="Roles for Hotslab users." />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta name="keywords" content="roles" />
             </Head>
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">

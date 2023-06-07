@@ -12,6 +12,10 @@ const TagList: ComponentWithAuth<Props> = ({ tags }: Props) => {
         <Layout>
             <Head>
                 <title>Tags</title>
+                <meta property='og:title' content="Tags" />
+                <meta name="description" property='og:description' content="Tags for projects and experinces used on the Hotslab site." />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta name="keywords" content="tags" />
             </Head>
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">

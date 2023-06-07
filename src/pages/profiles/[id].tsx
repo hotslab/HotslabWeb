@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { ProfileExtended } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import { ComponentWithAuth } from "../../../types/authenticated"
+import DOMPurify from 'isomorphic-dompurify'
 import { useEffect, useState } from "react"
 import Head from "next/head"
 import eventBus from "@/lib/eventBus"
@@ -13,6 +14,7 @@ const Skeleton = dynamic(() => import("@/components/Skeleton"), { loading: () =>
 const UserProfile = dynamic(() => import("@/components/UserProfile/UserProfile"), { loading: () => <Spinner /> })
 
 const Profile: ComponentWithAuth = () => {
+    const [developerName, setDeveloperName] = useState("Developer")
     const [profile, setProfile] = useState<ProfileExtended | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
@@ -23,7 +25,11 @@ const Profile: ComponentWithAuth = () => {
             fetch(`${process.env.NEXT_PUBLIC_HOST}/api/profile/${router.query.id}`, {
                 method: "GET",
             }).then(async response => {
-                if (response.ok) setProfile((await response.json()).data)
+                if (response.ok) {
+                    const profile = (await response.json()).data
+                    setProfile(profile)
+                    setDeveloperName(profile.user.name && profile.user.surname ? `${profile.user.name} ${profile.user.surname}` : 'Developer')
+                }
                 else eventBus.dispatch("openErrorModal", (await response.json()).data)
                 eventBus.dispatch("openLoadingPage", false)
             })
@@ -42,11 +48,15 @@ const Profile: ComponentWithAuth = () => {
                 profile !== null ?
                     <>
                         <Head>
-                            <title>
-                                {profile && profile.user && profile.user.name && profile.user.surname
-                                    ? `${profile.user.name} ${profile.user.surname}`
-                                    : 'Profile'}
-                            </title>
+                            <title>{developerName}</title>
+                            <meta property='og:title' content={developerName} />
+                            <meta
+                                name="description"
+                                property="og:description"
+                                content={DOMPurify.sanitize(profile ? profile.summary as string : `${developerName}'s career profile page`)}
+                            />
+                            <meta name="author" content="Joseph Nyahuye" />
+                            <meta name="keywords" content={`profile,career,cv,curriculum vitae,${developerName}`} />
                         </Head>
                         <div className="min-h-screen bg-white">
                             <div className="container mx-auto py-10 px-4">

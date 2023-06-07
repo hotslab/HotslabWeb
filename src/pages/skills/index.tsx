@@ -11,6 +11,10 @@ const SkillList: ComponentWithAuth<Props> = ({ skills }: Props) => {
         <Layout>
             <Head>
                 <title>Skills</title>
+                <meta property='og:title' content="Skills" />
+                <meta name="description" property='og:description' content="Skills used for Hotslab projects and developer work experiences." />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta name="keywords" content="skills" />
             </Head>
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4">

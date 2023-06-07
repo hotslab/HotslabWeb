@@ -35,6 +35,10 @@ export default function Login() {
         <Layout>
             <Head>
                 <title>Login</title>
+                <meta property='og:title' content="Login" />
+                <meta name="description" property='og:description' content="Hotslab login page" />
+                <meta name="author" content="Joseph Nyahuye" />
+                <meta name="keywords" content="login,logout,signin,signout,authentication,authorize,verify,email,password,username" />
             </Head>
             <div className="min-h-screen bg-white flex flex-col items-center justify-start sm:justify-center px-4 lg:px-12">
                 <div className="mt-10 mb-5 sm:mt-0 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -64,6 +68,7 @@ export default function Login() {
                         autoComplete="email"
                         className="input text-white input-bordered w-full max-w-xs"
                         value={email}
+                        onKeyDown={e => e.key === 'Enter' ? login() : null}
                         onChange={e => setEmail(e.target.value)}
                     />
                 </div>
@@ -78,6 +83,7 @@ export default function Login() {
                         autoComplete="password"
                         className="input text-white input-bordered w-full max-w-xs"
                         value={password}
+                        onKeyDown={e => e.key === 'Enter' ? login() : null}
                         onChange={e => setPasssword(e.target.value)}
                     />
                 </div>
