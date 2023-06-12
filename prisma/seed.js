@@ -38,8 +38,9 @@ async function main() {
                     city: "Harare",
                     country: "Zimbabwe",
                     postcode: '0000',
-                    summary: `A well seasoned and experienced full stack software developer, with over 5 years 
-                            of commercial working experience in the industry.`,
+                    summary: `
+                    <p>1. Over 6 years of full stack software development experience, developing and implementing applications based on client&rsquo;s needs.<br>2. Experienced in working on UNIX systems and developing databases.<br>3. Excellent in troubleshooting skills with an ability to engineer well researched, responsive solutions after analysing codes.<br>4. Possess knowledge of processes and tools to design state of the art software solutions based on relevant software and tools in both the back and frontend.</p>
+                    `,
                     links: {
                         create: [
                             { name: "Linkedin Profile", url: "https://linkedin.com/in/joseph-nyahuye-4a9b94150 /" },
@@ -64,13 +65,16 @@ async function main() {
                         create: [
                             {
                                 name: "IITPSA - Institute of Information Technology Professionals of South Africa",
-                                description: `Former affiliate member with membership number NO83177 before moving back to Zimbabwe.`
+                                description: `<p>Former affiliate member with membership number NO83177 before moving back to Zimbabwe.</p>`
                             },
                             {
                                 name: "Zimbabwe Presidential Scholarship of 2010",
                                 description: `
-                                Was awarded the scholarship to study at the University of KwaZulu Natal in South Africa,
-                                due to academy excellence in 2010 for a three year program.
+                                <p>Was awarded the scholarship to study at the University of KwaZulu Natal in South Africa, due to academy excellence in 2010 for a three year program.</p>
+                                \n
+                                <p>&nbsp;</p>
+                                \n
+                                <p>Links:<br>a. <a href=\"https://www.aabri.com/manuscripts/141827.pdf\" rel=\"noopener\">https://www.aabri.com/manuscripts/141827.pdf</a><br>b. <a href=\"https://www.un.org/womenwatch/daw/csw/csw55/statements/Zimbabwe.pdf\" rel=\"noopener\">https://www.un.org/womenwatch/daw/csw/csw55/statements/Zimbabwe.pdf</a></p>
                                 `
                             }
                         ]
@@ -111,13 +115,16 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Created an Administration panel for integrating social media links like TikTok to the restaurants profile.
-            This helps restaurant owners to connect with their customers on a more personal basis, increasing
-            engagement with their regular customers, and attracting new customers from these platforms through
-            word of mouth and promotions using the internal systems of the social media platforms they are on. I also
-            created the Client interface which enables the restaurant’s customers to connect with the restaurants
-            social media links.
-            Reference: No reference can be provided as it is a company internal system.
+            '
+            <p>Created an Administration panel for integrating social media links like TikTok to the restaurants profile. This helps restaurant owners to connect with their customers on a more personal basis, increasing engagement with their regular customers, and attracting new customers from these platforms through word of mouth and promotions using the internal systems of the social media platforms they are on.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I also created the Client interface which enables the restaurant&rsquo;s customers to connect with the restaurants social media links.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: No reference can be provided as it is a company internal system.</p>
             `,
             experiences: {
                 create: [
@@ -184,13 +191,15 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            The application is used in NimbleGroup’s call centres based in Cape Town, Johannesburg and Kenya. It
-            was built working as a team, and took approximately six months to finish from design to production. The
-            application makes calls through webrtc, and has increased the call centre’s productivity by reducing and
-            simplifying the agent’s workload. It is currently the main application that I help in maintaining, recently
-            converting it to work directly in the browser. It is built using VueJS, Laravel, MSSQL, Redis, Websockets,
-            WebRTC, ElasticSearch and various other integrations that are constantly being added or updated.
-            Reference: No reference can be provided as it is a company internal system.
+            <p>The application is used in NimbleGroup&rsquo;s call centres based in Cape Town, Johannesburg and Kenya. It was built working as a team, and took approximately six months to finish from design to production. The application makes calls through webrtc, and has increased the call centre&rsquo;s productivity by reducing and simplifying the agent&rsquo;s workload. It is currently the main application that I help in maintaining, recently converting it to work directly in the browser.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>It is built using VueJS, Laravel, MSSQL, Redis, Websockets, WebRTC, ElasticSearch and various other integrations that are constantly being added or updated.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: No reference can be provided as it is a company internal system.</p>
             `,
             experiences: {
                 create: [
@@ -262,10 +271,11 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            A web service for debtors to log in using the browser in order to manage their debt payments to
-            NimbleGroup. It is built with VueJS, Apollo GraphQL and Socket IO in the frontend, and uses Laravel,
-            GraphQL, Redis and MSSQL Database in the backend.
-            Reference: Website address is https://pay.nimblegroup.co.za.
+            <p>A web service for debtors to log in using the browser in order to manage their debt payments to NimbleGroup. It is built with VueJS, Apollo GraphQL and Socket IO in the frontend, and uses Laravel, GraphQL, Redis and MSSQL Database in the backend.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: Website address is <a href=\"https://pay.nimblegroup.co.za\" rel=\"noopener\">https://pay.nimblegroup.co.za</a>.</p>
             `,
             experiences: {
                 create: [
@@ -345,14 +355,15 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            This is the mobile application companion to the NimblePay Web Service. I converted its old codebase
-            from AngularJS to VueJS, and built it using the Quasar framework for the Android and Apple stores. It
-            was a project I did alone for the NimbleGroup under supervision from the Lead Developer, and the app is
-            available for download on both app stores. It uses Vue.js, Apollo GraphQL and Socket IO in the frontend,
-            and Laravel, GraphQL, Redis and MSSQL Database in the backend.
-            Reference: The app download links are https://play.google.com/store/apps/details?
-            id=com.nimble.nimblepay&hl=en&gl=US and https://apps.apple.com/ke/app/nimblepay/id1057565672 for
-            the Android and Apple store respectively.
+            <p>This is the mobile application companion to the NimblePay Web Service. I converted its old codebase from AngularJS to VueJS, and built it using the Quasar framework for the Android and Apple stores. It was a project I did alone for the NimbleGroup under supervision from the Lead Developer, and the app is available for download on both app stores.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>It uses Vue.js, Apollo GraphQL and Socket IO in the frontend, and Laravel, GraphQL, Redis and MSSQL Database in the backend.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: The app download links are <a href=\"https://play.google.com/store/apps/details?id=com.nimble.nimblepay&amp;hl=en&amp;gl=US\" rel=\"noopener\">https://play.google.com/store/apps/details?id=com.nimble.nimblepay&amp;hl=en&amp;gl=US</a> and <a href=\"https://apps.apple.com/ke/app/nimblepay/id1057565672\" rel=\"noopener\">https://apps.apple.com/ke/app/nimblepay/id1057565672</a> for the Android and Apple store respectively.</p>
             `,
             experiences: {
                 create: [
@@ -441,11 +452,15 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            I integrated the new debicheck payment facility from Standard Bank (Pty) Ltd with the Norman Electron
-            app for NimbleGroup, in line with the new financial regulations regarding debit order payments. The
-            integration was done with PHP via the Laravel Framework on the backend, integrating it with the SOAP
-            API provided by the bank.
-            Reference: Integration reference is https://nimblegroup.co.za/introducing-debicheck.
+            <p>I integrated the new debicheck payment facility from Standard Bank (Pty) Ltd with the Norman Electron app for NimbleGroup, in line with the new financial regulations regarding debit order payments.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>The integration was done with PHP via the Laravel Framework on the backend, integrating it with the SOAP API provided by the bank.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: Integration reference is <a href=\"https://nimblegroup.co.za/introducing-debicheck\" rel=\"noopener\">https://nimblegroup.co.za/introducing-debicheck</a>.</p>
             `,
             experiences: {
                 create: [
@@ -518,10 +533,11 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            I built an internal parking lot management system for a business complex called Brickfield Canvas in
-            Cape Town. I used VueJS for the frontend, and AdonisJS in the backend, with SocketIO working as the
-            notification system, with Postgre Database and Redis providing the data storage in the backend.
-            Reference: The client’s website is https://www.brickfieldcanvas.com.
+            <p>I built an internal parking lot management system for a business complex called Brickfield Canvas in Cape Town. I used VueJS for the frontend, and AdonisJS in the backend, with SocketIO working as the notification system, with Postgre Database and Redis providing the data storage in the backend.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: The client&rsquo;s website is <a href=\"https://www.brickfieldcanvas.com\" rel=\"noopener\">https://www.brickfieldcanvas.com</a>.</p>
             `,
             experiences: {
                 create: [
@@ -601,10 +617,11 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            An internal service system for Nimble Group to manage the chat service for debtors needing assistance,
-            and to provide useful statistics for management and other authorised personnel. It was built using
-            SocketIO, Laravel, Redis and MSSQL Database.
-            Reference: The website address is https://nimblepay.nimblegroup.co.za/login.
+            <p>An internal service system for Nimble Group to manage the chat service for debtors needing assistance, and to provide useful statistics for management and other authorised personnel. It was built using SocketIO, Laravel, Redis and MSSQL Database.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Reference: The website address is <a href=\"https://nimblepay.nimblegroup.co.za/login\" rel=\"noopener\">https://nimblepay.nimblegroup.co.za/login</a>.</p>
             `,
             experiences: {
                 create: [
@@ -670,22 +687,103 @@ async function main() {
                 ])).map((skillId) => { return { skillId: skillId } })
             }
         },
+        // {
+        //     profileId: user?.profile?.id,
+        //     projectName: "Completed Web Sites built on WordPress - (Built whilst as a freelance developer)",
+        //     isOngoing: false,
+        //     startDate: new Date('2022-09-01').toISOString(),
+        //     endDate: new Date("2022-09-30").toISOString(),
+        //     description: `
+        //     1. https://www.hotslab.com – my personal portfolio website.
+        //     2. http://www.waynne.co.za – a personal fitness provider.
+        //     3. http://www.capetownestateagent.co.za – a landing page for a premier property estate agent.
+        //     4. http://www.capewavefreight.co.za & http:// www.cmg-globalfreight.co.za – sister companies specializing
+        //     in freight forwarding and clearance.
+        //     5. http://www.intrinsicfreight.co.za – a freight forwarding and clearance company.
+        //     6. http://www.meco.org.uk - a Muslim social and political blog.
+        //     7. http://www.leisurecombined.co.za - a premier travel website listing holiday rentals for apartments and
+        //     cars in Cape Town.
+        //     `,
+        //     experiences: {
+        //         create: [
+        //             {
+        //                 experienceId: (await prisma.experience.findFirst({
+        //                     where: {
+        //                         profileId: user?.profile?.id, companyName: "Hotslab"
+        //                     }
+        //                 }))?.id
+        //             }
+        //         ]
+        //     },
+        //     tags: {
+        //         create: [
+        //             {
+        //                 tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
+        //             }
+        //         ]
+        //     },
+        //     skills: {
+        //         create: (await populateSkills([
+        //             "JavaScript",
+        //             "Typescript",
+        //             "PHP",
+        //             "HTML",
+        //             "SQL",
+        //             "CSS",
+        //             "Bash",
+        //             "Git",
+        //             "Github",
+        //             "Node",
+        //             "Jquery",
+        //             "npm",
+        //             "SOAP",
+        //             "HTTP",
+        //             "REST",
+        //             "Linux",
+        //             "MySQL",
+        //             "MariaDB",
+        //             "Nginx",
+        //             "Apache",
+        //             "Wordpress",
+        //             "WooCommerce",
+        //             "Bootstrap",
+        //             "Google Cloud",
+        //             "Express",
+        //             "Gimp",
+        //             "Photoshop",
+        //             "InkScape",
+        //             "XML",
+        //             "Markdown",
+        //             "CPanel"
+        //         ])).map((skillId) => { return { skillId: skillId } })
+        //     }
+        // },
         {
             profileId: user?.profile?.id,
-            projectName: "Completed Web Sites built on WordPress - (Built whilst as a freelance developer)",
+            projectName: "Bula Deals",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            1. https://www.hotslab.com – my personal portfolio website.
-            2. http://www.waynne.co.za – a personal fitness provider.
-            3. http://www.capetownestateagent.co.za – a landing page for a premier property estate agent.
-            4. http://www.capewavefreight.co.za & http:// www.cmg-globalfreight.co.za – sister companies specializing
-            in freight forwarding and clearance.
-            5. http://www.intrinsicfreight.co.za – a freight forwarding and clearance company.
-            6. http://www.meco.org.uk - a Muslim social and political blog.
-            7. http://www.leisurecombined.co.za - a premier travel website listing holiday rentals for apartments and
-            cars in Cape Town.
+            <div>
+            \n
+            <div>Bula Deals is a premier onlline store offering customers the best deals on many products they are looking for. The store offers various discounts and promotions, and can deliver the product to the the customers\'s door step or they can arrange to pick it up at the store\'s offices. This and more services helps to give customers an excellent online shopping experience.</div>
+            \n<br>\n
+            <div>I helped to maintain and&nbsp; construct some sections of the site and added the following features:</div>
+            \n<br>\n
+            <div>1. An integrated contact form to submit information to the site.</div>
+            \n
+            <div>2. Interactive widgets to make the site dynamic and user friendly.</div>
+            \n
+            <div>3. The ability to add products and updates through automated means using XML and various API services linked via Woocommerce.</div>
+            \n
+            <div>4. Integration with social networks to allow users to socialize on those platforms and receive updates.</div>
+            \n
+            <div>5. The site was built on the WordPress platform using the Woocommerce plugin, and it is fully customizable.</div>
+            \n<br>\n
+            <div>Website: <a href=\"https://web.archive.org/web/20160313035035/http://buladeals.com/\" rel=\"noopener\">http://www.buladeals.com</a></div>
+            \n
+            </div>
             `,
             experiences: {
                 create: [
@@ -701,7 +799,7 @@ async function main() {
             tags: {
                 create: [
                     {
-                        tagId: (await prisma.tag.findUnique({ where: { name: "project" } }))?.id
+                        tagId: (await prisma.tag.findUnique({ where: { name: "portfolio" } }))?.id
                     }
                 ]
             },
@@ -740,7 +838,7 @@ async function main() {
                     "CPanel"
                 ])).map((skillId) => { return { skillId: skillId } })
             }
-        },
+        }
         {
             profileId: user?.profile?.id,
             projectName: "Personal Trainer Cape Town",
@@ -748,17 +846,27 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Personal Trainer Cape Town offers one of the best one-on-one and group personal training in Cape Town. You get the best personal and specialistic services that cater to your individual needs, ensuring that you will reach your goal of a healthier you.
-
-            We constructed the site and added the following features for the landing page:
-
-            An integrated contact form to submit information to the site.
-            Interactive widgets to make the site dynamic and user friendly.
-            The ability to post new future items, downloads and updates.
-            Integration with social networks to allow users to socialize on those platforms and receive updates.
-            The site was built on the WordPress platform, and it is fully customizable.
-
-            Website: http://www.waynne.co.za
+            <p>Personal Trainer Cape Town offers one of the best one-on-one and group personal training in Cape Town. You get the best personal and specialistic services that cater to your individual needs, ensuring that you will reach your goal of a healthier you.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features for the landing page:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An integrated contact form to submit information to the site.</p>
+            \n
+            <p>2. Interactive widgets to make the site dynamic and user friendly.</p>
+            \n
+            <p>3. The ability to post new future items, downloads and updates.</p>
+            \n
+            <p>4. Integration with social networks to allow users to socialize on those platforms and receive updates.</p>
+            \n
+            <p>5. The site was built on the WordPress platform, and it is fully customizable.&nbsp;</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20160526232243/http://waynne.co.za\" rel=\"noopener\">http://www.waynne.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -821,17 +929,27 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Properties Cape Town is  South African based Estate Agent Service focusing on premier property in and around Cape Town. The agency helps with the listing, viewing and valuation of exclusive and premier property, which it caters for the tastes of it’s discerning and affluent clients.
-
-            We constructed the site and added the following features for the landing page:
-
-            An integrated contact form to submit information to the site.
-            Interactive widgets to make the site dynamic and user friendly.
-            The ability to post new future items, downloads and updates.
-            Integration with social networks to allow users to socialize on those platforms and receive updates.
-            The site was built on the WordPress platform, and it is fully customizable.
-
-            Website: http://www.capetownestateagent.co.za
+            <p>Properties Cape Town is South African based Estate Agent Service focusing on premier property in and around Cape Town. The agency helps with the listing, viewing and valuation of exclusive and premier property, which it caters for the tastes of it&rsquo;s discerning and affluent clients.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features for the landing page:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An integrated contact form to submit information to the site.</p>
+            \n
+            <p>2. Interactive widgets to make the site dynamic and user friendly.</p>
+            \n
+            <p>3. The ability to post new future items, downloads and updates.</p>
+            \n
+            <p>4. Integration with social networks to allow users to socialize on those platforms and receive updates.</p>
+            \n
+            <p>5. The site was built on the WordPress platform, and it is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website: <a href=\"https://web.archive.org/web/20161201140052/http://commercialpropertiescapetown.co.za\" rel=\"noopener\">http://www.commercialpropertiescapetown.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -894,17 +1012,27 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Capewave Freight Services is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company, it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping. It is the sister site to CMG Global Freight Logistics.
-
-            We constructed the site and added the following features:
-
-            An integrated contact form to submit information to the site.
-            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
-            The ability to post new items, downloads and updates.
-            Integration with Facebook to allow users to view the site’s profile, and to socialize also on that platform.
-            The site was built on the WordPress platform, and it is fully customizable.
-
-            URL: http://www.capewavefreight.co.za
+            <p>Capewave Freight Services is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company, it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping. It is the sister site to CMG Global Freight Logistics.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An integrated contact form to submit information to the site.</p>
+            \n
+            <p>2.&nbsp; A catalogue of services and interactive widgets to make the site dynamic and user friendly.</p>
+            \n
+            <p>3. The ability to post new items, downloads and updates.</p>
+            \n
+            <p>4. Integration with Facebook to allow users to view the site&rsquo;s profile, and to socialize also on that platform.</p>
+            \n
+            <p>5. The site was built on the WordPress platform, and it is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20160724145813/http://www.capewavefreight.co.za\" rel=\"noopener\">http://www.capewavefreight.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -967,16 +1095,25 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Intrinsic Freight Agency is a South African based Customs Clearing and Forwarding Company. The company to provides an essential services to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping.
-
-            We constructed the site and added the following features:
-
-            An integrated contact form to submit information to the site.
-            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
-            The ability to post new items, downloads and updates.
-            The site was built on the WordPress platform, and it is fully customizable.
-
-            URL: http://www.intrinsicfreight.co.za
+            <p>Intrinsic Freight Agency is a South African based Customs Clearing and Forwarding Company. The company to provides an essential services to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of the Freight, Logistics and Shipping.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An integrated contact form to submit information to the site.</p>
+            \n
+            <p>2. A catalogue of services and interactive widgets to make the site dynamic and user friendly.</p>
+            \n
+            <p>3. The ability to post new items, downloads and updates.</p>
+            \n
+            <p>4. The site was built on the WordPress platform, and it is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20161016121857/https://www.intrinsicfreight.co.za\" rel=\"noopener\">http://www.intrinsicfreight.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -1039,17 +1176,27 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            CMG GLOBAL FREIGHT & LOGISTICS is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of Freight, Logistics and Shipping.
-
-            We constructed the site and added the following features:
-
-            An integrated contact and career form to submit information to the site.
-            A catalogue of services and interactive widgets to make the site dynamic and user friendly.
-            The ability to post new items, downloads and updates.
-            Integration with Facebook to allow users to view the site’s profile, and to socialize on that platform.
-            The site was built on the WordPress platform, and it is fully customizable.
-
-            URL: http://www.cmg-globalfreight.co.za
+            <p>CMG GLOBAL FREIGHT &amp; LOGISTICS is a South African based Customs Clearing and Forwarding Company. The company was established in 2010 to provide an essential service to Importers and Exporters. As a modest company it is made up of well experienced and committed experts in the various fields of Freight, Logistics and Shipping.&nbsp;</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An integrated contact and career form to submit information to the site.</p>
+            \n
+            <p>2. A catalogue of services and interactive widgets to make the site dynamic and user friendly.</p>
+            \n
+            <p>3. The ability to post new items, downloads and updates.</p>
+            \n
+            <p>4. Integration with Facebook to allow users to view the site&rsquo;s profile, and to socialize on that platform.</p>
+            \n
+            <p>5. The site was built on the WordPress platform, and it is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20161113065421/http://cmg-globalfreight.co.za\" rel=\"noopener\">http://www.cmg-globalfreight.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -1112,13 +1259,15 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            MECO (Muslim Educational Centre of Oxford University), is an online socio-political blog addressing issues and topics affecting the Muslim world.
-
-            The site site acts primarily as a online blog and news center, much in the same way as a magazine site, and showcases the features that HOTSLAB can add in creating a online magazine site.
-
-            The site was built on the WordPress platform and the site is fully customizable.
-
-            URL: http://www.meco.org.uk
+            <p>MECO (Muslim Educational Centre of Oxford University), is an online socio-political blog addressing issues and topics affecting the Muslim world. The site site acts primarily as a online blog and news center, much in the same way as a magazine site, and showcases the features that HOTSLAB can add in creating a online magazine site.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>The site was built on the WordPress platform and the site is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20170507063134/http://www.meco.org.uk\" rel=\"noopener\">http://www.meco.org.uk</a></p>
             `,
             experiences: {
                 create: [
@@ -1181,17 +1330,25 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Leisure Combined is a premier travel site made for the most discerning travelers who require a quality service. The site acts as a one stop center for all travel needs and helps people to prepare for their trips to South Africa as well as the rest of the World.
-
-            We constructed the site and added the following features:
-
-            1. An intergrated worldwide flight, hotel and car rental search engine
-            2. A catalogue of premier apartments for travelers to choose from when they visit Cape Town.
-            4. Posting of news items, downloads and updates.
-
-            The site was built on the WordPress platform and the site is fully customizable.
-
-            URL: http://www.leisurecombined.co.za
+            <p>Leisure Combined is a premier travel site made for the most discerning travelers who require a quality service. The site acts as a one stop center for all travel needs and helps people to prepare for their trips to South Africa as well as the rest of the World.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>I constructed the site and added the following features:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>1. An intergrated worldwide flight, hotel and car rental search engine.</p>
+            \n
+            <p>2. A catalogue of premier apartments for travelers to choose from when they visit Cape Town.&nbsp;</p>
+            \n
+            <p>3. Posting of news items, downloads and updates.</p>
+            \n
+            <p>4. The site was built on the WordPress platform and the site is fully customizable.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Website:&nbsp;<a href=\"https://web.archive.org/web/20181112171743/http://leisurecombined.co.za\" rel=\"noopener\">http://www.leisurecombined.co.za</a></p>
             `,
             experiences: {
                 create: [
@@ -1254,7 +1411,7 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Roll up banner for Sage Plumbing used for advertising.
+            <p>Designed the roll up banner for Sage Plumbing used for advertising through street display.</p>
             `,
             experiences: {
                 create: [
@@ -1290,7 +1447,7 @@ async function main() {
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
             description: `
-            Business card for Properties Cape Town.
+            <p>Business&nbsp; flyer for Properties Cape Town.</p>
             `,
             experiences: {
                 create: [

@@ -203,7 +203,7 @@ export default function Project() {
                                             unoptimized={true}
                                             height={100}
                                             width={100}
-                                            alt=""
+                                            alt={displayImageCaption}
                                         />
                                     </div>
                                 </div>

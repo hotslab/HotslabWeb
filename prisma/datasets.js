@@ -4313,15 +4313,15 @@ const experiences = [
         endDate: new Date("2022-12-31").toISOString(),
         industry: "Software Development",
         description: `
-            I worked as a full stack engineer at Superb Aps from October to December 2022. I was unfortunately laid
-            off from my job at the start of December. This is due to one of the company’s venture capital funders
-            pulling out unexpectedly in the latest funding round, citing some financial trouble on their end due to the
-            economic downturn in the market. This unfortunately forced Superb Aps to lay off a large part of its staff
-            to cut costs.
-            The technology stack I worked on was mostly based on JavaScript both the frontend and backend. I
-            worked with React.js, MongoDB, Redis, Koa.js, Docker, Kubernetes, AWS, Mailtrap and other various
-            tools a bit lengthy to mention here, but will be happy to elaborate on should you request for it.
-            For reference please contact Mr Henrik Karlsson (CTO) at henrik.karlsson@superbexperience.com
+            <p>I worked as a full stack engineer at Superb Aps from October to December 2022.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>The technology stack I worked on was mostly based on JavaScript both the frontend and backend. I worked with React.js, MongoDB, Redis, Koa.js, Docker, Kubernetes, AWS, Mailtrap and other various tools.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>For reference please contact Mr Henrik Karlsson (CTO) at henrik.karlsson@superbexperience.com</p>
             `
     },
     {
@@ -4335,15 +4335,15 @@ const experiences = [
         endDate: new Date("2022-08-31").toISOString(),
         industry: "Software Development",
         description: `
-            I worked as an onsite full stack software developer from August 2016 to 2020 in South Africa, and
-            remotely in Zimbabwe until end of September 2022, building web applications targeting desktop and
-            mobile environments for our major customer and one of South Africa’s biggest debt collectors, Nimble
-            Group (Pty) Ltd (https://nimblegroup.co.za).
-            The technology stack we primarily use is JavaScript on the frontend via the VueJS framework, and PHP
-            on the backend via the Laravel framework. We also use NodeJS in the server to run other services like
-            sockets via SocketIO, and to interact with in-memory databases like Redis for fast data access.
-            For reference please contact Mr Corne Dreyer (Managing Director) at corne@evision.co.za / +2721 003
-            0087.
+            <p>I worked as an onsite full stack software developer from August 2016 to 2020 in South Africa, and remotely in Zimbabwe until end of September 2022, building web applications targeting desktop and mobile environments for our major customer and one of South Africa&rsquo;s biggest debt collectors, Nimble Group (Pty) Ltd (https://nimblegroup.co.za).</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>The technology stack we primarily use is JavaScript on the frontend via the VueJS framework, and PHP on the backend via the Laravel framework. We also used NodeJS in the server to run other services like sockets via SocketIO, and to interact with in-memory databases like Redis for fast data access.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>For reference please contact Mr Corne Dreyer (Managing Director) at corne@evision.co.za / +2721 003 0087.</p>
             `
     },
     {
@@ -4357,10 +4357,15 @@ const experiences = [
         endDate: new Date("2016-09-01").toISOString(),
         industry: "Software Development",
         description: `
-            Web design and development from September 2015 to August 2016 on a freelance basis. The work
-            consisted of managing an e-commerce store called Buladeals (https://www.buladeals.com), on a part time
-            basis. I also worked on various projects built under my own portfolio agency, operating under the
-            business name of Hotslab (http://www.hotslab.com). Most of the sites were built using WordPress.
+            <p>Web design and development from September 2015 to August 2016 on a freelance basis.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>The work consisted of managing an e-commerce store called Buladeals (https://www.buladeals.com), on a part time basis. I also worked on various projects built under my own portfolio agency, operating under the business name of Hotslab (http://www.hotslab.com).</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>Most of the sites were built using WordPress.</p>
             `
     },
     {
@@ -4374,9 +4379,11 @@ const experiences = [
         endDate: new Date("2015-09-31").toISOString(),
         industry: "Hospitality",
         description: `
-            Cashier for the Cape Wheel in the VA Waterfront Shopping Centre, on a part-time contract starting from 2
-            December 2014 up to September 2015. For reference please call Mr Brynn Roberts (General Manager)
-            on 021 418 2502.
+            <p>Cashier for the Cape Wheel in the VA Waterfront Shopping Centre, on a part-time contract starting from 2 December 2014 up to September 2015.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>For reference please call Mr Brynn Roberts (General Manager) on 021 418 2502.</p>
             `
     },
     {
@@ -4390,8 +4397,11 @@ const experiences = [
         endDate: new Date("2015-06-31").toISOString(),
         industry: "Freight Services",
         description: `
-            Store Room Supervisor at Fastway Couriers, starting from February 2015 to end June 2015. For
-            reference please call Mrs Phyllis Timba (Financial Manager) on 0861 222 882 or 076 914 5584.
+            <p>Store Room Supervisor at Fastway Couriers, starting from February 2015 to end June 2015.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>For reference please call Mrs Phyllis Timba (Financial Manager) on 0861 222 882 or 076 914 5584.</p>
             `
     },
     {
@@ -4405,8 +4415,11 @@ const experiences = [
         endDate: new Date("2014-09-31").toISOString(),
         industry: "IT Services",
         description: `
-            Outbound Telephonic Sales Consultant at Netsurit for a 3 month contract beginning 1 August 2014 and ending
-            31 October 2014. Contact Mr Christian Papst on 021 404 3600.
+            <p>Outbound Telephonic Sales Consultant at Netsurit for a 3 month contract beginning 1 August 2014 and ending 31 October 2014.</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>For reference please&nbsp; contact Mr Christian Papst on 021 404 3600.</p>
             `
     },
 ]
@@ -4417,8 +4430,7 @@ const educations = [
         school: 'University of Kwa-Zulu Natal',
         location: "South Africa",
         description: `
-            Majored in Economics and Development Studies under the 
-            Zimababwe Presidential Scholarship program for disadvantaged students.
+            <p>Majored in Economics and Development Studies under the Zimbabwe Presidential Scholarship program for disadvantaged students.</p>
             `,
         startDate: new Date('2010-01-01').toISOString(),
         endDate: new Date('2012-12-31').toISOString()
@@ -4428,10 +4440,15 @@ const educations = [
         school: 'Ellis Robins Boys High School',
         location: "Zimbabwe",
         description: `
-            High school education completed with the following grades:
-            i. Economics – A
-            ii. Management of Business – B
-            iii. Accounting – C
+            <p>High school education completed with the following grades:</p>
+            \n
+            <p>&nbsp;</p>
+            \n
+            <p>i. Economics &ndash; A</p>
+            \n
+            <p>ii. Management of Business &ndash; B</p>
+            \n
+            <p>iii. Accounting &ndash; C</p>
             `,
         startDate: new Date('2002-01-01').toISOString(),
         endDate: new Date('2007-12-31').toISOString()
