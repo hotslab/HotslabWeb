@@ -99,8 +99,8 @@ export default function Project() {
                                                 className="cursor-pointer carousel-item w-full h-[200px] sm:h-[400px]"
                                                 style={{
                                                     backgroundImage: `url('${displayImage}')`,
-                                                    backgroundPosition: "center",
-                                                    backgroundSize: "contain",
+                                                    backgroundPosition: "top",
+                                                    backgroundSize: "cover",
                                                     backgroundRepeat: "no-repeat"
                                                 }}
                                             />
