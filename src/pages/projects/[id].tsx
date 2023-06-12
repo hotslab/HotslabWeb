@@ -16,13 +16,15 @@ const Image = dynamic(() => import("next/image"), { loading: () => <Spinner /> }
 
 export default function Project() {
     const [displayImage, setDisplayImage] = useState<string | null>(null)
+    const [displayImageCaption, setDisplayImageCaption] = useState<string>('')
     const [showSlideShow, setShowSlideshow] = useState<boolean>(false)
     const [project, setProject] = useState<ProjectExtended | null>(null)
     const router = useRouter()
 
-    function setCurrentDisplayImage(url: string | null, scroll: boolean = false) {
+    function setCurrentDisplayImage(url: string | null, caption: string = '', scroll: boolean = false) {
         const imageUrl = url ? `${process.env.NEXT_PUBLIC_IMAGE_HOST}/${url}` : null
         setDisplayImage(imageUrl)
+        setDisplayImageCaption(caption)
         if (scroll && typeof window !== "undefined") {
             const targetElement = document.getElementById("image-container")
             targetElement?.scrollIntoView({ behavior: "smooth" })
@@ -34,10 +36,12 @@ export default function Project() {
             fetch(`${process.env.NEXT_PUBLIC_HOST}/api/project/${router.query.id}`, { method: "GET", })
                 .then(async response => {
                     if (response.ok) {
-                        const profileData = (await response.json()).data
-                        setProject(profileData)
+                        const projectData = (await response.json()).data
+                        setProject(projectData)
+                        const firstImage: ProjectImage | null = projectData && Array.isArray(projectData.images) && projectData.images.length > 0 ? projectData.images[0] : null
                         setCurrentDisplayImage(
-                            profileData && profileData.images && profileData.images.length > 0 ? profileData.images[0].url : null
+                            firstImage?.url || null,
+                            firstImage?.caption || ''
                         )
                     } else eventBus.dispatch("openErrorModal", (await response.json()).data)
                     eventBus.dispatch("openLoadingPage", false)
@@ -95,6 +99,7 @@ export default function Project() {
                                         displayImage !== null
                                             ?
                                             <div
+                                                title="Click to view full image"
                                                 onClick={() => setShowSlideshow(true)}
                                                 className="cursor-pointer carousel-item w-full h-[200px] sm:h-[400px]"
                                                 style={{
@@ -113,7 +118,7 @@ export default function Project() {
                                             <a
                                                 key={image.id} id={`item${index + 1}`}
                                                 className="btn btn-xs"
-                                                onClick={() => setCurrentDisplayImage(image.url, true)}
+                                                onClick={() => setCurrentDisplayImage(image.url, image.caption, true)}
                                             >
                                                 {index + 1}
                                             </a>
@@ -187,7 +192,10 @@ export default function Project() {
                             ?
                             <>
                                 <div className="carousel w-full mt-7">
-                                    <div className="carousel-item relative w-full">
+                                    <div className="carousel-item relative w-full flex-col justify-center items-center gap-5">
+                                        <div className="bg-black py-2 px-4 w-full">
+                                            <h2 className="text-white">{displayImageCaption}</h2>
+                                        </div>
                                         <Image src={displayImage}
                                             className="w-full"
                                             unoptimized={true}
@@ -203,7 +211,7 @@ export default function Project() {
                                             <a
                                                 key={image.id} id={`item${index + 1}`}
                                                 className="btn btn-xs"
-                                                onClick={() => setCurrentDisplayImage(image.url, true)}
+                                                onClick={() => setCurrentDisplayImage(image.url, image.caption, true)}
                                             >
                                                 {index + 1}
                                             </a>
