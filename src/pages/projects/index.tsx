@@ -49,9 +49,9 @@ export default function Projects() {
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center"
                 }}
-                className="w-full h-[300px] scale-110 p-0 transition ease-in-out delay-10 hover:scale-150"
+                className="w-full h-[300px] scale-110 p-0 transition ease-in-out delay-10 hover:scale-150 flex items-end"
             >
-                <div className="w-full h-[300px] bg-[linear-gradient(to_top,black_10%,_transparent_90%)] hover:bg-none" />
+                <div className="w-full scale-110 h-[60%] bg-[linear-gradient(to_top,black_10%,_transparent_90%)] hover:bg-none" />
             </div>
         } else return <MdImage className="text-success text-[100px] w-[100%] p-0 transition ease-in-out delay-150 scale-110 hover:scale-150" />
     }

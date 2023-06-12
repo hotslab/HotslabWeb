@@ -101,14 +101,16 @@ export default function Project() {
                                             <div
                                                 title="Click to view full image"
                                                 onClick={() => setShowSlideshow(true)}
-                                                className="cursor-pointer carousel-item w-full h-[200px] sm:h-[400px]"
+                                                className="cursor-pointer carousel-item w-full h-[200px] sm:h-[500px] flex items-end"
                                                 style={{
                                                     backgroundImage: `url('${displayImage}')`,
                                                     backgroundPosition: "top",
                                                     backgroundSize: "cover",
                                                     backgroundRepeat: "no-repeat"
                                                 }}
-                                            />
+                                            >
+                                                <div className="w-full h-[30%] bg-[linear-gradient(to_top,black_5%,_transparent_95%)]" />
+                                            </div>
                                             : <MdImage className="text-success text-[200px] sm:text-[400px] w-[100%] h-[200px] sm:h-[400px]" />
                                     }
                                 </div>
