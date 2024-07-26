@@ -838,7 +838,7 @@ async function main() {
                     "CPanel"
                 ])).map((skillId) => { return { skillId: skillId } })
             }
-        }
+        },
         {
             profileId: user?.profile?.id,
             projectName: "Personal Trainer Cape Town",
