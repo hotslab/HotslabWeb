@@ -13,7 +13,6 @@ export default async function handler(
 ) {
     await nextCors(req, res)
     const session: JWT | null = await getToken({ req: req, secret: process.env.NEXTAUTH_SECRET, raw: false })
-    console.error("SESSION", session, process.env.NEXTAUTH_SECRET);
     if (req.method === 'GET') await index(req, res, session)
     else if (req.method === 'POST') await create(req, res, session)
     else {
