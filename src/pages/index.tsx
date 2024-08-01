@@ -48,7 +48,7 @@ export default function Home() {
               className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5 cursor-pointer"
             >
               <div
-                title="App Development"
+                title="Developer profile"
                 style={{
                   backgroundImage: `url(${tabletImage.src})`,
                   backgroundSize: "contain",
@@ -67,7 +67,7 @@ export default function Home() {
               className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5 cursor-pointer"
             >
               <div
-                title="Graphic Design"
+                title="Developer projects"
                 style={{
                   backgroundImage: `url(${artBoardImage.src})`,
                   backgroundSize: "contain",
