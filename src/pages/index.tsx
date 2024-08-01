@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import Layout from "@/components/Layout"
 import hotslabImage from "../../public/assets/hotslab.svg"
 import computerImage from "../../public/assets/computer.svg"
@@ -5,9 +6,17 @@ import tabletImage from "../../public/assets/tablet.svg"
 import artBoardImage from "../../public/assets/artboard.svg"
 import Head from "next/head"
 
+
 export default function Home() {
 
   const keyWords = "JavaScript,Typescript, PHP, HTML, SQL, CSS, Java, Python, Bash, Git, Gitlab, Github, Node, AdonisJS, Docker, Kubernetes, Jquery, AngularJS, React, Angular, Vue, Laravel, Yii, Symfony, GraphQL, Quasar, NextJS, Redux, npm, composer, Cordova, Apollo, WebRTC, SocketIO, ElasticSearch, Capacitor, SOAP, HTTP, REST API, JSONAPI, AWS, Linux, MySQL, MariaDB, Postgre, MSSQL, MongoDB, Redis, Nginx, Apache, Wordpress, WooCommerce, TailwindCSS, Bootstrap, JIRA, Notion, Slack, Google Cloud, Express, Koa, Cypress, Electron, Gimp, Photoshop, InkScape, GooglePlay, IOS, Xcode, Android Studio, Puppeteer, XML, Markdown, CPanel"
+  
+  const router = useRouter()
+
+  async function goTo(route: string) {
+    
+    router.push(route)
+  }
 
   return (
     <Layout>
@@ -34,23 +43,10 @@ export default function Home() {
           </div>
           <h1 id="logo-text" className="text-white font-bold text-white text-xs my-10">HOTSLAB</h1>
           <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
-            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
-              <div
-                title="Software Development"
-                style={{
-                  backgroundImage: `url(${computerImage.src})`,
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center"
-                }}
-                className="w-full h-[80px]"
-              >
-              </div>
-              <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <h2 className="font-bold text-md text-white">Software Development</h2>
-              </div>
-            </div>
-            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
+            <div 
+              onClick={() => goTo(`/developer`)} 
+              className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5 cursor-pointer"
+            >
               <div
                 title="App Development"
                 style={{
@@ -63,10 +59,13 @@ export default function Home() {
               >
               </div>
               <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <h2 className="font-bold text-md text-white">Mobile Applications</h2>
+                <h2 className="font-bold text-md text-white">Profile</h2>
               </div>
             </div>
-            <div className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5">
+            <div 
+              onClick={() => goTo(`/projects`)} 
+              className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5 cursor-pointer"
+            >
               <div
                 title="Graphic Design"
                 style={{
@@ -79,7 +78,7 @@ export default function Home() {
               >
               </div>
               <div className="flex flex-col justify-between items-center text-center w-full h-full">
-                <h2 className="font-bold text-md text-white">Graphic Designs</h2>
+                <h2 className="font-bold text-md text-white">Projects</h2>
               </div>
             </div>
           </div>
