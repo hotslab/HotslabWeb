@@ -1,0 +1,53 @@
+networks:
+  hotslab_network:
+    name: hotslab_network
+    driver: bridge
+    
+services:
+  hotslab_postgres:
+      image: postgres:16.2-bookworm
+      container_name: hotslab_postgres
+      environment:
+        POSTGRES_PASSWORD: secret
+        POSTGRES_MULTIPLE_DATABASES: hotslabdev
+      volumes:
+        - ./docker/cache/dev/pgdata:/var/lib/postgresql/data
+        - ./docker/postgres-init.sh:/docker-entrypoint-initdb.d/postgres-init.sh
+      ports:
+        - 7800:5432
+      restart: unless-stopped
+      networks:
+        - hotslab_network
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 30s
+        timeout: 30s
+        retries: 3
+
+  hotslab_dev:
+    image: hotslab_dev
+    container_name: hotslab_dev
+    build:
+      context: ./
+      dockerfile: docker/hotslab-dev.dockerfile
+    volumes:
+      - .:/app
+      - ./docker/cache/dev/supervisor:/app/supervisord
+      - ./docker/cache/dev/.next:/app/.next
+      - dev_node_modules:/app/node_modules
+      - dev_npm:/app/.npm
+    ports:
+      - 3200:3200
+    environment:
+      - CHOKIDAR_USEPOLLING=1
+    networks:
+        - hotslab_network
+    extra_hosts:
+    - host.docker.internal:host-gateway
+    depends_on:
+      hotslab_postgres:
+        condition: service_healthy
+
+volumes:
+  dev_node_modules:
+  dev_npm:

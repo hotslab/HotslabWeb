@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.npm
 /.pnp
 .pnp.js
 
@@ -42,3 +43,7 @@ next-env.d.ts
 /public/uploads/
 /public/assets/libs/
 /public/.well-known/
+
+docker/cache/*
+
+supervisord
