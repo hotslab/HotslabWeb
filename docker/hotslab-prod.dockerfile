@@ -37,15 +37,24 @@ COPY --chown=$USERNAME:$USERNAME \
     --exclude=.npm \
     --exclude=build \
     --exclude=docker \
+    --exclude=.next \
+    --exclude=prisma/migrations/* \
+    --exclude=supervisord \
+    --exclude=.vscode \
+    --exclude=public/assets/libs/tinymce/* \
     ["../", "./"]
 
 COPY --chown=$USERNAME:$USERNAME \
     --chmod=a+x \
     ["../open_supervisorctl.sh", "./"]
 
+COPY --chown=$USERNAME:$USERNAME \
+    --chmod=a+x \
+    ["docker/entrypoint_prod.sh", "./"]
+
 ADD ["docker/hotslab-supervisor-prod.conf", "/etc/supervisor/conf.d/hotslab-supervisor.conf"]
 
-ENTRYPOINT [ "docker/entrypoint_prod.sh" ]
+ENTRYPOINT [ "./entrypoint_prod.sh" ]
 
 CMD [ "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf" ] 
 

@@ -11,11 +11,11 @@ const app = next({ dev, dir: __dirname })
 const handle = app.getRequestHandler()
 
 let options = {}
-if (!dev) {
-    options.ca = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_CA)
-    options.cert = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_CERT)
-    options.key = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_KEY)
-}
+// if (!dev) {
+//     options.ca = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_CA)
+//     options.cert = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_CERT)
+//     options.key = fs.readFileSync(process.env.NEXT_PUBLIC_SSL_KEY)
+// }
 
 app.prepare().then(() => {
     createServer(options, async (req, res) => {

@@ -83,9 +83,6 @@ docker compose -f "$envFile" down
 if [[ $close == 'yes' ]]; then showInfo "Container has been closed."; exit 1; fi
 
 if [[ $rebuild == 'yes' ]] 
-then 
-  if [[ $env == 'dev' ]] then sudo chown -R "$(id -nu):$(id -ng)"  docker/cache/dev/pgdata/; fi
-  HOST_UID=$(id -uS) HOST_GID=$(id -g) docker compose -f "$envFile" up --build -d
-else 
-  HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose -f "$envFile" up -d
+then HOST_UID=$(id -uS) HOST_GID=$(id -g) docker compose -f "$envFile" up --build -d
+else HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose -f "$envFile" up -d
 fi
