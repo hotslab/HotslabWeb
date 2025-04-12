@@ -19,19 +19,19 @@ trap cleanUp INT SIGINT SIGTERM
 
 showInfo "Cleasring old image and container files..."
 
-docker container rm softnance_frontend_prod -f
-docker image rm softnance_frontend_prod -f
+docker container rm hotslab_prod -f
+docker image rm hotslab_prod -f
 docker builder prune -f
 docker buildx prune -f
 docker system prune -f
-if [ -f softnance_frontend_prod.tar.gz ]; then rm softnance_frontend_prod.tar.gz; fi
+if [ -f hotslab_prod.tar.gz ]; then rm hotslab_prod.tar.gz; fi
 
 showInfo "Building the image..."
 
 BUILDKIT_PROGRESS=plain docker compose -f docker-compose-production.yml build
 
-showInfo "Creating softnance_frontend_prod.tar.gz file..."
+showInfo "Creating hotslab_prod.tar.gz file..."
 
-docker image save softnance_frontend_prod | gzip > softnance_frontend_prod.tar.gz
+docker image save hotslab_prod | gzip > hotslab_prod.tar.gz
 
 showInfo "Finished!"

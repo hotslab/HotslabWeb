@@ -6,7 +6,7 @@ yarn pnpify prisma generate
 
 yarn pnpify prisma db pull
 
-if [ ! -d "prisma/migrations/0_init" ]; then mkdir -p mkdir -p prisma/migrations/0_init; fi
+if [ ! -d "prisma/migrations/0_init" ]; then mkdir -p prisma/migrations/0_init; fi
 
 yarn pnpify prisma migrate diff \
 --from-empty \

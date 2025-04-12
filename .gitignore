@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+.env.prod
 
 # vercel
 .vercel
@@ -58,3 +59,4 @@ supervisord
 # !.yarn/versions
 
 core
+hotslab_prod.tar.gz
