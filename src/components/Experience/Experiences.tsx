@@ -1,4 +1,5 @@
-import { ProfileExtended, ExperienceExtended, Country } from "@prisma/client"
+import { ProfileExtended, ExperienceExtended } from "@prisma/client"
+import { Country } from "../../../prisma/generated/client"
 import { MdDelete, MdEditSquare } from "react-icons/md"
 import ExperienceEdit from "@/components/Experience/ExperienceEdit"
 import { useState } from "react"
@@ -54,7 +55,7 @@ export default function Experiences({ experiences, countries, profile, close }: 
                 !showEdit ?
                     <div>
                         <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold">
                                 <span>Experiences</span>
                                 <span>{experiences.length}</span>
                             </div>

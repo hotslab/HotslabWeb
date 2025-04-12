@@ -2,21 +2,21 @@
 
 node assets.js
 
-npx prisma generate 
+yarn pnpify prisma generate
 
-npx prisma db pull
+yarn pnpify prisma db pull
 
 if [ ! -d "prisma/migrations/0_init" ]; then mkdir -p mkdir -p prisma/migrations/0_init; fi
 
-npx prisma migrate diff \
+yarn pnpify prisma migrate diff \
 --from-empty \
 --to-schema-datamodel prisma/schema.prisma \
 --script > prisma/migrations/0_init/migration.sql
 
-npx prisma migrate resolve --applied 0_init
+yarn pnpify prisma migrate resolve --applied 0_init
 
-npx prisma db push
+yarn pnpify prisma db push
 
-npm run seed
+yarn pnpify node prisma/seed.js 
 
 exec "$@"

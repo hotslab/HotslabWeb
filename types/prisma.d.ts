@@ -17,7 +17,7 @@ import {
     ProjectExperience,
     ProjectClient,
     ExperienceSkill
-} from "@prisma/client"
+} from "../prisma/generated/client"
 
 declare module "@prisma/client" {
     interface RoleExtended extends Role {

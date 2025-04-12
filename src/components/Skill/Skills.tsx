@@ -54,7 +54,7 @@ export default function Skills({ skills, close }: props) {
                 !showEdit ?
                     <div>
                         <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <div className="flex justify-between items-center flex-wrap gap-3 text-2xl font-bold">
                                 <span>Skills</span>
                                 <span>{skills.length}</span>
                             </div>

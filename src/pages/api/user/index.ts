@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma"
 import { NextApiRequest, NextApiResponse } from "next"
 import * as argon2 from "argon2"
 import { getToken, JWT } from 'next-auth/jwt'
-import { User } from '@prisma/client'
+import { User } from '../../../../prisma/generated/client'
 import validator from "@/lib/validator"
 import nextCors from "@/lib/cors"
 

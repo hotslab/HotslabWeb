@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
-import { Education } from '@prisma/client'
+import { Education } from '../../../../prisma/generated/client' 
 import validator from '@/lib/validator'
 import nextCors from '@/lib/cors'
 

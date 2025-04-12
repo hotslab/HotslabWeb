@@ -1,4 +1,5 @@
-import { ProfileExtended, Education, Country } from "@prisma/client"
+import { ProfileExtended } from "@prisma/client"
+import { Education, Country } from "../../../prisma/generated/client"
 import { MdDelete, MdEditSquare } from "react-icons/md"
 import EducationEdit from "@/components/Education/EducationEdit"
 import { useState } from "react"
@@ -54,7 +55,7 @@ export default function Educations({ educations, countries, profile, close }: pr
                 !showEdit ?
                     <div>
                         <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <div className="flex justify-between items-center flex-wrap gap-3 text-2xl font-bold">
                                 <span>Educations</span>
                                 <span>{educations.length}</span>
                             </div>

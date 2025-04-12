@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { ProfileExtended, UserExtended, Sex, Country } from "@prisma/client"
+import { ProfileExtended, UserExtended } from "@prisma/client"
+import { Sex, Country } from "../../../prisma/generated/client"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { MdAccountCircle } from "react-icons/md"
@@ -103,7 +104,7 @@ export default function ProfileEdit({ profile, user, countries, close }: props) 
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{user ? `Update ${user.name} ${user.surname} Profile` : 'Create Profile'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button

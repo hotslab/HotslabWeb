@@ -1,17 +1,19 @@
 import {
-    Achievement,
+    ProfileExtended,
+    ProjectExtended,
+    ProjectSkillExtended,
+    ProjectTagExtended,
+    SkillExtended
+} from "@prisma/client"
+import { 
+    Achievement,  
     Country,
     Education,
     Experience,
     Interest,
     Link,
-    ProfileExtended,
-    ProjectExtended,
-    ProjectSkillExtended,
-    ProjectTagExtended,
     Role,
-    SkillExtended
-} from "@prisma/client"
+} from "../../../prisma/generated/client"
 import { format } from 'date-fns'
 import { MdEditSquare, MdAccountCircle, MdSettings } from "react-icons/md"
 import { useCallback, useEffect, useState } from "react"

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
-import { Country } from '@prisma/client'
+import { Country } from '../../../../prisma/generated/client' 
 import nextCors from '@/lib/cors'
 
 type Data = { data: any }

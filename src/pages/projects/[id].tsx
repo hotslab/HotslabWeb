@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout"
-import { ProjectExtended, ProjectImage, ProjectSkillExtended, ProjectTagExtended } from "@prisma/client"
+import { ProjectExtended, ProjectSkillExtended, ProjectTagExtended } from "@prisma/client"
+import { ProjectImage } from "../../../prisma/generated/client"
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
@@ -73,7 +74,7 @@ export default function Project() {
                     <div className="min-h-screen bg-white">
                         <div className="container mx-auto py-10 px-4">
                             <div className="text-white bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3" id="image-container">
-                                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                                <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold">
                                     <span>{project.projectName}</span>
                                     <button
                                         className="btn btn-sm btn-error text-white"

@@ -12,7 +12,6 @@ export interface AuthEnabledComponentConfig {
 /**
  * A component with authentication configuration
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ComponentWithAuth<PropsType = any> = React.FC<PropsType> &
     AuthEnabledComponentConfig;
 
@@ -20,6 +19,5 @@ export type ComponentWithAuth<PropsType = any> = React.FC<PropsType> &
  * Main app component configuration
  */
 export type AppAuthProps = AppProps & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Component: NextComponentType<NextPageContext, any, {}> & Partial<AuthEnabledComponentConfig>;
 }

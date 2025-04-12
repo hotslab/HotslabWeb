@@ -1,4 +1,5 @@
-import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended, Project, Skill, Country } from "@prisma/client"
+import { ExperienceExtended, ExperienceSkillExtended, ProfileExtended, ProjectExperienceExtended } from "@prisma/client"
+import { Project, Skill, Country } from "../../../prisma/generated/client"
 import { useState, useEffect, useCallback } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -182,7 +183,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                 {editSection === null &&
                     <div className="w-full">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center flex-wrap gap-3 text-2xl font-bold text-white">
                                 <span>{experience ? `Update ${experience.title}` : 'Create Experience'}</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -428,7 +429,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                     editSection === "skills" &&
                     <div className="">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>Link Unlinked Skills</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -466,7 +467,7 @@ export default function ExperienceEdit({ experience, countries, profile, close }
                     editSection === "projects" &&
                     <div className="">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>Link Unlinked Projects</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button

@@ -41,8 +41,8 @@ export default function Home() {
             className="mt-10 h-[120px] w-[120px]"
           >
           </div>
-          <h1 id="logo-text" className="text-white font-bold text-white text-xs my-10">HOTSLAB</h1>
-          <div className="flex justify-center items-center flex-wrap gap-10 justify-center mb-10 mx-10">
+          <h1 id="logo-text" className="font-bold text-white text-xs my-10">HOTSLAB</h1>
+          <div className="flex items-center flex-wrap gap-10 justify-center mb-10 mx-10">
             <div 
               onClick={() => goTo(`/developer`)} 
               className="px-8 py-6 bg-base-100 w-[200px] h-[200px] hotslab-shadow grid gap-5 cursor-pointer"

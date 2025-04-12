@@ -1,7 +1,9 @@
-const { PrismaClient } = require('@prisma/client')
-const argon2 = require("argon2")
-const { countries, skills, roles, tags, experiences, educations } = require('./datasets.js')
 require('dotenv/config')
+const { PrismaClient } = require('./generated/client')
+const argon2 = require("argon2")
+const fs = require("fs")
+const path = require("path")
+const { countries, skills, roles, tags, experiences, educations, projectImages } = require('./datasets.js')
 
 const prisma = new PrismaClient()
 
@@ -88,6 +90,25 @@ async function main() {
         where: { email: process.env.NEXT_PUBLIC_OWNER_EMAIL },
         include: { profile: true, role: true }
     })
+
+
+    // PROFILE IMAGE
+
+    if (user) {
+        const updatedProfile = await prisma.profile.update({
+            where: { userId: user.id },
+            data: { imageUrl: `uploads/profile/${user.profile.id}/OwnerProfile.jpg` }
+        })
+        if (updatedProfile) {
+            const imageFolder = path.resolve(`./src/assets/profile/OwnerProfile.jpg`)
+            const finalImagePath = path.resolve(`./public/uploads/profile/${user.profile.id}/OwnerProfile.jpg`)
+            fs.cp(imageFolder, finalImagePath, { recursive: true }, (err) => {
+                if (err) console.error(`Error cpying image ${imageFolder} to ${finalImagePath}`, "\n", err, "\n", "")
+                console.log(`Image ${imageFolder} copied to ${finalImagePath}`, "\n", "")
+            })
+        }
+
+    }
 
     // TAGS
     for (const tag of tags) await prisma.tag.upsert({ where: { name: tag }, update: {}, create: { name: tag } })
@@ -1442,7 +1463,7 @@ async function main() {
         },
         {
             profileId: user?.profile?.id,
-            projectName: "Properties Cape Town Business Card",
+            projectName: "Properties Cape Town Flyer",
             isOngoing: false,
             startDate: new Date('2022-09-01').toISOString(),
             endDate: new Date("2022-09-30").toISOString(),
@@ -1488,6 +1509,36 @@ async function main() {
         if (exists.length === 0) await prisma.project.create({ data: project })
     }
 
+
+    // PROJECT IMAGES
+    for (const projectImage of projectImages) {
+        const existingProject = await prisma.project.findFirst({ where: { projectName: projectImage.projectName } })
+        if (existingProject) {
+            let updatedProjectImage = null
+            updatedProjectImage = await prisma.projectImage.findFirst({
+                where: {
+                    caption: projectImage.caption,
+                    url: `uploads/project/${existingProject.id}/${projectImage.image}`,
+                    projectId: existingProject.id
+                }
+            })
+            if (!updatedProjectImage) updatedProjectImage = await prisma.projectImage.create({
+                data: {
+                    caption: projectImage.caption,
+                    url: `uploads/project/${existingProject.id}/${projectImage.image}`,
+                    projectId: existingProject.id
+                }
+            })
+            if (updatedProjectImage) {
+                const imageFolder = path.resolve(`./src/assets/project/${projectImage.image}`)
+                const finalImagePath = path.resolve(`./public/uploads/project/${existingProject.id}/${projectImage.image}`)
+                fs.cp(imageFolder, finalImagePath, { recursive: true }, (err) => {
+                    if (err) console.error(`Error copying image ${imageFolder} to ${finalImagePath}`, "\n", err, "\n", "")
+                    console.log(`Image ${imageFolder} copied to ${finalImagePath}`, "\n", "")
+                })
+            }
+        }
+    }
 
     // EDUCATION
     for (const education of educations.map((e) => { return { profileId: user?.profile?.id, ...e } }))

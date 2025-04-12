@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout"
-import Router from "next/router"
-import { Tag } from "@prisma/client"
+import { Tag } from "../../../prisma/generated/client" 
 import Tags from "@/components/Tag/Tags"
 import { ComponentWithAuth } from "../../../types/authenticated"
 import Head from "next/head"

@@ -2,7 +2,7 @@ import NextAuth, { Session } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
 import * as argon2 from "argon2"
-import { User, UserExtended } from "@prisma/client"
+import { User } from "../../../../prisma/generated/client" 
 
 type CallbackSession = {
     session: Session

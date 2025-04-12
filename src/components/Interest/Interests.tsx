@@ -1,4 +1,5 @@
-import { Interest, ProfileExtended } from "@prisma/client"
+import { ProfileExtended } from "@prisma/client"
+import { Interest } from "../../../prisma/generated/client"
 import { MdDelete, MdEditSquare } from "react-icons/md"
 import InterestEdit from "@/components/Interest/InterestEdit"
 import { useState } from "react"
@@ -51,7 +52,7 @@ export default function Interests({ interests, profile, close }: props) {
                 !showEdit ?
                     <div>
                         <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-3 text-white">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold">
                                 <span>Interests</span>
                                 <span>{interests.length}</span>
                             </div>

@@ -48,9 +48,9 @@ services:
     volumes:
       - .:/app
       - ./docker/cache/dev/supervisor:/app/supervisord
-      - ./docker/cache/dev/.next:/app/.next
+      - ./docker/cache/dev/migrations:/app/prisma/migrations
       - dev_node_modules:/app/node_modules
-      - dev_npm:/app/.npm
+      - dev_yarn:/app/.yarn
     ports:
       - 3200:3200
     environment:
@@ -65,4 +65,4 @@ services:
 
 volumes:
   dev_node_modules:
-  dev_npm:
+  dev_yarn:

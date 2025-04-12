@@ -1,4 +1,5 @@
-import { ProjectExtended, ProfileExtended, ProjectSkillExtended, Tag, Skill, ProjectTagExtended, Experience, ProjectExperienceExtended, ProjectImage } from "@prisma/client"
+import { ProjectExtended, ProfileExtended, ProjectSkillExtended, ProjectTagExtended, ProjectExperienceExtended,  } from "@prisma/client"
+import { Tag, Skill, ProjectImage , Experience} from "../../../prisma/generated/client"
 import { useState, useEffect, useCallback } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -298,7 +299,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                 {editSection === null &&
                     <div className="w-full">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>{project ? `Update ${project.projectName}` : 'Create Project'}</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -565,7 +566,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                     editSection === "skills" &&
                     <div className="">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>Link Unlinked Skills</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -603,7 +604,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                     editSection === "tags" &&
                     <div className="">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>Link Unlinked Tags</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -641,7 +642,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                     editSection === "experiences" &&
                     <div className="">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                                 <span>Link Unlinked Experiences</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button
@@ -679,7 +680,7 @@ export default function ProjectEdit({ project, profile, close }: props) {
                     editSection === "images" &&
                     <div className="my-8">
                         <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                            <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                            <div className="flex justify-between items-center flex-wrap gap-3 text-2xl font-bold text-white">
                                 <span>Image</span>
                                 <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                                     <button

@@ -29,11 +29,12 @@
     "**/*.ts",
     "**/*.tsx",
     "prisma/datasets.js",
-    "prisma/seed.js",
+    "prisma/seed.mjs",
     "server.js",
-    "assets.js",
+    "assets.mjs",
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "prisma/generated"
   ]
 }

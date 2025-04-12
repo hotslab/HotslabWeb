@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
-import { ProjectImage } from '@prisma/client'
+import { ProjectImage } from '../../../../../prisma/generated/client'
 import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
 import path from 'path'

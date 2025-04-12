@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Role, UserExtended } from "@prisma/client"
+import { UserExtended } from "@prisma/client"
+import { Role } from "../../../prisma/generated/client"
 import { useRouter } from "next/router"
 import eventBus from "@/lib/eventBus"
 
@@ -56,7 +57,7 @@ export default function UserEdit({ user, roles, close }: props) {
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{user ? `Update ${user.name} ${user.surname}` : 'Create User'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button

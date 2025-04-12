@@ -1,4 +1,5 @@
-import { Country, Education, ProfileExtended } from "@prisma/client"
+import { Country, Education } from "../../../prisma/generated/client"
+import { ProfileExtended } from "@prisma/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import DatePicker from "react-datepicker"
@@ -50,7 +51,7 @@ export default function EducationEdit({ education, countries, profile, close }: 
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                <div className="flex justify-between items-center flex-wrap gap-3 text-2xl font-bold text-white">
                     <span>{education ? `Update ${education.title}` : 'Create Education'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button

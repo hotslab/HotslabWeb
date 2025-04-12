@@ -4,7 +4,7 @@ import { getToken, JWT } from 'next-auth/jwt'
 import formidable, { File, errors as formidableErrors } from 'formidable'
 import fs from "fs"
 import path from 'path'
-import { Profile } from '@prisma/client'
+import { Profile } from '../../../../../prisma/generated/client' 
 import validator from '@/lib/validator'
 import nextCors from '@/lib/cors'
 

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/prisma"
 import { getToken, JWT } from 'next-auth/jwt'
-import { User } from '@prisma/client'
+import { User } from '../../../../prisma/generated/client'
 import * as argon2 from "argon2"
 import validator from '@/lib/validator'
 import { UserExtended } from '@prisma/client'

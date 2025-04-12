@@ -1,4 +1,5 @@
-import { Interest, ProfileExtended } from "@prisma/client"
+import { ProfileExtended } from "@prisma/client"
+import { Interest } from "../../../prisma/generated/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import eventBus from "@/lib/eventBus"
@@ -34,7 +35,7 @@ export default function InterestEdit({ interest, profile, close }: props) {
     return (
         <div className="w-full">
             <div className="bg-base-100 mb-5 px-[1.5rem] py-[1rem] flex flex-col gap-3">
-                <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold text-white">
+                <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold text-white">
                     <span>{interest ? `Update ${interest.name}` : 'Create Interest'}</span>
                     <div className="flex justify-start sm:justify-end items-center flex-wrap gap-5">
                         <button

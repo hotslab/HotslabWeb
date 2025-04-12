@@ -1,0 +1,16 @@
+{
+    "customizations": {
+        // Configure properties specific to VS Code.
+        "vscode": {
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "mhutchie.git-graph",
+                "docsmsft.docs-preview",
+                "mads-hartmann.bash-ide-vscode",
+                "dbaeumer.vscode-eslint",
+                "bradlc.vscode-tailwindcss",
+                "arcanis.vscode-zipfs"
+            ]
+        }
+    }
+}

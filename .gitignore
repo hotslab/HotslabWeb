@@ -38,6 +38,7 @@ next-env.d.ts
 
 # prisma
 /prisma/migrations/
+/prisma/generated/
 
 # folder
 /public/uploads/
@@ -47,3 +48,13 @@ next-env.d.ts
 docker/cache/*
 
 supervisord
+
+.pnp.*
+.yarn/*
+# !.yarn/patches
+# !.yarn/plugins
+# !.yarn/releases
+# !.yarn/sdks
+# !.yarn/versions
+
+core

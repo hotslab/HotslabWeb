@@ -4455,4 +4455,98 @@ const educations = [
     }
 ]
 
-module.exports = { countries, skills, roles, tags, experiences, educations }
+const projectImages = [
+    
+    {
+        projectName: "Admin and Client interface integrating social media",
+        image: "SuperbAps.jpg",
+        caption: "Superb Experience",
+    },
+    {
+        projectName: "Norman Browser and Electron Desktop Application",
+        image: "NimbleGroup.jpg",
+        caption: "Nimble Group Website",
+    },
+    {
+        projectName: "NimblePay Web Service",
+        image: "NimblePay.jpg",
+        caption: "NimblePay Web Service",
+    },
+    {
+        projectName: "Standard Bank Debicheck API Integration",
+        image: "StandardBankDebicheck.jpg",
+        caption: "Standard Bank Debicheck",
+    },
+    {
+        projectName: "Brickfield Canvas System",
+        image: "BrickFieldCanvas.jpg",
+        caption: "Brickfield Canvas",
+    },
+    {
+        projectName: "Ebranch Service",
+        image: "EbranchService.jpg",
+        caption: "Ebranch Service",
+    },
+    {
+        projectName: "Bula Deals",
+        image: "Buladeals.jpg",
+        caption: "Bula Deals",
+    },
+    {
+        projectName: "Personal Trainer Cape Town",
+        image: "Personal-Trainer-Cape-Town.jpg",
+        caption: "Personal Trainer Cape Town",
+    },
+    {
+        projectName: "Properties Cape Town",
+        image: "Properties-Cape-Town.jpg",
+        caption: "Properties Cape Town",
+    },
+    {
+        projectName: "NimblePay App",
+        image: "NimblePayAppStore.jpg",
+        caption: "NimblePay App Store",
+    },
+    {
+        projectName: "NimblePay App",
+        image: "NimblePayPlayStore.jpg",
+        caption: "NimblePay Playstore App",
+    },
+    {
+        projectName: "Capewave Freight Services",
+        image: "Capewave-Freight-Services.jpg",
+        caption: "Capewave Freight Services",
+    },
+    {
+        projectName: "Intrinisic Freight Agency",
+        image: "Home-Intrinsic-Freight-Agency.jpg",
+        caption: "Intrinisic Freight Agency",
+    },
+    {
+        projectName: "CMG Global Freight & Logistics",
+        image: "CMG-Global-Freight.jpg",
+        caption: "CMG Global Freight & Logistics",
+    },
+    {
+        projectName: "Muslim Educational Centre of Oxford",
+        image: "MECO.jpg",
+        caption: "Muslim Educational Centre of Oxford",
+    },
+    {
+        projectName: "Leisure Combined",
+        image: "Leisure-Combined.jpg",
+        caption: "Leisure Combined",
+    },
+    {
+        projectName: "Sage Plumbing Roll Up Banner",
+        image: "sage-banner-transformed.jpeg",
+        caption: "Sage Banner In The Field",
+    },
+    {
+        projectName: "Properties Cape Town Flyer",
+        image: "FLYER-NEW-HIGH-RES.jpg",
+        caption: "Properties Cape Town Flyer",
+    },
+]
+
+module.exports = { countries, skills, roles, tags, experiences, educations, projectImages }

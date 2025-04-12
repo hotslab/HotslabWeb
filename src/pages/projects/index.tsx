@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { ProjectExtended, ProjectImage, Tag } from "@prisma/client"
+import { ProjectExtended } from "@prisma/client"
+import { ProjectImage, Tag } from "../../../prisma/generated/client"
 import { useRouter } from "next/router"
 import { MdImage } from "react-icons/md"
 import Layout from "@/components/Layout"
@@ -75,8 +76,8 @@ export default function Projects() {
             <div className="min-h-screen bg-white">
                 <div className="container mx-auto py-10 px-4 text-white">
                     <div className="bg-base-100 mb-10 px-[1.5rem] py-[1rem] flex flex-col gap-4">
-                        <div className="flex justify-between items-center flex-wrap gap-3 flex-wrap text-2xl font-bold">
-                            <div className="flex justify-between items-center flex-wrap gap-5 flex-wrap">
+                        <div className="flex justify-between items-center gap-3 flex-wrap text-2xl font-bold">
+                            <div className="flex justify-between items-center gap-5 flex-wrap">
                                 <span>Portfolio</span>
                                 <select
                                     className="select select-bordered text-white"
