@@ -17,6 +17,8 @@ yarn pnpify prisma migrate resolve --applied 0_init
 
 yarn pnpify prisma db push
 
+yarn pnpify node prisma/seed.js 
+
 yarn build
 
 exec "$@"

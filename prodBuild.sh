@@ -19,11 +19,12 @@ trap cleanUp INT SIGINT SIGTERM
 
 showInfo "Cleasring old image and container files..."
 
-docker container rm hotslab_prod -f
-docker image rm hotslab_prod -f
-docker builder prune -f
-docker buildx prune -f
-docker system prune -f
+# docker container rm hotslab_prod -f
+# docker image rm hotslab_prod -f
+# docker builder prune -f
+# docker buildx prune -f
+# docker system prune -f
+
 if [ -f hotslab_prod.tar.gz ]; then rm hotslab_prod.tar.gz; fi
 
 showInfo "Building the image..."
