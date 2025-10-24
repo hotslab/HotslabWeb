@@ -3,7 +3,7 @@
 showInfo() {
 	echo
 	echo "======================================================="
-	echo -e "$(date -u): " ${1}
+	echo -e "$(date -u): " "${1}"
 	echo "======================================================="
 	echo
 }
@@ -17,7 +17,7 @@ trap cleanUp INT SIGINT SIGTERM
 
 showInfo "Clearing, loading and starting the production hotslab_prod docker container..."
 
-docker compose -f docker-compose-production.yml down 
+docker stop hotslab_prod
 
 docker container rm hotslab_prod 
 
@@ -25,6 +25,6 @@ docker image rm hotslab_prod
 
 docker image load --input hotslab_prod.tar.gz
 
-docker compose -f docker-compose-production.yml up -d
+docker start hotslab_prod
 
 showInfo "Finished!"

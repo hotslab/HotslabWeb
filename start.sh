@@ -24,7 +24,7 @@ showHelp()
 showInfo() {
 	echo
 	echo "======================================================="
-	echo -e "$(date -u): " ${1}
+	echo -e "$(date -u): " "${1}"
 	echo "======================================================="
 	echo
 }
@@ -45,11 +45,6 @@ cleanUp() {
     exit 1
 }
 
-cleanUp() {
-  showInfo "Script externaly stopped! Exiting download process gracefully..."
-  exit 1
-}
-
 trap cleanUp INT SIGINT SIGTERM
 
 if [[ -v $1 ]]; then showHelp "No options were passed"; exit 1; fi
@@ -58,7 +53,7 @@ if [[ -v $1 ]]; then showHelp "No options were passed"; exit 1; fi
 down="no"
 env="dev"
 envFile="docker-compose-development.yml"
-envParams=("dev", "prod")
+envParams=("dev" "prod")
 rebuild="no"
 close="no"
 logs="no"
@@ -99,15 +94,6 @@ do
     esac
 done
 
-mkdir -p docker/cache docker/cache/dev docker/cache/prod
-
-if [ ! -d "docker/cache/prod/supervisor" ]; then mkdir -p docker/cache/prod/supervisor; fi
-if [ ! -d "docker/cache/prod/.next" ]; then mkdir -p docker/cache/prod/.next; fi
-if [ ! -d "docker/cache/prod/migrations" ]; then mkdir -p docker/cache/prod/migrations; fi
-if [ ! -d "docker/cache/dev/supervisor" ]; then mkdir -p docker/cache/dev/supervisor; fi
-if [ ! -d "docker/cache/dev/.next" ]; then mkdir -p docker/cache/dev/.next; fi
-if [ ! -d "docker/cache/dev/migrations" ]; then mkdir -p docker/cache/dev/migrations; fi
-if [ ! -d "docker/cache/dev/pgdata" ]; then mkdir -p docker/cache/dev/pgdata; fi
 if [ ! -f ".env" ]; then cp .env.example .env; fi
 
 closeContainer

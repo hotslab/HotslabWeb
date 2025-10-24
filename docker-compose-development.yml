@@ -8,7 +8,7 @@ services:
     image: postgres:16.2-bookworm
     container_name: hotslab_init
     volumes:
-      - ./docker/cache/dev/pgdata:/var/lib/postgresql/data
+      - hotslab_dev_pgdata:/var/lib/postgresql/data
     entrypoint:
       - sh
       - -c
@@ -22,7 +22,7 @@ services:
         POSTGRES_PASSWORD: secret
         POSTGRES_MULTIPLE_DATABASES: hotslabdev,hotslabstaging
       volumes:
-        - ./docker/cache/dev/pgdata:/var/lib/postgresql/data
+        - hotslab_dev_pgdata:/var/lib/postgresql/data
         - ./docker/postgres-init.sh:/docker-entrypoint-initdb.d/postgres-init.sh
       ports:
         - 7800:5432
@@ -47,10 +47,9 @@ services:
       dockerfile: docker/hotslab-dev.dockerfile
     volumes:
       - .:/app
-      - ./docker/cache/dev/supervisor:/app/supervisord
-      - ./docker/cache/dev/migrations:/app/prisma/migrations
-      - dev_node_modules:/app/node_modules
-      - dev_yarn:/app/.yarn
+      - hotslab_dev_supervisor:/app/supervisord
+      - hotslab_dev_migrations:/app/prisma/migrations
+      - hotslab_dev_node_modules:/app/node_modules
     ports:
       - 3200:3200
     # restart: unless-stopped
@@ -65,5 +64,7 @@ services:
         condition: service_healthy
 
 volumes:
-  dev_node_modules:
-  dev_yarn:
+  hotslab_dev_pgdata:
+  hotslab_dev_supervisor:
+  hotslab_dev_migrations:
+  hotslab_dev_node_modules:

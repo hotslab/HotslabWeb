@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
-FROM node:20.16.0-bookworm-slim
+FROM node:22.20.0-bookworm-slim
 
 # create the app user
 ARG USERNAME=node
@@ -44,9 +44,7 @@ COPY --chown=$USERNAME:$USERNAME \
     --exclude=.git \
     --exclude=.gitignore \
     --exclude=.dockerignore \
-    --exclude=.env.example \
-    --exclude=.env.prod \
-    --exclude=.env \
+    --exclude=.env* \
     --exclude=node_modules \
     --exclude=.npm \
     --exclude=build \
