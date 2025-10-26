@@ -19,12 +19,13 @@ trap cleanUp INT SIGINT SIGTERM
 
 showInfo "Cleasring old image and container files..."
 
+docker container rm hotslab_prod -f
+
 if [[ "${1}" != "" ]] 
 then
 	if [[ "${1}" != "-r" ]]
 	then showInfo "Passed incorrect optional value \e[1m${1}\e[0m. Optional value should be exactly \e[1m-r\e[0m i.e. to remove old docker files."; exit 1;
 	else 
-		docker container rm hotslab_prod -f
 		docker image rm hotslab_prod -f
 		docker builder prune -f
 		docker buildx prune -f
