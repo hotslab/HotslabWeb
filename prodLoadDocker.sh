@@ -19,12 +19,18 @@ showInfo "Clearing, loading and starting the production hotslab_prod docker cont
 
 docker stop hotslab_prod
 
-docker container rm hotslab_prod 
+docker container rm hotslab_prod -f
 
-docker image rm hotslab_prod
+docker image rm hotslab_prod -f
 
 docker image load --input hotslab_prod.tar.gz
 
-docker start hotslab_prod
+docker run -d \
+	--name hotslab_prod \
+	--add-host host.docker.internal:host-gateway \
+	--restart unless-stopped \
+	-p 127.0.0.1:3000:3000 \
+	-e CHOKIDAR_USEPOLLING=1 \
+	hotslab_prod
 
 showInfo "Finished!"

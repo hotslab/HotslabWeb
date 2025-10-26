@@ -42,8 +42,9 @@ echo
 showInfo "Started uploadling hotslab_prod.tar.gz to server..."
 
 sftp $user@$host <<EOF
-rm $remotePath/*
 cd $remotePath
+rm $loadingFile
+rm $fileName
 put $loadingFile
 put $fileName
 quit
