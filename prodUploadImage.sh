@@ -17,17 +17,17 @@ cleanUp() {
 
 trap cleanUp INT SIGINT SIGTERM
 
-if [ -f .env ]; then
+if [ -f .env.prod ]; then
     set -a            # Automatically export all variables
-    source .env       # Load the variables
+    source .env.prod       # Load the variables
     set +a            # Stop automatically exporting
 else
-    showInfo "The .env file was not found containing the authourisation code!"
+    showInfo "The .env.prod file was not found containing the authourisation code!"
     exit 1
 fi
 
 if [[ $SERVER_IP == "" ]]; then
-    showInfo "The .env SERVER_IP variable is empty. Unable to proceed"
+    showInfo "The .env.prod SERVER_IP variable is empty. Unable to proceed"
     exit 1
 fi
 
