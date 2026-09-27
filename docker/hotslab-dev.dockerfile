@@ -12,16 +12,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive ACCEPT_EULA=Y apt-get insta
     curl \
     nano
 
-RUN npm config rm proxy && \
-    npm config rm https-proxy && \
-    npm config set registry https://registry.npmjs.org/ && \
-    npm config set fetch-retry-maxtimeout 120000 && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-timeout 420000 && \
-    npm i --maxsockets 3 --loglevel verbose -g serve
-    # && npm update -g --loglevel verbose --maxsockets 3
-
-RUN corepack enable
+RUN npm i  --legacy-peer-deps --maxsockets 3 --loglevel verbose -g serve --fetch-timeout 420000 && npm update -g --loglevel verbose --maxsockets 3
 
 WORKDIR /app
 
@@ -31,14 +22,11 @@ USER $USERNAME
 
 COPY --chown=$USERNAME:$USERNAME ["../package*.json", "./"]
 
-RUN corepack install 
-
-RUN yarn install && yarn unplug tinymce
+RUN npm i  --legacy-peer-deps --maxsockets 3 --loglevel verbose --fetch-timeout 420000
 
 ADD ["docker/hotslab-supervisor-dev.conf", "/etc/supervisor/conf.d/hotslab-supervisor.conf"]
 
 RUN mkdir -p supervisord/
-
 
 ENTRYPOINT [ "docker/entrypoint_dev.sh" ]
 

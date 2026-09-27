@@ -2,13 +2,12 @@
   "name": "hotslab-web",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "yarn@4.8.1+sha256.8c8cf7bef23cced7c138d0da3ea72d43d2626727f1ae309edb853c41ab18ef1c",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
-    "seed": "pnpify node prisma/seed.js ",
+    "seed": "node prisma/seed.js ",
     "assets": "node assets.js"
   },
   "dependencies": {
@@ -20,7 +19,6 @@
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
     "@types/validatorjs": "^3.15.0",
-    "@yarnpkg/pnpify": "^4.1.4",
     "argon2": "^0.30.3",
     "autoprefixer": "10.4.14",
     "compressorjs": "^1.2.1",
@@ -50,10 +48,5 @@
     "@types/cors": "^2.8.13",
     "prisma": "6.6.0",
     "ts-node": "^10.9.1"
-  },
-  "dependenciesMeta": {
-    "tinymce@6.8.5": {
-      "unplugged": true
-    }
   }
 }
