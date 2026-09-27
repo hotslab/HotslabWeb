@@ -22,7 +22,7 @@ if [ -f .env.prod ]; then
     source .env.prod       # Load the variables
     set +a            # Stop automatically exporting
 else
-    showInfo "The .env.prod file was not found containing the authourisation code!"
+    showInfo "The .env.prod file was not found containing the SERVER_IP!"
     exit 1
 fi
 
