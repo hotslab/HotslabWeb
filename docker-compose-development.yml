@@ -65,6 +65,10 @@ services:
 
 volumes:
   hotslab_dev_pgdata:
+    name: "hotslab_dev_pgdata"
   hotslab_dev_supervisor:
+    name: "hotslab_dev_supervisor"
   hotslab_dev_migrations:
+    name: "hotslab_dev_migrations"
   hotslab_dev_node_modules:
+    name: "hotslab_dev_migrations"

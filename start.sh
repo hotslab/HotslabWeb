@@ -70,7 +70,7 @@ do
             if [[ ${envParams[@]} =~ ${OPTARG} ]]
             then 
                 env=${OPTARG};
-                if [[ ${OPTARG} == "prod" ]] then envFile="docker-compose-production.yml"; fi
+                if [[ ${OPTARG} == "prod" ]]; then envFile="docker-compose-production.yml"; fi
             else showInfo "Error: The \e[1mEnvironement\e[0m value is incorrect i.e \e[1m -e \e[0m must be either \e[1m dev \e[0m or \e[1m prod \e[0m! "; exit 1; 
             fi ;;
         r) 

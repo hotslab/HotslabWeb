@@ -17,7 +17,21 @@ cleanUp() {
 
 trap cleanUp INT SIGINT SIGTERM
 
-host='102.214.10.110'
+if [ -f .env ]; then
+    set -a            # Automatically export all variables
+    source .env       # Load the variables
+    set +a            # Stop automatically exporting
+else
+    showInfo "The .env file was not found containing the authourisation code!"
+    exit 1
+fi
+
+if [[ $SERVER_IP == "" ]]; then
+    showInfo "The .env SERVER_IP variable is empty. Unable to proceed"
+    exit 1
+fi
+
+host=$SERVER_IP
 user='joseph'
 remotePath='/var/www/apps/hotslab'
 fileName='hotslab_prod.tar.gz'
